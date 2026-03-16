@@ -1,21 +1,10 @@
-CC      = gcc
-CFLAGS  = -Wall -Wextra -std=c99 -g
-SRCDIR  = src
-BINDIR  = bin
+CC = g++
+CFLAGS = -Wall -std=c++17
 
-# TODO: tambahkan source file sesuai struktur yang dibuat
-# SRCS    = $(SRCDIR)/main.c $(SRCDIR)/lexer.c
-# OBJS    = $(SRCS:.c=.o)
-# TARGET  = $(BINDIR)/lexer
+all: lexer
 
-.PHONY: all clean test
-
-all:
-	@echo "TODO: tambahkan target build"
-
-test:
-	@echo "TODO: tambahkan test case"
+lexer: src/main.cpp src/lexer/lexer.cpp
+    $(CC) $(CFLAGS) -o lexer src/main.cpp src/lexer/lexer.cpp
 
 clean:
-	rm -f $(SRCDIR)/*.o
-	rm -rf $(BINDIR)
+    rm -f lexer
