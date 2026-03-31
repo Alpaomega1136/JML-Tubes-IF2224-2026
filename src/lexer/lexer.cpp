@@ -9,6 +9,10 @@ bool caseInsensitiveCheck(char l, const char c) {
     return isLetterEqual(l,c) || isLetterEqual(c,l);
 }
 
+bool isLetter(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
 bool isDigit(char c) {
     return c >= '0' && c <= '9';
 }
@@ -130,6 +134,10 @@ vector<Token> tokenize(const std::string& filename) {
                     case '\'':
                         curr_state = EMPTY_STRING_STATE;
                         break;
+                    case '\n':
+                        curr_value += '\'';
+                        pushtoken(unknown);
+                        break;
                     default :
                         curr_state = CHAR_STATE;
                         curr_value += curr_char;
@@ -163,6 +171,9 @@ vector<Token> tokenize(const std::string& filename) {
                     case '\'':
                         curr_state = STRING_END_STATE;
                         break;
+                    case '\n':
+                        curr_value = '\'' + curr_value;
+                        pushtoken(unknown);
                     default:
                         curr_value += curr_char;
                         break;
@@ -227,8 +238,11 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = INT_PERIOD_STATE;
                 } else if (isDigit(curr_char)) {
                     curr_value += curr_char;
-                } else {
+                } else if (isDelimiter(curr_char)) {
                     pushtoken(intcon);
+                } else {
+                    curr_state = UNKNOWN_STATE;
+                    curr_value += curr_char;
                 }
                 break;
             case INT_PERIOD_STATE:
@@ -244,9 +258,20 @@ vector<Token> tokenize(const std::string& filename) {
             case REAL_STATE:
                 if (isDigit(curr_char)) {
                     curr_value += curr_char;
-                } else {
+                } else if (isDelimiter(curr_char)) {
                     pushtoken(realcon);
+                } else {
+                    curr_state = UNKNOWN_STATE;
+                    curr_value += curr_state;
                 }
+                break;
+            case UNKNOWN_STATE:
+                if (isDelimiter(curr_char)) {
+                    pushtoken(unknown);
+                } else {
+                    curr_value += curr_char;
+                }
+                break;
             default:
                 break;
         }
