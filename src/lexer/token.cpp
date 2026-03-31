@@ -2,10 +2,14 @@
 
 const std::string Token::tokenTypeToString() const {
     switch(type) {
+        case intcon:
+            return "intcon (" + value + ")";
+        case realcon:
+            return "realcon (" + value + ")";
         case stringcon:
-            return "stringcon (" + value +")";
+            return "stringcon (" + value + ")";
         case charcon:
-            return "charcon (" + value +")";
+            return "charcon (" + value + ")";
         case ListToken::plus:
             return "plus";
         case ListToken::minus:
@@ -44,6 +48,8 @@ const std::string Token::tokenTypeToString() const {
             return "colon";
         case becomes:
             return "becomes";
+        case comment:
+            return "comment (" + value + ")";
         default:
             return "how bro";
     }
