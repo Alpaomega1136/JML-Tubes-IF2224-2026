@@ -19,8 +19,10 @@ enum State {
     REAL_STATE,       // membaca angka riil (setelah titik)
 
     START_QUOTE_STATE,
-    STRING_STATE,
+    STRING_ONGOING_STATE,
+    STRING_END_STATE,
     CHAR_STATE,
+    CHAR_END_STATE,
 
     MINUS_STATE,
     PLUS_STATE,
