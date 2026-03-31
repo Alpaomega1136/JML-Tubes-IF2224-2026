@@ -34,7 +34,7 @@ vector<Token> tokenize(const std::string& filename) {
             case RDIV_STATE: 
                 pushtoken(rdiv);      
                 break;
-            case EQL_STATE: 
+            case SEMI_EQL_STATE: 
                 if (curr_char == '=') {
                     curr_value += curr_char;
                     pushtoken(eql); 
@@ -104,7 +104,7 @@ vector<Token> tokenize(const std::string& filename) {
                     case '-': curr_state = MINUS_STATE;     curr_value += curr_char;    ;break;
                     case '*': curr_state = TIMES_STATE;     curr_value += curr_char;    ;break;
                     case '/': curr_state = RDIV_STATE;      curr_value += curr_char;    ;break;
-                    case '=': curr_state = EQL_STATE;       curr_value += curr_char;    ;break;
+                    case '=': curr_state = SEMI_EQL_STATE;  curr_value += curr_char;    ;break;
                     case ',': curr_state = COMMA_STATE;     curr_value += curr_char;    ;break;
                     case ';': curr_state = SEMICOLON_STATE; curr_value += curr_char;    ;break;
                     case ':': curr_state = COLON_STATE;     curr_value += curr_char;    ;break;

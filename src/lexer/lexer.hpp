@@ -41,6 +41,7 @@ enum State {
     LSS_STATE,
     LEQ_STATE,
     NEQ_STATE,
+    SEMI_EQL_STATE,
     EQL_STATE,
     GTR_STATE,
     GEQ_STATE,
