@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include <iostream>
 
 bool isLetter(char l, const char c) {
     return (l == c) || (l >= 65 && l <=90 && ((l + 32) == c));
@@ -25,56 +26,78 @@ vector<Token> tokenize(const std::string& filename) {
                 switch(curr_char) {
                     case '\'':
                         curr_state = EMPTY_STRING_STATE;
+                        break;
                     default :
                         curr_state = CHAR_STATE;
                         curr_value += curr_char;
+                        break;
                 }
+                break;
             case CHAR_STATE:
                 switch(curr_char) {
                     case '\'':
                         curr_state = CHAR_END_STATE;
+                        break;
                     default :
                         curr_state = STRING_ONGOING_STATE;
                         curr_value += curr_char;
+                        break;
                 }
+                break;
             case CHAR_END_STATE :
                 switch(curr_char) {
                     case '\'':
                         curr_state = STRING_ONGOING_STATE;
                         curr_value += curr_char;
+                        break;
                     default:
                         pushtoken(charcon);
+                        break;
                 }
+                break;
             case STRING_ONGOING_STATE :
                 switch(curr_char) {
                     case '\'':
                         curr_state = STRING_END_STATE;
+                        break;
                     default:
                         curr_value += curr_char;
+                        break;
                 }
+                break;
             case EMPTY_STRING_STATE :
                 switch(curr_char) {
                     case '\'':
                         curr_state = CHAR_STATE;
                         curr_value += curr_char;
+                        break;
                     default :
                         pushtoken(stringcon);
+                        break;
                 }
+                break;
             case STRING_END_STATE :
                 switch(curr_char) {
                     case '\'':
                         curr_state = STRING_ONGOING_STATE;
                         curr_value += curr_char;
+                        break;
                     default:
                         pushtoken(stringcon);
+                        break;
                 }
+                break;
+            default:
+                break;
         }
 
         if (curr_state == START_STATE) {
             switch(curr_char) {
                 case '\'':
                     curr_state = START_QUOTE_STATE;
-            }   
+                default:
+                    break;
+            }
         }
     }
     return tokens;
@@ -83,9 +106,11 @@ vector<Token> tokenize(const std::string& filename) {
 string tokenTypeToString(const Token& t) {
     switch(t.type) {
         case stringcon:
-            return "stringcon ('" + t.value +"')";
+            return "stringcon (" + t.value +")";
         case charcon:
-            return "charcon ('" + t.value +"')";
+            return "charcon (" + t.value +")";
+        default:
+            return "how bro";
     }
 };
 
