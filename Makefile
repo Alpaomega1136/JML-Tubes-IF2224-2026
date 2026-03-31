@@ -1,10 +1,12 @@
-CC = g++
+CC     = g++
 CFLAGS = -Wall -std=c++17
+TARGET = lexer
+SRCS   = src/main.cpp src/lexer/lexer.cpp
 
-all: lexer
+all: $(TARGET)
 
-lexer: src/main.cpp src/lexer/lexer.cpp
-    $(CC) $(CFLAGS) -o lexer src/main.cpp src/lexer/lexer.cpp
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
 
 clean:
-    rm -f lexer
+	rm -f $(TARGET)
