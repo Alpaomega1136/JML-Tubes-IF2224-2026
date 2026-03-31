@@ -42,6 +42,7 @@ enum State {
     LSS_STATE,
     LEQ_STATE,
     NEQ_STATE,
+    SEMI_EQL_STATE,
     EQL_STATE,
     GTR_STATE,
     GEQ_STATE,
@@ -123,6 +124,7 @@ enum State {
     RECORD_STATE,
     REP_STATE,
     REPE_STATE,
+    REPEA_STATE,
     REPEAT_STATE,
     T_STATE,
     TH_STATE,
@@ -146,7 +148,8 @@ enum State {
     WHIL_STATE,
     WHILE_STATE,
 
-    UNKNOWN_STATE
+    UNKNOWN_STATE,
+    UNKNOWN2_STATE
 };
 
 // Fungsi utama yanh berfungsi untuk mengubah isi file.txt menjadi list of token
