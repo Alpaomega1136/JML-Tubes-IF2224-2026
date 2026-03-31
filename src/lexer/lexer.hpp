@@ -148,7 +148,8 @@ enum State {
     WHIL_STATE,
     WHILE_STATE,
 
-    UNKNOWN_STATE
+    UNKNOWN_STATE,
+    UNKNOWN2_STATE
 };
 
 // Fungsi utama yanh berfungsi untuk mengubah isi file.txt menjadi list of token
