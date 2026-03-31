@@ -58,6 +58,7 @@ vector<Token> tokenize(const std::string& filename) {
                 break;
             case PERIOD_STATE: 
                 pushtoken(period);
+                break;
             case LPARENT_STATE: 
                 if (curr_char == '*') {  
                     curr_state = COMMENT2_STATE;
@@ -66,7 +67,7 @@ vector<Token> tokenize(const std::string& filename) {
                 pushtoken(lparent); 
                 break;
             case RPARENT_STATE: 
-                pushtoken(lbrack);
+                pushtoken(rparent);
                 break;
             case LBRACK_STATE: 
                 pushtoken(lbrack);    
@@ -187,16 +188,3 @@ vector<Token> tokenize(const std::string& filename) {
     }
     return tokens;
 }
-
-string tokenTypeToString(const Token& t) {
-    switch(t.type) {
-        case stringcon:
-            return "stringcon (" + t.value +")";
-        case charcon:
-            return "charcon (" + t.value +")";
-        default:
-            return "how bro";
-    }
-}
-
-ListToken checkKeyword(const std::string& word);
