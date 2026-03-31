@@ -89,9 +89,12 @@ enum ListToken {
     comment       // Komentar: { ... } atau (* ... *)
 };
 
-struct Token {
-    ListToken type;
-    std::string value;
+class Token {
+    private:
+        ListToken type;
+        std::string value;
+    public:
+        Token(ListToken type, string val) : type(type), value(val) {}
 };
 
 #endif
