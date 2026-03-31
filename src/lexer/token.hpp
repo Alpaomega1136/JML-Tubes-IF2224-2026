@@ -88,13 +88,14 @@ enum ListToken {
     ident,        // Nama variabel/fungsi/dll (case-insensitive, diawali huruf)
     comment       // Komentar: { ... } atau (* ... *)
 };
-
 class Token {
     private:
-        ListToken type;
-        std::string value;
+
     public:
-        Token(ListToken type, string val) : type(type), value(val) {}
+        ListToken type;
+        std::string value;  
+        Token(ListToken type, std::string val) : type(type), value(val) {}
+
 };
 
 #endif
