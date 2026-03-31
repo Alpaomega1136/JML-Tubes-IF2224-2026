@@ -124,6 +124,7 @@ enum State {
     RECORD_STATE,
     REP_STATE,
     REPE_STATE,
+    REPEA_STATE,
     REPEAT_STATE,
     T_STATE,
     TH_STATE,
