@@ -13,6 +13,7 @@ enum State {
     IDENT_STATE,      // membaca identifier/keyword
     COMMENT1_STATE,   // membaca '{' → komentar
     COMMENT2_STATE,   // membaca '(*' → komentar
+    COMMENT2_END_STATE,
 
     INT_STATE,        // membaca angka integer
     INT_PERIOD_STATE,  // membaca angka integer lalu .
