@@ -66,10 +66,11 @@ vector<Token> tokenize(const std::string& filename) {
             case SEMI_EQL_STATE: 
                 if (curr_char == '=') {
                     curr_value += curr_char;
-                    pushtoken(eql); 
+                    curr_state = EQL_STATE;
+                    pushtoken(eql);
                     continue; 
                 }
-                pushtoken(eql);
+                curr_state = UNKNOWN2_STATE; //untuk kasus ini, menurutku di switch ini ditambah case UNKNOWN2_STATE dibawah case ini, terus breaknya dihapus. UNKNOWN2_STATE belum dibuat 
                 break;
             case COMMA_STATE: 
                 pushtoken(comma);     
