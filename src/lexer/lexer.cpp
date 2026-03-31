@@ -1,12 +1,41 @@
 #include "lexer.hpp"
 #include <iostream>
 
-bool isLetter(char l, const char c) {
+bool isLetterEqual(char l, const char c) {
     return (l == c) || (l >= 65 && l <=90 && ((l + 32) == c));
 }
 
 bool caseInsensitiveCheck(char l, const char c) {
-    return isLetter(l,c) || isLetter(c,l);
+    return isLetterEqual(l,c) || isLetterEqual(c,l);
+}
+
+bool isDigit(char c) {
+    return c >= '0' && c <= '9';
+}
+
+bool isDelimiter(char c) {
+    switch(c) {
+        case ' ': 
+        case '\n':
+        case '+': 
+        case '-': 
+        case '*':
+        case '/':
+        case '=':
+        case ',': 
+        case ';':
+        case ':':
+        case '.':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '<':
+        case '>':
+        case '{':
+        case '\'': return true;
+        default: return false;
+    }
 }
 
 vector<Token> tokenize(const std::string& filename) {
@@ -161,6 +190,63 @@ vector<Token> tokenize(const std::string& filename) {
                         break;
                 }
                 break;
+            case COMMENT1_STATE :
+                switch(curr_char) {
+                    case '}':
+                        pushtoken(comment);
+                        break;
+                    default:
+                        curr_value += curr_char;
+                        break;
+                }
+                break;
+            case COMMENT2_STATE:
+                switch(curr_char) {
+                    case '*':
+                        curr_state = COMMENT2_END_STATE;
+                        break;
+                    default:
+                        curr_value += curr_char;
+                        break;
+                }
+                break;
+            case COMMENT2_END_STATE:
+                switch(curr_char) {
+                    case ')':
+                        pushtoken(comment);
+                        break;
+                    default:
+                        curr_value += '*';
+                        curr_value += curr_char;
+                        curr_state = COMMENT2_STATE;
+                        break;
+                }
+                break;
+            case INT_STATE:
+                if (curr_char == '.') {
+                    curr_state = INT_PERIOD_STATE;
+                } else if (isDigit(curr_char)) {
+                    curr_value += curr_char;
+                } else {
+                    pushtoken(intcon);
+                }
+                break;
+            case INT_PERIOD_STATE:
+                if (isDigit(curr_char)) {
+                    curr_state = REAL_STATE;
+                    curr_value += '.';
+                    curr_value += curr_char;
+                } else {
+                    pushtoken(intcon);
+                    pushtoken(period);
+                }
+                break;
+            case REAL_STATE:
+                if (isDigit(curr_char)) {
+                    curr_value += curr_char;
+                } else {
+                    pushtoken(realcon);
+                }
             default:
                 break;
         }
@@ -176,13 +262,20 @@ vector<Token> tokenize(const std::string& filename) {
                 case ';': curr_state = SEMICOLON_STATE; curr_value += curr_char;    ;break;
                 case ':': curr_state = COLON_STATE;     curr_value += curr_char;    ;break;
                 case '.': curr_state = PERIOD_STATE;    curr_value += curr_char;    ;break;
-                case '(': curr_state = LPARENT_STATE;   curr_value += curr_char;    ;break;
+                case '(': curr_state = LPARENT_STATE;   ;break;
                 case ')': curr_state = RPARENT_STATE;   curr_value += curr_char;    ;break;
                 case '[': curr_state = LBRACK_STATE;    curr_value += curr_char;    ;break;
                 case ']': curr_state = RBRACK_STATE;    curr_value += curr_char;    ;break;
                 case '<': curr_state = LSS_STATE;       curr_value += curr_char;    ;break;
                 case '>': curr_state = GTR_STATE;       curr_value += curr_char;    ;break;
-                case '\'': curr_state = START_QUOTE_STATE;
+                case '{': curr_state = COMMENT1_STATE; break;
+                case '\'': curr_state = START_QUOTE_STATE; break;
+                default:
+                    if (isDigit(curr_char)) {
+                        curr_state = INT_STATE;
+                        curr_value += curr_char;
+                    }
+                    break;
             }
         }
     }
