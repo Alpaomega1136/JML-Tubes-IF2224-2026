@@ -95,7 +95,7 @@ class Token {
         ListToken type;
         std::string value;  
         Token(ListToken type, std::string val) : type(type), value(val) {}
-
+        const std::string tokenTypeToString() const;
 };
 
 #endif

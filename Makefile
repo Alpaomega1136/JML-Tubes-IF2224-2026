@@ -1,7 +1,7 @@
 CC     = g++
 CFLAGS = -Wall -std=c++17
 TARGET = lexer
-SRCS   = src/main.cpp src/lexer/lexer.cpp
+SRCS   = src/main.cpp src/lexer/lexer.cpp src/lexer/token.cpp
 
 all: $(TARGET)
 

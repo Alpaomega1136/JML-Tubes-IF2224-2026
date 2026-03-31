@@ -13,6 +13,7 @@ enum State {
     IDENT_STATE,      // membaca identifier/keyword
     COMMENT1_STATE,   // membaca '{' → komentar
     COMMENT2_STATE,   // membaca '(*' → komentar
+    COMMENT2_END_STATE,
 
     INT_STATE,        // membaca angka integer
     INT_PERIOD_STATE,  // membaca angka integer lalu .
@@ -151,12 +152,6 @@ enum State {
 
 // Fungsi utama yanh berfungsi untuk mengubah isi file.txt menjadi list of token
 vector<Token> tokenize(const std::string& filename);
-
-// Fungsi mengubah ListToken menjadi string dan memasukkkannya pada output.txt
-string tokenTypeToString(const Token& t);
-
-// Fungsi untuk mengecek apakah suatu kata adalah keyword
-ListToken  checkKeyword(const std::string& word);
 
 #endif
 
