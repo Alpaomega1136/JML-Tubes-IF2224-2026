@@ -20,7 +20,7 @@ vector<Token> tokenize(const std::string& filename) {
         curr_state = START_STATE;
         curr_value ="";
     };
-    while(file.get(curr_char)) {
+    while(file.get(curr_char)) { 
         switch (curr_state){
             case PLUS_STATE: 
                 pushtoken(ListToken::plus);      
@@ -95,27 +95,6 @@ vector<Token> tokenize(const std::string& filename) {
                 }
                 pushtoken(gtr); 
                 break;
-        }
-
-        switch(curr_state){
-            case START_STATE:
-                switch (curr_char) {
-                    case '+': curr_state = PLUS_STATE;      curr_value += curr_char;    ;break;
-                    case '-': curr_state = MINUS_STATE;     curr_value += curr_char;    ;break;
-                    case '*': curr_state = TIMES_STATE;     curr_value += curr_char;    ;break;
-                    case '/': curr_state = RDIV_STATE;      curr_value += curr_char;    ;break;
-                    case '=': curr_state = EQL_STATE;       curr_value += curr_char;    ;break;
-                    case ',': curr_state = COMMA_STATE;     curr_value += curr_char;    ;break;
-                    case ';': curr_state = SEMICOLON_STATE; curr_value += curr_char;    ;break;
-                    case ':': curr_state = COLON_STATE;     curr_value += curr_char;    ;break;
-                    case '.': curr_state = PERIOD_STATE;    curr_value += curr_char;    ;break;
-                    case '(': curr_state = LPARENT_STATE;   curr_value += curr_char;    ;break;
-                    case ')': curr_state = RPARENT_STATE;   curr_value += curr_char;    ;break;
-                    case '[': curr_state = LBRACK_STATE;    curr_value += curr_char;    ;break;
-                    case ']': curr_state = RBRACK_STATE;    curr_value += curr_char;    ;break;
-                    case '<': curr_state = LSS_STATE;       curr_value += curr_char;    ;break;
-                    case '>': curr_state = GTR_STATE;       curr_value += curr_char;    ;break;
-                }
             case START_QUOTE_STATE:
                 switch(curr_char) {
                     case '\'':
@@ -185,12 +164,24 @@ vector<Token> tokenize(const std::string& filename) {
                 break;
         }
 
-        if (curr_state == START_STATE) {
-            switch(curr_char) {
-                case '\'':
-                    curr_state = START_QUOTE_STATE;
-                default:
-                    break;
+        if(curr_state == START_STATE) {
+            switch (curr_char) {
+                case '+': curr_state = PLUS_STATE;      curr_value += curr_char;    ;break;
+                case '-': curr_state = MINUS_STATE;     curr_value += curr_char;    ;break;
+                case '*': curr_state = TIMES_STATE;     curr_value += curr_char;    ;break;
+                case '/': curr_state = RDIV_STATE;      curr_value += curr_char;    ;break;
+                case '=': curr_state = EQL_STATE;       curr_value += curr_char;    ;break;
+                case ',': curr_state = COMMA_STATE;     curr_value += curr_char;    ;break;
+                case ';': curr_state = SEMICOLON_STATE; curr_value += curr_char;    ;break;
+                case ':': curr_state = COLON_STATE;     curr_value += curr_char;    ;break;
+                case '.': curr_state = PERIOD_STATE;    curr_value += curr_char;    ;break;
+                case '(': curr_state = LPARENT_STATE;   curr_value += curr_char;    ;break;
+                case ')': curr_state = RPARENT_STATE;   curr_value += curr_char;    ;break;
+                case '[': curr_state = LBRACK_STATE;    curr_value += curr_char;    ;break;
+                case ']': curr_state = RBRACK_STATE;    curr_value += curr_char;    ;break;
+                case '<': curr_state = LSS_STATE;       curr_value += curr_char;    ;break;
+                case '>': curr_state = GTR_STATE;       curr_value += curr_char;    ;break;
+                case '\'': curr_state = START_QUOTE_STATE;
             }
         }
     }
@@ -206,6 +197,6 @@ string tokenTypeToString(const Token& t) {
         default:
             return "how bro";
     }
-};
+}
 
 ListToken checkKeyword(const std::string& word);
