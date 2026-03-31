@@ -21,6 +21,7 @@ enum State {
     START_QUOTE_STATE,
     STRING_ONGOING_STATE,
     STRING_END_STATE,
+    EMPTY_STRING_STATE,
     CHAR_STATE,
     CHAR_END_STATE,
 
@@ -151,7 +152,7 @@ enum State {
 vector<Token> tokenize(const std::string& filename);
 
 // Fungsi mengubah ListToken menjadi string dan memasukkkannya pada output.txt
-string tokenTypeToString(ListToken list, const std::string& value);
+string tokenTypeToString(const Token& t);
 
 // Fungsi untuk mengecek apakah suatu kata adalah keyword
 ListToken  checkKeyword(const std::string& word);
