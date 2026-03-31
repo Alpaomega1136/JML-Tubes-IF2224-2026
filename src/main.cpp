@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     vector<Token> tokens = tokenize(inputFile);
     ofstream out(outputFile);
     for (const Token& t : tokens) {
-        out << tokenTypeToString(t) << "\n";
+        out << t.tokenTypeToString() << "\n";
     }
     std::cout << "Tokenisasi selesai!" << std::endl;
     return 0;
