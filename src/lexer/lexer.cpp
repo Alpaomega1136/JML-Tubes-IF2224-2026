@@ -12,9 +12,15 @@ vector<Token> tokenize(const std::string& filename) {
     ifstream file(filename);
     char curr_char;
     State curr_state = START_STATE;
+    std::string curr_value = "";
     vector<Token> tokens;
     while(file.get(curr_char)) {
-        
+        switch(curr_state){
+            case START_STATE:
+                switch(curr_char) {
+                    
+                }
+        }
     }
 }
 
