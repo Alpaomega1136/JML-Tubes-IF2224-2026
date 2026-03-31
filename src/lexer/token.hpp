@@ -86,7 +86,9 @@ enum ListToken {
     // === Identifier & Komentar
     // =========================================================
     ident,        // Nama variabel/fungsi/dll (case-insensitive, diawali huruf)
-    comment       // Komentar: { ... } atau (* ... *)
+    comment,       // Komentar: { ... } atau (* ... *)
+
+    unknown
 };
 class Token {
     private:

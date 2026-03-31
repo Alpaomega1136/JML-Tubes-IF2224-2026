@@ -50,6 +50,8 @@ const std::string Token::tokenTypeToString() const {
             return "becomes";
         case comment:
             return "comment (" + value + ")";
+        case unknown:
+            return "unknown (" + value + ")";
         default:
             return "how bro";
     }
