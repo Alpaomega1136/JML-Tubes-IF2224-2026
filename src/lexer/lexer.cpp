@@ -1,7 +1,23 @@
 #include "lexer.hpp"
 
-vector<Token> tokenize(const std::string& filename);
+bool isLetter(char l, const char c) {
+    return (l == c) || (l >= 65 && l <=90 && ((l + 32) == c));
+}
+
+bool caseInsensitiveCheck(char l, const char c) {
+    return isLetter(l,c) || isLetter(c,l);
+}
+
+vector<Token> tokenize(const std::string& filename) {
+    ifstream file(filename);
+    char curr_char;
+    State curr_state = START_STATE;
+    vector<Token> tokens;
+    while(file.get(curr_char)) {
+        
+    }
+}
 
 string tokenTypeToString(ListToken list, const std::string& value);
 
-ListToken  checkKeyword(const std::string& word);
+ListToken checkKeyword(const std::string& word);
