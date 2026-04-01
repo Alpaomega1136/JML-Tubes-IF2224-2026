@@ -95,7 +95,7 @@ vector<Token> tokenize(const std::string& filename) {
                 break;
             case LPARENT_STATE: 
                 if (curr_char == '*') {  
-                    curr_state = COMMENT2_STATE;
+                    curr_state = COMMENT_STATE;
                     continue; 
                 }
                 pushtoken(lparent); 
@@ -202,37 +202,33 @@ vector<Token> tokenize(const std::string& filename) {
                         break;
                 }
                 break;
-            case COMMENT1_STATE :
+            case COMMENT_STATE :
                 switch(curr_char) {
                     case '}':
-                        pushtoken(comment);
+                        curr_state = COMMENT_END_STATE;
                         break;
-                    default:
-                        curr_value += curr_char;
-                        break;
-                }
-                break;
-            case COMMENT2_STATE:
-                switch(curr_char) {
                     case '*':
-                        curr_state = COMMENT2_END_STATE;
+                        curr_state = COMMENT_ASTERISK_STATE;
                         break;
                     default:
                         curr_value += curr_char;
                         break;
                 }
                 break;
-            case COMMENT2_END_STATE:
+            case COMMENT_ASTERISK_STATE:
                 switch(curr_char) {
                     case ')':
-                        pushtoken(comment);
+                        curr_state = COMMENT_END_STATE;
                         break;
                     default:
                         curr_value += '*';
                         curr_value += curr_char;
-                        curr_state = COMMENT2_STATE;
+                        curr_state = COMMENT_STATE;
                         break;
                 }
+                break;
+            case COMMENT_END_STATE:
+                pushtoken(comment);
                 break;
             case INT_STATE:
                 if (curr_char == '.') {
@@ -1643,6 +1639,14 @@ vector<Token> tokenize(const std::string& filename) {
                     pushtoken(whilesy);
                     break;
                 }
+            case UNKNOWN2_STATE:
+                if (isDelimiter(curr_char) || isalnum(curr_char)) {
+                    pushtoken(unknown);
+                }
+                else {
+                    curr_value += curr_char;
+                }
+                break;
             default:
                 break;
         }
@@ -1664,7 +1668,7 @@ vector<Token> tokenize(const std::string& filename) {
                 case ']': curr_state = RBRACK_STATE;    curr_value += curr_char;    ;break;
                 case '<': curr_state = LSS_STATE;       curr_value += curr_char;    ;break;
                 case '>': curr_state = GTR_STATE;       curr_value += curr_char;    ;break;
-                case '{': curr_state = COMMENT1_STATE; break;
+                case '{': curr_state = COMMENT_STATE; break;
                 case '\'': curr_state = START_QUOTE_STATE; break;
                 default:
                     if (isDigit(curr_char)) {
@@ -1672,7 +1676,7 @@ vector<Token> tokenize(const std::string& filename) {
                         curr_value += curr_char;
                         break;
                     }
-                    if (isalpha(curr_char) || curr_char == '_') {
+                    if (isalpha(curr_char)) {
                         curr_value += curr_char;
                         switch (tolower(curr_char)) {
                             case 'a': curr_state = A_STATE; break;
@@ -1693,10 +1697,13 @@ vector<Token> tokenize(const std::string& filename) {
                             case 'w': curr_state = W_STATE; break;
                             default:  curr_state = IDENT_STATE; break;
                         }
+                        break;
+                    }
+                    if (!isDelimiter(curr_char)) {
+                        curr_value += curr_char;
+                        curr_state = UNKNOWN2_STATE;
                     }
                     break;
-
-                    
             }
         }
     }
