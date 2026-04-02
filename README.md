@@ -104,6 +104,42 @@ make clean
 
 ---
 
+## Struktur Repository
+
+```
+JML-Tubes-IF2224-2026/
+├── src/
+│   ├── main.cpp
+│   └── lexer/
+│       ├── lexer.hpp
+│       ├── lexer.cpp
+│       ├── token.hpp
+│       └── token.cpp
+├── doc/
+│   └── milestone-1/
+│       ├── Laporan-1-JML-1.pdf
+│       ├── Diagram DFA Lexer.drawio.xml
+│       └── Spesifikasi Milestone 1 - Tubes IF2224 TBFO.pdf
+├── test/
+│   └── milestone-1/
+│       ├── input/
+│       │   ├── input-1.txt
+│       │   ├── input-2.txt
+│       │   ├── input-3.txt
+│       │   ├── input-4.txt
+│       │   └── input-5.txt
+│       └── output/
+│           ├── output-1.txt
+│           ├── output-2.txt
+│           ├── output-3.txt
+│           ├── output-4.txt
+│           └── output-5.txt
+├── Makefile
+└── README.md
+```
+
+---
+
 ## Pembagian Tugas
 
 | Nama Lengkap | NIM | Tugas |
