@@ -1,0 +1,39 @@
+{ Input 5: Case statement, operator div/mod, dan gabungan komentar }
+{ Token dicek: casesy, ofsy, idiv, imod                            }
+{ Komentar brace { } dan paren (* *) keduanya muncul di sini       }
+
+program KasusLengkap;
+var
+    angka   : integer;
+    bagi    : integer;
+    sisa    : integer;
+    harakat : char;
+begin
+    angka := 17;
+
+    (* Uji operator div integer *)
+    bagi := angka div 5;
+
+    { Uji operator modulo }
+    sisa := angka MOD 5;
+
+    writeln(bagi);
+    writeln(sisa);
+
+    (* Uji case of *)
+    case sisa of
+        0 : writeln('Habis dibagi 5');
+        1 : writeln('Sisa 1');
+        2 : writeln('Sisa 2');
+        3 : writeln('Sisa 3');
+        4 : writeln('Sisa 4');
+    end;
+
+    { Uji charcon satu karakter }
+    harakat := 'Z';
+
+    { Komentar bisa juga berisi angka 123 dan simbol +*/ }
+    (* Komentar paren juga bisa berisi apa saja := <> >= *)
+
+    writeln(harakat);
+end.

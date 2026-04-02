@@ -1,0 +1,115 @@
+comment ( Input 5: Case statement, operator div/mod, dan gabungan komentar )
+comment ( Token dicek: casesy, ofsy, idiv, imod                            )
+comment ( Komentar brace { )
+ident (dan)
+ident (paren)
+comment ( )
+ident (keduanya)
+ident (muncul)
+ident (di)
+ident (sini)
+unknown (})
+programsy
+ident (KasusLengkap)
+semicolon
+varsy
+ident (angka)
+colon
+ident (integer)
+semicolon
+ident (bagi)
+colon
+ident (integer)
+semicolon
+ident (sisa)
+colon
+ident (integer)
+semicolon
+ident (harakat)
+colon
+ident (char)
+semicolon
+beginsy
+ident (angka)
+becomes
+intcon (17)
+semicolon
+comment ( Uji operator div integer )
+ident (bagi)
+becomes
+ident (angka)
+div
+intcon (5)
+semicolon
+comment ( Uji operator modulo )
+ident (sisa)
+becomes
+ident (angka)
+imod
+intcon (5)
+semicolon
+ident (writeln)
+lparent
+ident (bagi)
+rparent
+semicolon
+ident (writeln)
+lparent
+ident (sisa)
+rparent
+semicolon
+comment ( Uji case of )
+casesy
+ident (sisa)
+ofsy
+intcon (0)
+colon
+ident (writeln)
+lparent
+stringcon (Habis dibagi 5)
+rparent
+semicolon
+intcon (1)
+colon
+ident (writeln)
+lparent
+stringcon (Sisa 1)
+rparent
+semicolon
+intcon (2)
+colon
+ident (writeln)
+lparent
+stringcon (Sisa 2)
+rparent
+semicolon
+intcon (3)
+colon
+ident (writeln)
+lparent
+stringcon (Sisa 3)
+rparent
+semicolon
+intcon (4)
+colon
+ident (writeln)
+lparent
+stringcon (Sisa 4)
+rparent
+semicolon
+endsy
+semicolon
+comment ( Uji charcon satu karakter )
+ident (harakat)
+becomes
+charcon (Z)
+semicolon
+comment ( Komentar bisa juga berisi angka 123 dan simbol +*/ )
+comment ( Komentar paren juga bisa berisi apa saja := <> >= )
+ident (writeln)
+lparent
+ident (harakat)
+rparent
+semicolon
+endsy
+period

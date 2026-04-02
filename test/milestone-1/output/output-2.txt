@@ -1,0 +1,26 @@
+comment ( Input 2: Percabangan — if/then/else dan operator perbandingan & logika )
+comment ( Token dicek: ifsy, thensy, elsesy, eql, neq, gtr, geq, lss, leq,    )
+comment (              notsy, andsy, orsy                                        )
+programsy
+ident (CekNilai)
+semicolon
+varsy
+ident (nilai)
+colon
+ident (integer)
+semicolon
+ident (lulus)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (nilai)
+becomes
+intcon (75)
+semicolon
+ident (lulus)
+becomes
+intcon (0)
+semicolon
+ifsy
+ident (nilai)

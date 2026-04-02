@@ -1,0 +1,30 @@
+{ Input 1: Program dasar — aritmatika dan tipe data primitif }
+{ Token dicek: programsy, varsy, beginsy, endsy, becomes, semicolon,  }
+{              colon, comma, period, plus, minus, times, rdiv,         }
+{              intcon, realcon, charcon, string, ident, lparent,       }
+{              rparent                                                  }
+
+program Kalkulator;
+var
+    x, y    : integer;
+    phi     : real;
+    inisial : char;
+    pesan   : string;
+    hasil   : integer;
+begin
+    x       := 20;
+    y       := 7;
+    phi     := 3.14;
+    inisial := 'A';
+    pesan   := 'Halo Arion';
+
+    hasil := x + y;
+    hasil := x - y;
+    hasil := x * y;
+    phi   := 22 / 7;
+
+    writeln(hasil);
+    writeln(phi);
+    writeln(inisial);
+    writeln(pesan);
+end.

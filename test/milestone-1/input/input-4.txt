@@ -1,0 +1,43 @@
+{ Input 4: Deklarasi lanjutan — const, type, record, array, function, procedure }
+{ Token dicek: constsy, typesy, recordsy, arraysy, functionsy, proceduresy,    }
+{              lbrack, rbrack, ofsy                                              }
+
+program TipeKompleks;
+const
+    MAX := 10;
+    PI  := 3.14159;
+type
+    Titik = record
+        x : real;
+        y : real;
+    end;
+    Daftar = array [1..10] of integer;
+var
+    p    : Titik;
+    data : Daftar;
+    i    : integer;
+
+function Kuadrat(n : integer) : integer;
+begin
+    Kuadrat := n * n;
+end;
+
+procedure IsiArray(var arr : Daftar; n : integer);
+var
+    j : integer;
+begin
+    for j := 1 to n do
+        arr[j] := j * j;
+end;
+
+begin
+    p.x := 3.0;
+    p.y := 4.0;
+
+    IsiArray(data, MAX);
+
+    for i := 1 to MAX do
+        writeln(data[i]);
+
+    writeln(Kuadrat(5));
+end.

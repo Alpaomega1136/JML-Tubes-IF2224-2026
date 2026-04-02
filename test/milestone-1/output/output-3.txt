@@ -1,0 +1,104 @@
+comment ( Input 3: Perulangan — for/to/downto, while/do, repeat/until )
+comment ( Token dicek: forsy, tosy, downtosy, dosy, whilesy,          )
+comment (              repeatsy, untilsy                                )
+programsy
+ident (Perulangan)
+semicolon
+varsy
+ident (i)
+comma
+ident (n)
+comma
+ident (total)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (n)
+becomes
+intcon (5)
+semicolon
+ident (total)
+becomes
+intcon (0)
+semicolon
+comment ( Perulangan for naik: 1 sampai n )
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+ident (n)
+dosy
+ident (total)
+becomes
+ident (total)
+plus
+ident (i)
+semicolon
+ident (writeln)
+lparent
+ident (total)
+rparent
+semicolon
+comment ( Perulangan for turun: n sampai 1 )
+forsy
+ident (i)
+becomes
+ident (n)
+downtosy
+intcon (1)
+dosy
+ident (writeln)
+lparent
+ident (i)
+rparent
+semicolon
+comment ( Perulangan while )
+ident (i)
+becomes
+intcon (1)
+semicolon
+whilesy
+ident (i)
+leq
+ident (n)
+dosy
+beginsy
+ident (writeln)
+lparent
+ident (i)
+rparent
+semicolon
+ident (i)
+becomes
+ident (i)
+plus
+intcon (1)
+semicolon
+endsy
+semicolon
+comment ( Perulangan repeat until )
+ident (i)
+becomes
+intcon (1)
+semicolon
+repeatsy
+ident (writeln)
+lparent
+ident (i)
+rparent
+semicolon
+ident (i)
+becomes
+ident (i)
+plus
+intcon (1)
+semicolon
+untilsy
+ident (i)
+gtr
+ident (n)
+semicolon
+endsy
+period

@@ -1,0 +1,36 @@
+(* Input 3: Perulangan — for/to/downto, while/do, repeat/until *)
+(* Token dicek: forsy, tosy, downtosy, dosy, whilesy,          *)
+(*              repeatsy, untilsy                                *)
+
+program Perulangan;
+var
+    i, n, total : integer;
+begin
+    n     := 5;
+    total := 0;
+
+    (* Perulangan for naik: 1 sampai n *)
+    for i := 1 to n do
+        total := total + i;
+
+    writeln(total);
+
+    (* Perulangan for turun: n sampai 1 *)
+    for i := n downto 1 do
+        writeln(i);
+
+    (* Perulangan while *)
+    i := 1;
+    while i <= n do
+    begin
+        writeln(i);
+        i := i + 1;
+    end;
+
+    (* Perulangan repeat until *)
+    i := 1;
+    repeat
+        writeln(i);
+        i := i + 1;
+    until i > n;
+end.

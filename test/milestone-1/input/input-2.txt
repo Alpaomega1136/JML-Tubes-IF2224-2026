@@ -1,0 +1,38 @@
+{ Input 2: Percabangan — if/then/else dan operator perbandingan & logika }
+{ Token dicek: ifsy, thensy, elsesy, eql, neq, gtr, geq, lss, leq,    }
+{              notsy, andsy, orsy                                        }
+
+program CekNilai;
+var
+    nilai : integer;
+    lulus : integer;
+begin
+    nilai := 75;
+    lulus := 0;
+
+    if nilai == 100 then
+        writeln('Sempurna');
+
+    if nilai <> 0 then
+        writeln('Nilai tidak nol');
+
+    if nilai > 90 then
+        writeln('Sangat Baik')
+    else if nilai >= 75 then
+        writeln('Baik')
+    else if nilai < 50 then
+        writeln('Kurang')
+    else if nilai <= 59 then
+        writeln('Cukup')
+    else
+        writeln('Sedang');
+
+    if NOT (nilai == 0) then
+        lulus := 1;
+
+    if (nilai >= 75) AND (nilai <= 100) then
+        writeln('Lulus');
+
+    if (nilai < 0) OR (nilai > 100) then
+        writeln('Nilai tidak valid');
+end.

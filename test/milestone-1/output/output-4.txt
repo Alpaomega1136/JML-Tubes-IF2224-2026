@@ -1,0 +1,8 @@
+comment ( Input 4: Deklarasi lanjutan — const, type, record, array, function, procedure )
+comment ( Token dicek: constsy, typesy, recordsy, arraysy, functionsy, proceduresy,    )
+comment (              lbrack, rbrack, ofsy                                              )
+programsy
+ident (TipeKompleks)
+semicolon
+constsy
+ident (MAX)
