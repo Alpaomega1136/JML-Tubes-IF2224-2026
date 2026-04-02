@@ -53,7 +53,11 @@ vector<Token> tokenize(const std::string& filename) {
         curr_state = START_STATE;
         curr_value ="";
     };
-    while(file.get(curr_char)) { 
+    while(!file.eof()) {
+        file.get(curr_char);
+        if (file.eof()) {   
+            curr_char = '\n';
+        }
         switch (curr_state){
             case PLUS_STATE: 
                 pushtoken(ListToken::plus);      
@@ -218,6 +222,13 @@ vector<Token> tokenize(const std::string& filename) {
             case COMMENT_ASTERISK_STATE:
                 switch(curr_char) {
                     case ')':
+                        curr_state = COMMENT_END_STATE;
+                        break;
+                    case '*':
+                        curr_value += curr_char;
+                        break;
+                    case '}':
+                        curr_value += '*';
                         curr_state = COMMENT_END_STATE;
                         break;
                     default:
