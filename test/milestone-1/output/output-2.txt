@@ -1,6 +1,4 @@
-comment ( Input 2: Percabangan — if/then/else dan operator perbandingan & logika )
-comment ( Token dicek: ifsy, thensy, elsesy, eql, neq, gtr, geq, lss, leq,    )
-comment (              notsy, andsy, orsy                                        )
+comment ( pengujian 2 - bagian percabangan dan operator logika )
 programsy
 ident (CekNilai)
 semicolon
@@ -22,5 +20,114 @@ ident (lulus)
 becomes
 intcon (0)
 semicolon
+comment ( bandingkan nilai dengan beberapa ambang batas menggunakan operator relasional )
+ifsy
+ident (nilai)
+gtr
+intcon (90)
+thensy
+ident (writeln)
+lparent
+stringcon (Sangat Baik)
+rparent
+elsesy
+ifsy
+ident (nilai)
+geq
+intcon (75)
+thensy
+ident (writeln)
+lparent
+stringcon (Baik)
+rparent
+elsesy
+ifsy
+ident (nilai)
+lss
+intcon (50)
+thensy
+ident (writeln)
+lparent
+stringcon (Kurang)
+rparent
+elsesy
+ifsy
+ident (nilai)
+leq
+intcon (59)
+thensy
+ident (writeln)
+lparent
+stringcon (Cukup)
+rparent
+elsesy
+ident (writeln)
+lparent
+stringcon (Sedang)
+rparent
+semicolon
+comment ( pastikan nilai tidak sama dengan nol sebelum diproses lebih lanjut )
+ifsy
+ident (nilai)
+neq
+intcon (0)
+thensy
+ident (writeln)
+lparent
+stringcon (Nilai tidak nol)
+rparent
+semicolon
+comment ( operator NOT membalik nilai logika dari kondisi yang dibungkus kurung )
+ifsy
+notsy
+lparent
+ident (nilai)
+lss
+intcon (0)
+rparent
+thensy
+ident (lulus)
+becomes
+intcon (1)
+semicolon
+comment ( operator AND mensyaratkan kedua sisi bernilai benar secara bersamaan )
+ifsy
+lparent
+ident (nilai)
+geq
+intcon (75)
+rparent
+andsy
+lparent
+ident (nilai)
+leq
+intcon (100)
+rparent
+thensy
+ident (writeln)
+lparent
+stringcon (Lulus)
+rparent
+semicolon
+comment ( cek apakah nilai di luar rentang yang diperbolehkan )
+ifsy
+lparent
+ident (nilai)
+lss
+intcon (0)
+rparent
+orsy
+lparent
+ident (nilai)
+gtr
+intcon (100)
+rparent
+thensy
+ident (writeln)
+lparent
+stringcon (Nilai tidak valid)
+rparent
+semicolon
+comment ( operator == diuji di sini, perhatikan jika ada bug pada EQL_STATE di lexer )
 ifsy
 ident (nilai)

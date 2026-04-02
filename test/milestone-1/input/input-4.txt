@@ -1,27 +1,27 @@
-{ Input 4: Deklarasi lanjutan — const, type, record, array, function, procedure }
-{ Token dicek: constsy, typesy, recordsy, arraysy, functionsy, proceduresy,    }
-{              lbrack, rbrack, ofsy                                              }
+(* pengujian 4 - bagian deklarasi tipe kompleks, fungsi, dan prosedur *)
 
 program TipeKompleks;
 const
     MAX := 10;
     PI  := 3.14159;
 type
-    Titik = record
+    Titik : record
         x : real;
         y : real;
     end;
-    Daftar = array [1..10] of integer;
+    Daftar : array [1..10] of integer;
 var
     p    : Titik;
     data : Daftar;
     i    : integer;
 
+{ fungsi ini menerima satu bilangan bulat dan mengembalikan kuadratnya }
 function Kuadrat(n : integer) : integer;
 begin
     Kuadrat := n * n;
 end;
 
+(* prosedur ini mengisi array dengan nilai kuadrat dari indeksnya *)
 procedure IsiArray(var arr : Daftar; n : integer);
 var
     j : integer;
@@ -31,9 +31,11 @@ begin
 end;
 
 begin
+    { isi koordinat titik dengan nilai real }
     p.x := 3.0;
     p.y := 4.0;
 
+    (* panggil prosedur untuk mengisi data, lalu tampilkan hasilnya *)
     IsiArray(data, MAX);
 
     for i := 1 to MAX do

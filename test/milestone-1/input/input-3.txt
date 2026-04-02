@@ -1,6 +1,4 @@
-(* Input 3: Perulangan — for/to/downto, while/do, repeat/until *)
-(* Token dicek: forsy, tosy, downtosy, dosy, whilesy,          *)
-(*              repeatsy, untilsy                                *)
+{pengujian 3 - bagian perulangan dengan for, while, dan repeat}
 
 program Perulangan;
 var
@@ -9,17 +7,17 @@ begin
     n     := 5;
     total := 0;
 
-    (* Perulangan for naik: 1 sampai n *)
+    { jumlahkan angka 1 sampai n menggunakan perulangan for naik }
     for i := 1 to n do
         total := total + i;
 
     writeln(total);
 
-    (* Perulangan for turun: n sampai 1 *)
+    (* cetak angka dari n turun ke 1 menggunakan for downto *)
     for i := n downto 1 do
         writeln(i);
 
-    (* Perulangan while *)
+    { perulangan while akan terus berjalan selama kondisinya benar }
     i := 1;
     while i <= n do
     begin
@@ -27,7 +25,7 @@ begin
         i := i + 1;
     end;
 
-    (* Perulangan repeat until *)
+    (* repeat dijalankan minimal satu kali sebelum kondisi until diperiksa }
     i := 1;
     repeat
         writeln(i);

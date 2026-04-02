@@ -1,14 +1,4 @@
-comment ( Input 5: Case statement, operator div/mod, dan gabungan komentar )
-comment ( Token dicek: casesy, ofsy, idiv, imod                            )
-comment ( Komentar brace { )
-ident (dan)
-ident (paren)
-comment ( )
-ident (keduanya)
-ident (muncul)
-ident (di)
-ident (sini)
-unknown (})
+comment (pengujian 5 - bagian case, operator div dan mod, serta variasi komentar)
 programsy
 ident (KasusLengkap)
 semicolon
@@ -34,14 +24,14 @@ ident (angka)
 becomes
 intcon (17)
 semicolon
-comment ( Uji operator div integer )
+comment ( bagi integer: 17 dibagi 5 hasilnya 3, bukan 3.4 )
 ident (bagi)
 becomes
 ident (angka)
 div
 intcon (5)
 semicolon
-comment ( Uji operator modulo )
+comment ( sisa bagi: 17 mod 5 hasilnya 2 karena 5 masuk 3 kali dengan sisa 2 )
 ident (sisa)
 becomes
 ident (angka)
@@ -58,7 +48,7 @@ lparent
 ident (sisa)
 rparent
 semicolon
-comment ( Uji case of )
+comment ( gunakan case of untuk memeriksa nilai sisa pembagian satu per satu )
 casesy
 ident (sisa)
 ofsy
@@ -99,13 +89,11 @@ rparent
 semicolon
 endsy
 semicolon
-comment ( Uji charcon satu karakter )
+comment ( simpan satu karakter huruf ke dalam variabel bertipe char )
 ident (harakat)
 becomes
 charcon (Z)
 semicolon
-comment ( Komentar bisa juga berisi angka 123 dan simbol +*/ )
-comment ( Komentar paren juga bisa berisi apa saja := <> >= )
 ident (writeln)
 lparent
 ident (harakat)

@@ -1,6 +1,4 @@
-comment ( Input 3: Perulangan — for/to/downto, while/do, repeat/until )
-comment ( Token dicek: forsy, tosy, downtosy, dosy, whilesy,          )
-comment (              repeatsy, untilsy                                )
+comment (pengujian 3 - bagian perulangan dengan for, while, dan repeat)
 programsy
 ident (Perulangan)
 semicolon
@@ -22,7 +20,7 @@ ident (total)
 becomes
 intcon (0)
 semicolon
-comment ( Perulangan for naik: 1 sampai n )
+comment ( jumlahkan angka 1 sampai n menggunakan perulangan for naik )
 forsy
 ident (i)
 becomes
@@ -41,7 +39,7 @@ lparent
 ident (total)
 rparent
 semicolon
-comment ( Perulangan for turun: n sampai 1 )
+comment ( cetak angka dari n turun ke 1 menggunakan for downto )
 forsy
 ident (i)
 becomes
@@ -54,7 +52,7 @@ lparent
 ident (i)
 rparent
 semicolon
-comment ( Perulangan while )
+comment ( perulangan while akan terus berjalan selama kondisinya benar )
 ident (i)
 becomes
 intcon (1)
@@ -78,7 +76,7 @@ intcon (1)
 semicolon
 endsy
 semicolon
-comment ( Perulangan repeat until )
+comment ( repeat dijalankan minimal satu kali sebelum kondisi until diperiksa )
 ident (i)
 becomes
 intcon (1)

@@ -1,6 +1,4 @@
-{ Input 2: Percabangan — if/then/else dan operator perbandingan & logika }
-{ Token dicek: ifsy, thensy, elsesy, eql, neq, gtr, geq, lss, leq,    }
-{              notsy, andsy, orsy                                        }
+(* pengujian 2 - bagian percabangan dan operator logika *)
 
 program CekNilai;
 var
@@ -10,12 +8,7 @@ begin
     nilai := 75;
     lulus := 0;
 
-    if nilai == 100 then
-        writeln('Sempurna');
-
-    if nilai <> 0 then
-        writeln('Nilai tidak nol');
-
+    { bandingkan nilai dengan beberapa ambang batas menggunakan operator relasional }
     if nilai > 90 then
         writeln('Sangat Baik')
     else if nilai >= 75 then
@@ -27,12 +20,23 @@ begin
     else
         writeln('Sedang');
 
-    if NOT (nilai == 0) then
+    (* pastikan nilai tidak sama dengan nol sebelum diproses lebih lanjut *)
+    if nilai <> 0 then
+        writeln('Nilai tidak nol');
+
+    { operator NOT membalik nilai logika dari kondisi yang dibungkus kurung }
+    if NOT (nilai < 0) then
         lulus := 1;
 
+    (* operator AND mensyaratkan kedua sisi bernilai benar secara bersamaan *)
     if (nilai >= 75) AND (nilai <= 100) then
         writeln('Lulus');
 
+    { cek apakah nilai di luar rentang yang diperbolehkan }
     if (nilai < 0) OR (nilai > 100) then
         writeln('Nilai tidak valid');
+
+    (* operator == diuji di sini, perhatikan jika ada bug pada EQL_STATE di lexer *)
+    if nilai == 75 then
+        writeln('Tepat 75');
 end.

@@ -1,8 +1,157 @@
-comment ( Input 4: Deklarasi lanjutan — const, type, record, array, function, procedure )
-comment ( Token dicek: constsy, typesy, recordsy, arraysy, functionsy, proceduresy,    )
-comment (              lbrack, rbrack, ofsy                                              )
+comment ( pengujian 4 - bagian deklarasi tipe kompleks, fungsi, dan prosedur )
 programsy
 ident (TipeKompleks)
 semicolon
 constsy
 ident (MAX)
+becomes
+intcon (10)
+semicolon
+ident (PI)
+becomes
+realcon (3.14159)
+semicolon
+typesy
+ident (Titik)
+colon
+recordsy
+ident (x)
+colon
+ident (real)
+semicolon
+ident (y)
+colon
+ident (real)
+semicolon
+endsy
+semicolon
+ident (Daftar)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (10)
+rbrack
+ofsy
+ident (integer)
+semicolon
+varsy
+ident (p)
+colon
+ident (Titik)
+semicolon
+ident (data)
+colon
+ident (Daftar)
+semicolon
+ident (i)
+colon
+ident (integer)
+semicolon
+comment ( fungsi ini menerima satu bilangan bulat dan mengembalikan kuadratnya )
+functionsy
+ident (Kuadrat)
+lparent
+ident (n)
+colon
+ident (integer)
+rparent
+colon
+ident (integer)
+semicolon
+beginsy
+ident (Kuadrat)
+becomes
+ident (n)
+times
+ident (n)
+semicolon
+endsy
+semicolon
+comment ( prosedur ini mengisi array dengan nilai kuadrat dari indeksnya )
+proceduresy
+ident (IsiArray)
+lparent
+varsy
+ident (arr)
+colon
+ident (Daftar)
+semicolon
+ident (n)
+colon
+ident (integer)
+rparent
+semicolon
+varsy
+ident (j)
+colon
+ident (integer)
+semicolon
+beginsy
+forsy
+ident (j)
+becomes
+intcon (1)
+tosy
+ident (n)
+dosy
+ident (arr)
+lbrack
+ident (j)
+rbrack
+becomes
+ident (j)
+times
+ident (j)
+semicolon
+endsy
+semicolon
+beginsy
+comment ( isi koordinat titik dengan nilai real )
+ident (p)
+period
+ident (x)
+becomes
+realcon (3.0)
+semicolon
+ident (p)
+period
+ident (y)
+becomes
+realcon (4.0)
+semicolon
+comment ( panggil prosedur untuk mengisi data, lalu tampilkan hasilnya )
+ident (IsiArray)
+lparent
+ident (data)
+comma
+ident (MAX)
+rparent
+semicolon
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+ident (MAX)
+dosy
+ident (writeln)
+lparent
+ident (data)
+lbrack
+ident (i)
+rbrack
+rparent
+semicolon
+ident (writeln)
+lparent
+ident (Kuadrat)
+lparent
+intcon (5)
+rparent
+rparent
+semicolon
+endsy
+period

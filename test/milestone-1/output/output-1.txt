@@ -1,8 +1,4 @@
-comment ( Input 1: Program dasar — aritmatika dan tipe data primitif )
-comment ( Token dicek: programsy, varsy, beginsy, endsy, becomes, semicolon,  )
-comment (              colon, comma, period, plus, minus, times, rdiv,         )
-comment (              intcon, realcon, charcon, string, ident, lparent,       )
-comment (              rparent                                                  )
+comment (pengujian 1 - bagian tipe data primitif dan operator aritmatika)
 programsy
 ident (Kalkulator)
 semicolon
@@ -30,6 +26,7 @@ colon
 ident (integer)
 semicolon
 beginsy
+comment ( isi nilai awal untuk setiap variabel )
 ident (x)
 becomes
 intcon (20)
@@ -50,6 +47,7 @@ ident (pesan)
 becomes
 stringcon (Halo Arion)
 semicolon
+comment ( hitung hasil penjumlahan, pengurangan, dan perkalian )
 ident (hasil)
 becomes
 ident (x)
@@ -68,12 +66,14 @@ ident (x)
 times
 ident (y)
 semicolon
+comment ( pembagian real: 22 dibagi 7 mendekati nilai phi )
 ident (phi)
 becomes
 intcon (22)
 rdiv
 intcon (7)
 semicolon
+comment ( tampilkan semua hasil ke layar )
 ident (writeln)
 lparent
 ident (hasil)
