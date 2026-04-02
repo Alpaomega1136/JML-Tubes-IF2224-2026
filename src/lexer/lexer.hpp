@@ -10,14 +10,14 @@ using namespace std;
 
 enum State {
     START_STATE,
-    IDENT_STATE,      // membaca identifier/keyword
-    COMMENT_STATE,   // membaca '{' → komentar   
+    IDENT_STATE,
+    COMMENT_STATE,
     COMMENT_ASTERISK_STATE,
     COMMENT_END_STATE,
 
-    INT_STATE,        // membaca angka integer
-    INT_PERIOD_STATE,  // membaca angka integer lalu .
-    REAL_STATE,       // membaca angka riil (setelah titik)
+    INT_STATE,
+    INT_PERIOD_STATE,
+    REAL_STATE,
 
     START_QUOTE_STATE,
     STRING_ONGOING_STATE,
@@ -46,7 +46,6 @@ enum State {
     EQL_STATE,
     GTR_STATE,
     GEQ_STATE,
-
 
     A_STATE,
     AN_STATE,
@@ -152,8 +151,6 @@ enum State {
     UNKNOWN2_STATE
 };
 
-// Fungsi utama yanh berfungsi untuk mengubah isi file.txt menjadi list of token
 vector<Token> tokenize(const std::string& filename);
 
 #endif
-
