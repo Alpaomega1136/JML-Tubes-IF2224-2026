@@ -4,14 +4,25 @@ Parser::Parser(const std::vector<Token>& tokens) : tokens(Parser::cleanCommentTo
 
 // Helper functions
 Token Parser::currentToken() const {
-    if (pos < tokens.size()) {
+    if ((size_t)pos < tokens.size()) {
         return tokens[pos];
     }
     throw std::runtime_error("Unexpected end of input");
 }
 
 bool Parser::check(ListToken type) const {
-    return pos < tokens.size() && tokens[pos].type == type;;
+    return (size_t)pos < tokens.size() && tokens[pos].type == type;
+}
+
+Token Parser::peekToken(int offset) const {
+    if ((size_t)(pos + offset) < tokens.size()) {
+        return tokens[pos + offset];
+    }
+    throw std::runtime_error("Peek beyond end of input");
+}
+
+bool Parser::checkNext(ListToken type) const {
+    return (size_t)(pos + 1) < tokens.size() && tokens[pos + 1].type == type;
 }
 
 TreeParser* Parser::match(ListToken expected) {
@@ -45,6 +56,7 @@ TreeParser* Parser::Program() {
         node->addChild(Parser::ProgramHeader());
         node->addChild(Parser::DeclarationPart());
         node->addChild(Parser::CompoundStatement());
+        node->addChild(Parser::match(period));
         return node;
     } catch (const std::runtime_error& e) {
         throw std::runtime_error(std::string("Parsing error: ") + e.what());
@@ -58,7 +70,6 @@ TreeParser* Parser::ProgramHeader() {
         node->addChild(Parser::match(programsy));
         node->addChild(Parser::match(ident));
         node->addChild(Parser::match(semicolon));
-        node->addChild(Parser::match(period));
         return node;
     }
     catch (const std::runtime_error& e) {
@@ -70,29 +81,25 @@ TreeParser* Parser::ProgramHeader() {
 TreeParser* Parser::DeclarationPart() {
     TreeParser* node = new TreeParser("<DeclarationPart>");
     try{
-        bool ConstDecl = false, TypeDecl = false, VarDecl = false, SubprogramDecl = false;
+        bool TypeDecl = false, VarDecl = false, SubprogramDecl = false;
         while(Parser::check(constsy) || Parser::check(typesy) || Parser::check(varsy) || Parser::check(proceduresy)) {
             if(Parser::check(constsy) && !TypeDecl && !VarDecl && !SubprogramDecl) {
                 node->addChild(Parser::ConstDeclaration());
-                ConstDecl = true;
             }
             else if(Parser::check(typesy) && !VarDecl && !SubprogramDecl) {
                 node->addChild(Parser::TypeDeclaration());
                 TypeDecl = true;
-                ConstDecl = true;
             }
             else if(Parser::check(varsy) && !SubprogramDecl) {
                 node->addChild(Parser::VarDeclaration());
                 VarDecl = true;
                 TypeDecl = true;
-                ConstDecl = true;
             }
             else if(Parser::check(proceduresy)) {
                 node->addChild(Parser::SubprogramDeclaration());
                 SubprogramDecl = true;
                 VarDecl = true;
                 TypeDecl = true;
-                ConstDecl = true;
             }
             else {
                 throw std::runtime_error("Invalid declaration order");
@@ -190,7 +197,7 @@ TreeParser* Parser::Type() {
             // enumerated diawali '('
             node->addChild(Parser::Enumerated());
         } else if (Parser::check(ident)) {
-            if ((size_t)(pos + 1) < tokens.size() && tokens[pos + 1].type == period) {
+            if (Parser::checkNext(period)) {
                 node->addChild(Parser::Range());
             } else {
                 node->addChild(Parser::match(ident));
@@ -212,7 +219,7 @@ TreeParser* Parser::ArrayType() {
     try {
         node->addChild(Parser::match(arraysy));
         node->addChild(Parser::match(lbrack));
-        if (Parser::check(ident) && (size_t)(pos + 1) < tokens.size() && tokens[pos + 1].type == rbrack) {
+        if (Parser::check(ident) && Parser::checkNext(rbrack)) {
             node->addChild(Parser::match(ident));
         } else {
             node->addChild(Parser::Range());

@@ -91,9 +91,6 @@ private:
     TreeParser* AdditiveOperator();
     TreeParser* MultiplicativeOperator();
 
-    // ============== Period ==============
-    TreeParser* Period();
-
 public:
     Parser(const std::vector<Token>& tokens);
 
