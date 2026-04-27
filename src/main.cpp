@@ -2,6 +2,7 @@
 #include <fstream>
 #include "lexer/lexer.hpp"
 #include "lexer/token.hpp"
+#include "parser/parser.hpp"
 
 using namespace std;
 
@@ -15,11 +16,10 @@ int main(int argc, char* argv[]){
     string outputFile = argv[2];
 
     vector<Token> tokens = tokenize(inputFile);
-    ofstream out(outputFile);
-    for (const Token& t : tokens) {
-        out << t.tokenTypeToString() << "\n";
-    }
     std::cout << "Tokenisasi selesai!" << std::endl;
+    Parser parser(tokens);
+    parser.parse();
+    std::cout << "Parsing selesai!" << std::endl;
     return 0;
 }
 
