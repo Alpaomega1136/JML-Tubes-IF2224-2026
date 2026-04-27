@@ -82,7 +82,7 @@ TreeParser* Parser::DeclarationPart() {
     TreeParser* node = new TreeParser("<DeclarationPart>");
     try{
         bool TypeDecl = false, VarDecl = false, SubprogramDecl = false;
-        while(Parser::check(constsy) || Parser::check(typesy) || Parser::check(varsy) || Parser::check(proceduresy)) {
+        while(Parser::check(constsy) || Parser::check(typesy) || Parser::check(varsy) || Parser::check(proceduresy) || Parser::check(functionsy)) {
             if(Parser::check(constsy) && !TypeDecl && !VarDecl && !SubprogramDecl) {
                 node->addChild(Parser::ConstDeclaration());
             }
@@ -95,7 +95,7 @@ TreeParser* Parser::DeclarationPart() {
                 VarDecl = true;
                 TypeDecl = true;
             }
-            else if(Parser::check(proceduresy)) {
+            else if(Parser::check(proceduresy) || Parser::check(functionsy)) {
                 node->addChild(Parser::SubprogramDeclaration());
                 SubprogramDecl = true;
                 VarDecl = true;
@@ -368,4 +368,94 @@ TreeParser* Parser::SubprogramDeclaration() {
     }
 }
 
+// <procedure-declaration> -> proceduresy ident (formal-parameter-list)? semicolon block semicolon
+TreeParser* Parser::ProcedureDeclaration() {
+    TreeParser* node = new TreeParser("<ProcedureDeclaration>");
+    try {
+        node->addChild(Parser::match(proceduresy));
+        node->addChild(Parser::match(ident));
+        if (Parser::check(lparent)) {
+            node->addChild(Parser::FormalParameterList());
+        }
+        node->addChild(Parser::match(semicolon));
+        node->addChild(Parser::Block());
+        node->addChild(Parser::match(semicolon));
+        return node;
+    }
+    catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Parsing error in ProcedureDeclaration: ") + e.what());
+    }
+}
 
+// <function-declaration> -> functionsy ident (formal-parameter-list)? colon ident semicolon block semicolon
+TreeParser* Parser::FunctionDeclaration() {
+    TreeParser* node = new TreeParser("<FunctionDeclaration>");
+    try {
+        node->addChild(Parser::match(functionsy));
+        node->addChild(Parser::match(ident));
+        if (Parser::check(lparent)) {
+            node->addChild(Parser::FormalParameterList());
+        }
+        node->addChild(Parser::match(colon));
+        node->addChild(Parser::match(ident));
+        node->addChild(Parser::match(semicolon));
+        node->addChild(Parser::Block());
+        node->addChild(Parser::match(semicolon));
+        return node;
+    }
+    catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Parsing error in FunctionDeclaration: ") + e.what());
+    }
+}
+
+// <block> -> declaration-part compound-statement
+TreeParser* Parser::Block() {
+    TreeParser* node = new TreeParser("<Block>");
+    try {
+        node->addChild(Parser::DeclarationPart());
+        node->addChild(Parser::CompoundStatement());
+        return node;
+    }
+    catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Parsing error in Block: ") + e.what());
+    }
+}
+
+// <formal-parameter-list> -> lparent parameter-group (semicolon parameter-group)* rparent
+TreeParser* Parser::FormalParameterList() {
+    TreeParser* node = new TreeParser("<FormalParameterList>");
+    try {
+        node->addChild(Parser::match(lparent));
+        node->addChild(Parser::ParameterGroup());
+        while (Parser::check(semicolon)) {
+            node->addChild(Parser::match(semicolon));
+            node->addChild(Parser::ParameterGroup());
+        }
+        node->addChild(Parser::match(rparent));
+        return node;
+    }
+    catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Parsing error in FormalParameterList: ") + e.what());
+    }
+}
+
+// <parameter-group> -> identifier-list colon (ident | array-type)
+TreeParser* Parser::ParameterGroup() {
+    TreeParser* node = new TreeParser("<ParameterGroup>");
+    try {
+        if (Parser::check(varsy)) {
+            node->addChild(Parser::match(varsy));
+        }
+        node->addChild(Parser::IdentifierList());
+        node->addChild(Parser::match(colon));
+        if (Parser::check(arraysy)) {
+            node->addChild(Parser::ArrayType());
+        } else {
+            node->addChild(Parser::match(ident));
+        }
+        return node;
+    }
+    catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Parsing error in ParameterGroup: ") + e.what());
+    }
+}
