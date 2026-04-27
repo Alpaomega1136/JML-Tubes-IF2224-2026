@@ -19,8 +19,9 @@ bool isDigit(char c) {
 
 bool isDelimiter(char c) {
     switch(c) {
-        case ' ': 
+        case ' ':
         case '\n':
+        case '\t':
         case '+': 
         case '-': 
         case '*':
@@ -48,6 +49,8 @@ vector<Token> tokenize(const std::string& filename) {
     State curr_state = START_STATE;
     std::string curr_value = "";
     vector<Token> tokens;
+    bool prev_was_separator = true;
+    bool period_at_chunk_start = false;
     auto pushtoken = [&](ListToken type){
         tokens.push_back(Token(type, curr_value));
         curr_state = START_STATE;
@@ -55,7 +58,7 @@ vector<Token> tokenize(const std::string& filename) {
     };
     while(!file.eof()) {
         file.get(curr_char);
-        if (file.eof()) {   
+        if (file.eof()) {
             curr_char = '\n';
         }
         switch (curr_state){
@@ -71,14 +74,13 @@ vector<Token> tokenize(const std::string& filename) {
             case RDIV_STATE: 
                 pushtoken(rdiv);      
                 break;
-            case SEMI_EQL_STATE: 
+            case EQL_STATE:
                 if (curr_char == '=') {
                     curr_value += curr_char;
-                    curr_state = EQL_STATE;
                     pushtoken(eql);
-                    continue; 
+                    continue;
                 }
-                curr_state = UNKNOWN2_STATE; //untuk kasus ini, menurutku di switch ini ditambah case UNKNOWN2_STATE dibawah case ini, terus breaknya dihapus. UNKNOWN2_STATE belum dibuat 
+                curr_state = UNKNOWN2_STATE;
                 break;
             case COMMA_STATE: 
                 pushtoken(comma);     
@@ -94,7 +96,13 @@ vector<Token> tokenize(const std::string& filename) {
                 }
                 pushtoken(colon); 
                 break;
-            case PERIOD_STATE: 
+            case PERIOD_STATE:
+                if (isDigit(curr_char) && period_at_chunk_start) {
+                    curr_value += curr_char;
+                    curr_state = UNKNOWN2_STATE;
+                    prev_was_separator = false;
+                    continue;
+                }
                 pushtoken(period);
                 break;
             case LPARENT_STATE: 
@@ -179,6 +187,7 @@ vector<Token> tokenize(const std::string& filename) {
                     case '\n':
                         curr_value = '\'' + curr_value;
                         pushtoken(unknown);
+                        break;
                     default:
                         curr_value += curr_char;
                         break;
@@ -270,7 +279,7 @@ vector<Token> tokenize(const std::string& filename) {
                     pushtoken(realcon);
                 } else {
                     curr_state = UNKNOWN_STATE;
-                    curr_value += curr_state;
+                    curr_value += curr_char;
                 }
                 break;
             case UNKNOWN_STATE:
@@ -1651,10 +1660,9 @@ vector<Token> tokenize(const std::string& filename) {
                     break;
                 }
             case UNKNOWN2_STATE:
-                if (isDelimiter(curr_char) || isalnum(curr_char)) {
+                if (curr_char == ' ' || curr_char == '\n' || curr_char == '\t') {
                     pushtoken(unknown);
-                }
-                else {
+                } else {
                     curr_value += curr_char;
                 }
                 break;
@@ -1672,7 +1680,7 @@ vector<Token> tokenize(const std::string& filename) {
                 case ',': curr_state = COMMA_STATE;     curr_value += curr_char;    ;break;
                 case ';': curr_state = SEMICOLON_STATE; curr_value += curr_char;    ;break;
                 case ':': curr_state = COLON_STATE;     curr_value += curr_char;    ;break;
-                case '.': curr_state = PERIOD_STATE;    curr_value += curr_char;    ;break;
+                case '.': curr_state = PERIOD_STATE;    curr_value += curr_char;    period_at_chunk_start = prev_was_separator; break;
                 case '(': curr_state = LPARENT_STATE;   ;break;
                 case ')': curr_state = RPARENT_STATE;   curr_value += curr_char;    ;break;
                 case '[': curr_state = LBRACK_STATE;    curr_value += curr_char;    ;break;
@@ -1717,6 +1725,7 @@ vector<Token> tokenize(const std::string& filename) {
                     break;
             }
         }
+        prev_was_separator = (curr_char == ' ' || curr_char == '\n' || curr_char == '\t');
     }
     return tokens;
 }

@@ -1,0 +1,34 @@
+{pengujian 3 - bagian perulangan dengan for, while, dan repeat}
+
+program Perulangan;
+var
+    i, n, total : integer;
+begin
+    n     := 5;
+    total := 0;
+
+    { jumlahkan angka 1 sampai n menggunakan perulangan for naik }
+    for i := 1 to n do
+        total := total + i;
+
+    writeln(total);
+
+    (* cetak angka dari n turun ke 1 menggunakan for downto *)
+    for i := n downto 1 do
+        writeln(i);
+
+    { perulangan while akan terus berjalan selama kondisinya benar }
+    i := 1;
+    while i <= n do
+    begin
+        writeln(i);
+        i := i + 1;
+    end;
+
+    (* repeat dijalankan minimal satu kali sebelum kondisi until diperiksa }
+    i := 1;
+    repeat
+        writeln(i);
+        i := i + 1;
+    until i > n;
+end.
