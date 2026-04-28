@@ -1,0 +1,8 @@
+{ pengujian 6 - error parsing karena titik koma setelah header program hilang }
+
+program ErrorParsing
+var
+    x : integer;
+begin
+    x := 10;
+end.

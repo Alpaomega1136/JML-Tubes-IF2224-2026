@@ -79,6 +79,7 @@ private:
     TreeParser* ForStatement();
     TreeParser* ProcedureFunctionCall();
     TreeParser* ParameterList();
+    TreeParser* Variable();
 
     // expression
     TreeParser* Expression();
@@ -95,4 +96,6 @@ public:
     Parser(const std::vector<Token>& tokens);
 
     TreeParser* parse();
+
+    void printParseTree(TreeParser* node, const std::string& path) const;
 };

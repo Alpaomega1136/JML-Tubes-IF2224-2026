@@ -1,4 +1,148 @@
 #include "parser/parser.hpp"
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <ostream>
+
+static std::string tokenToParseTreeString(const Token& token) {
+    switch (token.type) {
+        case intcon:
+            return "intcon(" + token.value + ")";
+        case realcon:
+            return "realcon(" + token.value + ")";
+        case charcon:
+            return "charcon(" + token.value + ")";
+        case stringcon:
+            return "stringcon(" + token.value + ")";
+        case ident:
+            return "ident(" + token.value + ")";
+        case comment:
+            return "comment(" + token.value + ")";
+        case unknown:
+            return "unknown(" + token.value + ")";
+        case plus: return "plus";
+        case minus: return "minus";
+        case times: return "times";
+        case idiv: return "idiv";
+        case rdiv: return "rdiv";
+        case imod: return "imod";
+        case notsy: return "notsy";
+        case andsy: return "andsy";
+        case orsy: return "orsy";
+        case eql: return "eql";
+        case neq: return "neq";
+        case gtr: return "gtr";
+        case geq: return "geq";
+        case lss: return "lss";
+        case leq: return "leq";
+        case lparent: return "lparent";
+        case rparent: return "rparent";
+        case lbrack: return "lbrack";
+        case rbrack: return "rbrack";
+        case comma: return "comma";
+        case semicolon: return "semicolon";
+        case period: return "period";
+        case colon: return "colon";
+        case becomes: return "becomes";
+        case constsy: return "constsy";
+        case typesy: return "typesy";
+        case varsy: return "varsy";
+        case functionsy: return "functionsy";
+        case proceduresy: return "proceduresy";
+        case arraysy: return "arraysy";
+        case recordsy: return "recordsy";
+        case programsy: return "programsy";
+        case beginsy: return "beginsy";
+        case endsy: return "endsy";
+        case ifsy: return "ifsy";
+        case thensy: return "thensy";
+        case elsesy: return "elsesy";
+        case casesy: return "casesy";
+        case ofsy: return "ofsy";
+        case whilesy: return "whilesy";
+        case dosy: return "dosy";
+        case repeatsy: return "repeatsy";
+        case untilsy: return "untilsy";
+        case forsy: return "forsy";
+        case tosy: return "tosy";
+        case downtosy: return "downtosy";
+    }
+
+    return "";
+}
+
+static std::string tokenToErrorString(ListToken type) {
+    switch (type) {
+        case intcon: return "intcon (integer literal)";
+        case realcon: return "realcon (real literal)";
+        case charcon: return "charcon (character literal)";
+        case stringcon: return "stringcon (string literal)";
+        case plus: return "plus (+)";
+        case minus: return "minus (-)";
+        case times: return "times (*)";
+        case idiv: return "idiv (div)";
+        case rdiv: return "rdiv (/)";
+        case imod: return "imod (mod)";
+        case notsy: return "notsy (not)";
+        case andsy: return "andsy (and)";
+        case orsy: return "orsy (or)";
+        case eql: return "eql (==)";
+        case neq: return "neq (<>)";
+        case gtr: return "gtr (>)";
+        case geq: return "geq (>=)";
+        case lss: return "lss (<)";
+        case leq: return "leq (<=)";
+        case lparent: return "lparent (()";
+        case rparent: return "rparent ())";
+        case lbrack: return "lbrack ([)";
+        case rbrack: return "rbrack (])";
+        case comma: return "comma (,)";
+        case semicolon: return "semicolon (;)";
+        case period: return "period (.)";
+        case colon: return "colon (:)";
+        case becomes: return "becomes (:=)";
+        case constsy: return "constsy (const)";
+        case typesy: return "typesy (type)";
+        case varsy: return "varsy (var)";
+        case functionsy: return "functionsy (function)";
+        case proceduresy: return "proceduresy (procedure)";
+        case arraysy: return "arraysy (array)";
+        case recordsy: return "recordsy (record)";
+        case programsy: return "programsy (program)";
+        case beginsy: return "beginsy (begin)";
+        case endsy: return "endsy (end)";
+        case ifsy: return "ifsy (if)";
+        case thensy: return "thensy (then)";
+        case elsesy: return "elsesy (else)";
+        case casesy: return "casesy (case)";
+        case ofsy: return "ofsy (of)";
+        case whilesy: return "whilesy (while)";
+        case dosy: return "dosy (do)";
+        case repeatsy: return "repeatsy (repeat)";
+        case untilsy: return "untilsy (until)";
+        case forsy: return "forsy (for)";
+        case tosy: return "tosy (to)";
+        case downtosy: return "downtosy (downto)";
+        case ident: return "ident (identifier)";
+        case comment: return "comment";
+        case unknown: return "unknown token";
+    }
+
+    return "unknown token";
+}
+
+static std::string tokenToErrorString(const Token& token) {
+    if (token.type == ident || token.type == intcon || token.type == realcon ||
+        token.type == charcon || token.type == stringcon || token.type == unknown) {
+        return tokenToErrorString(token.type) + " with value '" + token.value + "'";
+    }
+
+    return tokenToErrorString(token.type);
+}
+
+static bool startsWith(const std::string& text, const std::string& prefix) {
+    return text.rfind(prefix, 0) == 0;
+}
 
 Parser::Parser(const std::vector<Token>& tokens) : tokens(Parser::cleanCommentTokens(tokens)), pos(0) {}
 
@@ -7,7 +151,7 @@ Token Parser::currentToken() const {
     if ((size_t)pos < tokens.size()) {
         return tokens[pos];
     }
-    throw std::runtime_error("Unexpected end of input");
+    throw std::runtime_error("unexpected end of input");
 }
 
 bool Parser::check(ListToken type) const {
@@ -18,7 +162,7 @@ Token Parser::peekToken(int offset) const {
     if ((size_t)(pos + offset) < tokens.size()) {
         return tokens[pos + offset];
     }
-    throw std::runtime_error("Peek beyond end of input");
+    throw std::runtime_error("no next token available");
 }
 
 bool Parser::checkNext(ListToken type) const {
@@ -27,11 +171,13 @@ bool Parser::checkNext(ListToken type) const {
 
 TreeParser* Parser::match(ListToken expected) {
     if (Parser::check(expected)) {
-        TreeParser* node = new TreeParser(Parser::currentToken().value);
+        TreeParser* node = new TreeParser(tokenToParseTreeString(Parser::currentToken()));
         pos++;
         return node;
     }
-    throw std::runtime_error("Expected token type " + std::to_string(expected) + " but found " + std::to_string(Parser::currentToken().type));
+
+    std::string foundToken = (size_t)pos < tokens.size() ? tokenToErrorString(tokens[pos]) : "akhir input";
+    throw std::runtime_error("expected " + tokenToErrorString(expected) + ", found " + foundToken);
 }
 
 std::vector<Token> Parser::cleanCommentTokens(const std::vector<Token>& tokens) const {
@@ -59,7 +205,10 @@ TreeParser* Parser::Program() {
         node->addChild(Parser::match(period));
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error: ") + e.what());
+        if (startsWith(e.what(), "Syntax error")) {
+            throw;
+        }
+        throw std::runtime_error(std::string("Syntax error: ") + e.what());
     }
 }
 
@@ -73,7 +222,7 @@ TreeParser* Parser::ProgramHeader() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in ProgramHeader: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in ProgramHeader: ") + e.what());
     }
 }
 
@@ -102,13 +251,13 @@ TreeParser* Parser::DeclarationPart() {
                 TypeDecl = true;
             }
             else {
-                throw std::runtime_error("Invalid declaration order");
+        throw std::runtime_error("invalid declaration order: use const, type, var, then procedure/function");
             }
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in DeclarationPart: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in DeclarationPart: ") + e.what());
     }
 }
 
@@ -120,17 +269,21 @@ TreeParser* Parser::ConstDeclaration() {
             node->addChild(Parser::match(constsy));
             do {
                 node->addChild(Parser::match(ident));
-                node->addChild(Parser::match(eql));
+                if (Parser::check(eql)) {
+                    node->addChild(Parser::match(eql));
+                } else {
+                    node->addChild(Parser::match(becomes));
+                }
                 node->addChild(Parser::Constant());
                 node->addChild(Parser::match(semicolon));
             } while (Parser::check(ident));
         } else {
-            throw std::runtime_error("Expected 'const' keyword");
+            throw std::runtime_error("expected const keyword");
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in ConstDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in ConstDeclaration: ") + e.what());
     }
 }
 
@@ -157,13 +310,13 @@ TreeParser* Parser::Constant() {
             } else if (Parser::check(realcon)) {
                 node->addChild(Parser::match(realcon));
             } else {
-                throw std::runtime_error("Expected ident, intcon, or realcon in constant");
+                throw std::runtime_error("expected identifier, integer literal, or real literal in constant");
             }
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in Constant: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in Constant: ") + e.what());
     }
 }
 
@@ -174,14 +327,18 @@ TreeParser* Parser::TypeDeclaration() {
         node->addChild(Parser::match(typesy));
         do {
             node->addChild(Parser::match(ident));
-            node->addChild(Parser::match(eql));
+            if (Parser::check(eql)) {
+                node->addChild(Parser::match(eql));
+            } else {
+                node->addChild(Parser::match(colon));
+            }
             node->addChild(Parser::Type());
             node->addChild(Parser::match(semicolon));
         } while (Parser::check(ident));
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in TypeDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in TypeDeclaration: ") + e.what());
     }
 }
 
@@ -203,13 +360,13 @@ TreeParser* Parser::Type() {
                 node->addChild(Parser::match(ident));
             }
         } else {
-            // intcon/realcon/charcon/plus/minus -> kemungkinan besar range numerik (mis. 1..10)
+            // intcon/realcon/charcon/plus/minus 
             node->addChild(Parser::Range());
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in Type: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in Type: ") + e.what());
     }
 }
 
@@ -230,7 +387,7 @@ TreeParser* Parser::ArrayType() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in ArrayType: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in ArrayType: ") + e.what());
     }
 }
 
@@ -245,7 +402,7 @@ TreeParser* Parser::Range() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in Range: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in Range: ") + e.what());
     }
 }
 
@@ -263,7 +420,7 @@ TreeParser* Parser::Enumerated() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in Enumerated: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in Enumerated: ") + e.what());
     }
 }
 
@@ -277,12 +434,11 @@ TreeParser* Parser::RecordType() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in RecordType: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in RecordType: ") + e.what());
     }
 }
 
 // <field-list> -> field-part (semicolon field-part)*
-// Catatan: tolerir trailing semicolon sebelum endsy (umum di Pascal-style).
 TreeParser* Parser::FieldList() {
     TreeParser* node = new TreeParser("<FieldList>");
     try {
@@ -292,13 +448,13 @@ TreeParser* Parser::FieldList() {
             if (Parser::check(ident)) {
                 node->addChild(Parser::FieldPart());
             } else {
-                break; // trailing semicolon, keluar loop
+                break;
             }
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in FieldList: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in FieldList: ") + e.what());
     }
 }
 
@@ -312,7 +468,7 @@ TreeParser* Parser::FieldPart() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in FieldPart: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in FieldPart: ") + e.what());
     }
 }
 
@@ -330,7 +486,7 @@ TreeParser* Parser::VarDeclaration() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in VarDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in VarDeclaration: ") + e.what());
     }
 }
 
@@ -346,7 +502,7 @@ TreeParser* Parser::IdentifierList() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in IdentifierList: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in IdentifierList: ") + e.what());
     }
 }
 
@@ -359,12 +515,12 @@ TreeParser* Parser::SubprogramDeclaration() {
         } else if (Parser::check(functionsy)) {
             node->addChild(Parser::FunctionDeclaration());
         } else {
-            throw std::runtime_error("Expected 'procedure' or 'function'");
+            throw std::runtime_error("expected procedure or function keyword");
         }
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in SubprogramDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in SubprogramDeclaration: ") + e.what());
     }
 }
 
@@ -383,7 +539,7 @@ TreeParser* Parser::ProcedureDeclaration() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in ProcedureDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in ProcedureDeclaration: ") + e.what());
     }
 }
 
@@ -404,7 +560,7 @@ TreeParser* Parser::FunctionDeclaration() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in FunctionDeclaration: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in FunctionDeclaration: ") + e.what());
     }
 }
 
@@ -417,7 +573,7 @@ TreeParser* Parser::Block() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in Block: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in Block: ") + e.what());
     }
 }
 
@@ -435,7 +591,7 @@ TreeParser* Parser::FormalParameterList() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in FormalParameterList: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in FormalParameterList: ") + e.what());
     }
 }
 
@@ -456,7 +612,7 @@ TreeParser* Parser::ParameterGroup() {
         return node;
     }
     catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in ParameterGroup: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in ParameterGroup: ") + e.what());
     }
 }
 
@@ -469,7 +625,7 @@ TreeParser* Parser::CompoundStatement() {
         node->addChild(match(endsy));
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <compound-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <compound-statement>: ") + e.what());
     }
 }
 
@@ -484,22 +640,18 @@ TreeParser* Parser::StatementList() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <statement-list>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <statement-list>: ") + e.what());
     }
 }
  
 // <statement> -> assignment-statement | if-statement | case-statement
 //              | while-statement | repeat-statement | for-statement
 //              | procedure/function-call | compound-statement | (empty)
-//
-// Ambiguitas ident:
-//   - Jika ident diikuti ':=' -> assignment
-//   - Jika ident diikuti '(' atau diikuti statement-terminator -> proc/func call
 TreeParser* Parser::Statement() {
     TreeParser* node = new TreeParser("<statement>");
     try {
         if (check(ident)) {
-            if (checkNext(becomes)) {
+            if (checkNext(becomes) || checkNext(period) || checkNext(lbrack)) {
                 node->addChild(AssignmentStatement());
             } else {
                 node->addChild(ProcedureFunctionCall());
@@ -519,7 +671,7 @@ TreeParser* Parser::Statement() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <statement>: ") + e.what());
     }
 }
  
@@ -527,12 +679,12 @@ TreeParser* Parser::Statement() {
 TreeParser* Parser::AssignmentStatement() {
     TreeParser* node = new TreeParser("<assignment-statement>");
     try {
-        node->addChild(match(ident));
+        node->addChild(Variable());
         node->addChild(match(becomes));
         node->addChild(Expression());
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <assignment-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <assignment-statement>: ") + e.what());
     }
 }
  
@@ -550,7 +702,7 @@ TreeParser* Parser::IfStatement() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <if-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <if-statement>: ") + e.what());
     }
 }
  
@@ -565,7 +717,7 @@ TreeParser* Parser::CaseStatement() {
         node->addChild(match(endsy));
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <case-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <case-statement>: ") + e.what());
     }
 }
  
@@ -583,7 +735,6 @@ TreeParser* Parser::CaseBlock() {
         node->addChild(Statement());
  
         while (check(semicolon)) {
-            int savedPos = pos;
             node->addChild(match(semicolon));
             bool hasNextCase = check(ident) || check(intcon) || check(realcon) ||
                                check(charcon) || check(stringcon) ||
@@ -595,7 +746,7 @@ TreeParser* Parser::CaseBlock() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <case-block>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <case-block>: ") + e.what());
     }
 }
  
@@ -609,7 +760,7 @@ TreeParser* Parser::WhileStatement() {
         node->addChild(Statement());
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <while-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <while-statement>: ") + e.what());
     }
 }
  
@@ -623,7 +774,7 @@ TreeParser* Parser::RepeatStatement() {
         node->addChild(Expression());
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <repeat-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <repeat-statement>: ") + e.what());
     }
 }
  
@@ -638,13 +789,13 @@ TreeParser* Parser::ForStatement() {
         node->addChild(Expression());
         if (check(tosy))           node->addChild(match(tosy));
         else if (check(downtosy))  node->addChild(match(downtosy));
-        else throw std::runtime_error("Expected 'to' or 'downto' in <for-statement>");
+        else throw std::runtime_error("expected to or downto keyword in <for-statement>");
         node->addChild(Expression());
         node->addChild(match(dosy));
         node->addChild(Statement());
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <for-statement>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <for-statement>: ") + e.what());
     }
 }
  
@@ -662,7 +813,7 @@ TreeParser* Parser::ProcedureFunctionCall() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <procedure/function-call>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <procedure/function-call>: ") + e.what());
     }
 }
  
@@ -677,7 +828,28 @@ TreeParser* Parser::ParameterList() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <parameter-list>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <parameter-list>: ") + e.what());
+    }
+}
+
+// <variable> -> ident (period ident | lbrack expression rbrack)*
+TreeParser* Parser::Variable() {
+    TreeParser* node = new TreeParser("<variable>");
+    try {
+        node->addChild(match(ident));
+        while ((check(period) && checkNext(ident)) || check(lbrack)) {
+            if (check(period)) {
+                node->addChild(match(period));
+                node->addChild(match(ident));
+            } else {
+                node->addChild(match(lbrack));
+                node->addChild(Expression());
+                node->addChild(match(rbrack));
+            }
+        }
+        return node;
+    } catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Syntax error in <variable>: ") + e.what());
     }
 }
  
@@ -693,7 +865,7 @@ TreeParser* Parser::Expression() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <expression>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <expression>: ") + e.what());
     }
 }
  
@@ -711,7 +883,7 @@ TreeParser* Parser::SimpleExpression() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <simple-expression>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <simple-expression>: ") + e.what());
     }
 }
  
@@ -727,7 +899,7 @@ TreeParser* Parser::Term() {
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <term>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <term>: ") + e.what());
     }
 }
  
@@ -740,7 +912,7 @@ TreeParser* Parser::Factor() {
     try {
         if (check(ident)) {
             if (checkNext(lparent)) node->addChild(ProcedureFunctionCall());
-            else                    node->addChild(match(ident));
+            else                    node->addChild(Variable());
         } else if (check(intcon)) {
             node->addChild(match(intcon));
         } else if (check(realcon)) {
@@ -758,13 +930,12 @@ TreeParser* Parser::Factor() {
             node->addChild(Factor());
         } else {
             throw std::runtime_error(
-                "Syntax error: unexpected token '" +
-                currentToken().tokenTypeToString() +
-                "' in <factor>");
+                "invalid token in <factor>: found " +
+                tokenToErrorString(currentToken()));
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <factor>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <factor>: ") + e.what());
     }
 }
  
@@ -778,10 +949,10 @@ TreeParser* Parser::RelationalOperator() {
         else if (check(geq)) node->addChild(match(geq));
         else if (check(lss)) node->addChild(match(lss));
         else if (check(leq)) node->addChild(match(leq));
-        else throw std::runtime_error("Expected relational operator");
+        else throw std::runtime_error("expected relational operator: ==, <>, >, >=, <, or <=");
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <relational-operator>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <relational-operator>: ") + e.what());
     }
 }
  
@@ -792,10 +963,10 @@ TreeParser* Parser::AdditiveOperator() {
         if      (check(plus))  node->addChild(match(plus));
         else if (check(minus)) node->addChild(match(minus));
         else if (check(orsy))  node->addChild(match(orsy));
-        else throw std::runtime_error("Expected additive operator (+, -, or)");
+        else throw std::runtime_error("expected additive operator: +, -, or or");
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <additive-operator>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <additive-operator>: ") + e.what());
     }
 }
  
@@ -808,9 +979,55 @@ TreeParser* Parser::MultiplicativeOperator() {
         else if (check(idiv))  node->addChild(match(idiv));
         else if (check(imod))  node->addChild(match(imod));
         else if (check(andsy)) node->addChild(match(andsy));
-        else throw std::runtime_error("Expected multiplicative operator (*, /, div, mod, and)");
+        else throw std::runtime_error("expected multiplicative operator: *, /, div, mod, or and");
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Parsing error in <multiplicative-operator>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <multiplicative-operator>: ") + e.what());
     }
+}
+
+static void printParseTreeLine(TreeParser* node, std::ostream& output, const std::string& prefix, bool isLast) {
+    output << prefix;
+    if (isLast) {
+        output << "└── ";
+    } else {
+        output << "├── ";
+    }
+    output << node->data << '\n';
+
+    std::string childPrefix = prefix;
+    if (isLast) {
+        childPrefix += "    ";
+    } else {
+        childPrefix += "│   ";
+    }
+    for (size_t i = 0; i < node->children.size(); ++i) {
+        printParseTreeLine(node->children[i], output, childPrefix, i == node->children.size() - 1);
+    }
+}
+
+static void writeParseTree(std::ostream& output, TreeParser* root) {
+    output << root->data << '\n';
+    for (size_t i = 0; i < root->children.size(); ++i) {
+        printParseTreeLine(root->children[i], output, "", i == root->children.size() - 1);
+    }
+}
+
+void Parser::printParseTree(TreeParser* node, const std::string& path) const {
+    if (node == nullptr) {
+        throw std::runtime_error("empty parse tree");
+    }
+
+    std::filesystem::path outputPath(path);
+    if (outputPath.has_parent_path()) {
+        std::filesystem::create_directories(outputPath.parent_path());
+    }
+
+    std::ofstream file(path);
+    if (!file.is_open()) {
+        throw std::runtime_error("failed to open output file: " + path);
+    }
+
+    writeParseTree(std::cout, node);
+    writeParseTree(file, node);
 }
