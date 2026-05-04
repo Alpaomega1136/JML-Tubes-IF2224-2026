@@ -203,6 +203,9 @@ TreeParser* Parser::Program() {
         node->addChild(Parser::DeclarationPart());
         node->addChild(Parser::CompoundStatement());
         node->addChild(Parser::match(period));
+        if ((size_t)pos < tokens.size()) {
+            throw std::runtime_error("unexpected token after program end: " + tokenToErrorString(tokens[pos]));
+        }
         return node;
     } catch (const std::runtime_error& e) {
         if (startsWith(e.what(), "Syntax error")) {
@@ -391,14 +394,14 @@ TreeParser* Parser::ArrayType() {
     }
 }
 
-// <range> -> expression period period expression
+// <range> -> constant period period constant
 TreeParser* Parser::Range() {
     TreeParser* node = new TreeParser("<Range>");
     try {
-        node->addChild(Parser::Expression());
+        node->addChild(Parser::Constant());
         node->addChild(Parser::match(period));
         node->addChild(Parser::match(period));
-        node->addChild(Parser::Expression());
+        node->addChild(Parser::Constant());
         return node;
     }
     catch (const std::runtime_error& e) {
@@ -832,9 +835,29 @@ TreeParser* Parser::ParameterList() {
     }
 }
 
-// <variable> -> ident (period ident | lbrack expression rbrack)*
+// <variable> -> ident | component-variable
 TreeParser* Parser::Variable() {
     TreeParser* node = new TreeParser("<variable>");
+    try {
+        if ((check(period) && checkNext(ident)) || check(lbrack)) {
+            throw std::runtime_error("variable must start with an identifier");
+        }
+
+        if (check(ident) && (checkNext(period) || checkNext(lbrack))) {
+            node->addChild(ComponentVariable());
+            return node;
+        }
+
+        node->addChild(match(ident));
+        return node;
+    } catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Syntax error in <variable>: ") + e.what());
+    }
+}
+
+// <component-variable> -> ident ((lbrack index-list rbrack) | (period ident))+
+TreeParser* Parser::ComponentVariable() {
+    TreeParser* node = new TreeParser("<component-variable>");
     try {
         node->addChild(match(ident));
         while ((check(period) && checkNext(ident)) || check(lbrack)) {
@@ -843,13 +866,38 @@ TreeParser* Parser::Variable() {
                 node->addChild(match(ident));
             } else {
                 node->addChild(match(lbrack));
-                node->addChild(Expression());
+                node->addChild(IndexList());
                 node->addChild(match(rbrack));
             }
         }
         return node;
     } catch (const std::runtime_error& e) {
-        throw std::runtime_error(std::string("Syntax error in <variable>: ") + e.what());
+        throw std::runtime_error(std::string("Syntax error in <component-variable>: ") + e.what());
+    }
+}
+
+// <index-list> -> (intcon | charcon | ident) (comma index-list)*
+TreeParser* Parser::IndexList() {
+    TreeParser* node = new TreeParser("<index-list>");
+    try {
+        if (check(intcon)) {
+            node->addChild(match(intcon));
+        } else if (check(charcon)) {
+            node->addChild(match(charcon));
+        } else if (check(ident)) {
+            node->addChild(match(ident));
+        } else {
+            throw std::runtime_error("expected integer, character, or identifier in array index");
+        }
+
+        if (check(comma)) {
+            node->addChild(match(comma));
+            node->addChild(IndexList());
+        }
+
+        return node;
+    } catch (const std::runtime_error& e) {
+        throw std::runtime_error(std::string("Syntax error in <index-list>: ") + e.what());
     }
 }
  

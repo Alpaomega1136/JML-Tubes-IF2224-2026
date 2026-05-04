@@ -80,6 +80,8 @@ private:
     TreeParser* ProcedureFunctionCall();
     TreeParser* ParameterList();
     TreeParser* Variable();
+    TreeParser* ComponentVariable();
+    TreeParser* IndexList();
 
     // expression
     TreeParser* Expression();
