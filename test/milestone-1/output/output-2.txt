@@ -131,3 +131,13 @@ semicolon
 comment ( operator == diuji di sini, perhatikan jika ada bug pada EQL_STATE di lexer )
 ifsy
 ident (nilai)
+eql
+intcon (75)
+thensy
+ident (writeln)
+lparent
+stringcon (Tepat 75)
+rparent
+semicolon
+endsy
+period

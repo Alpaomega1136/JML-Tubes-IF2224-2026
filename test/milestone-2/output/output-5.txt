@@ -1,0 +1,223 @@
+<Program>
+├── <ProgramHeader>
+│   ├── programsy
+│   ├── ident(KasusLengkap)
+│   └── semicolon
+├── <DeclarationPart>
+│   └── <VarDeclaration>
+│       ├── varsy
+│       ├── <IdentifierList>
+│       │   └── ident(angka)
+│       ├── colon
+│       ├── <Type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <IdentifierList>
+│       │   └── ident(bagi)
+│       ├── colon
+│       ├── <Type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <IdentifierList>
+│       │   └── ident(sisa)
+│       ├── colon
+│       ├── <Type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <IdentifierList>
+│       │   └── ident(harakat)
+│       ├── colon
+│       ├── <Type>
+│       │   └── ident(char)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <statement>
+│   │   │   └── <assignment-statement>
+│   │   │       ├── <variable>
+│   │   │       │   └── ident(angka)
+│   │   │       ├── becomes
+│   │   │       └── <expression>
+│   │   │           └── <simple-expression>
+│   │   │               └── <term>
+│   │   │                   └── <factor>
+│   │   │                       └── intcon(17)
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <assignment-statement>
+│   │   │       ├── <variable>
+│   │   │       │   └── ident(bagi)
+│   │   │       ├── becomes
+│   │   │       └── <expression>
+│   │   │           └── <simple-expression>
+│   │   │               └── <term>
+│   │   │                   ├── <factor>
+│   │   │                   │   └── <variable>
+│   │   │                   │       └── ident(angka)
+│   │   │                   ├── <multiplicative-operator>
+│   │   │                   │   └── idiv
+│   │   │                   └── <factor>
+│   │   │                       └── intcon(5)
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <assignment-statement>
+│   │   │       ├── <variable>
+│   │   │       │   └── ident(sisa)
+│   │   │       ├── becomes
+│   │   │       └── <expression>
+│   │   │           └── <simple-expression>
+│   │   │               └── <term>
+│   │   │                   ├── <factor>
+│   │   │                   │   └── <variable>
+│   │   │                   │       └── ident(angka)
+│   │   │                   ├── <multiplicative-operator>
+│   │   │                   │   └── imod
+│   │   │                   └── <factor>
+│   │   │                       └── intcon(5)
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <procedure/function-call>
+│   │   │       ├── ident(writeln)
+│   │   │       ├── lparent
+│   │   │       ├── <parameter-list>
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── <variable>
+│   │   │       │                       └── ident(bagi)
+│   │   │       └── rparent
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <procedure/function-call>
+│   │   │       ├── ident(writeln)
+│   │   │       ├── lparent
+│   │   │       ├── <parameter-list>
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── <variable>
+│   │   │       │                       └── ident(sisa)
+│   │   │       └── rparent
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <case-statement>
+│   │   │       ├── casesy
+│   │   │       ├── <expression>
+│   │   │       │   └── <simple-expression>
+│   │   │       │       └── <term>
+│   │   │       │           └── <factor>
+│   │   │       │               └── <variable>
+│   │   │       │                   └── ident(sisa)
+│   │   │       ├── ofsy
+│   │   │       ├── <case-block>
+│   │   │       │   ├── <Constant>
+│   │   │       │   │   └── intcon(0)
+│   │   │       │   ├── colon
+│   │   │       │   ├── <statement>
+│   │   │       │   │   └── <procedure/function-call>
+│   │   │       │   │       ├── ident(writeln)
+│   │   │       │   │       ├── lparent
+│   │   │       │   │       ├── <parameter-list>
+│   │   │       │   │       │   └── <expression>
+│   │   │       │   │       │       └── <simple-expression>
+│   │   │       │   │       │           └── <term>
+│   │   │       │   │       │               └── <factor>
+│   │   │       │   │       │                   └── stringcon(Habis dibagi 5)
+│   │   │       │   │       └── rparent
+│   │   │       │   ├── semicolon
+│   │   │       │   └── <case-block>
+│   │   │       │       ├── <Constant>
+│   │   │       │       │   └── intcon(1)
+│   │   │       │       ├── colon
+│   │   │       │       ├── <statement>
+│   │   │       │       │   └── <procedure/function-call>
+│   │   │       │       │       ├── ident(writeln)
+│   │   │       │       │       ├── lparent
+│   │   │       │       │       ├── <parameter-list>
+│   │   │       │       │       │   └── <expression>
+│   │   │       │       │       │       └── <simple-expression>
+│   │   │       │       │       │           └── <term>
+│   │   │       │       │       │               └── <factor>
+│   │   │       │       │       │                   └── stringcon(Sisa 1)
+│   │   │       │       │       └── rparent
+│   │   │       │       ├── semicolon
+│   │   │       │       └── <case-block>
+│   │   │       │           ├── <Constant>
+│   │   │       │           │   └── intcon(2)
+│   │   │       │           ├── colon
+│   │   │       │           ├── <statement>
+│   │   │       │           │   └── <procedure/function-call>
+│   │   │       │           │       ├── ident(writeln)
+│   │   │       │           │       ├── lparent
+│   │   │       │           │       ├── <parameter-list>
+│   │   │       │           │       │   └── <expression>
+│   │   │       │           │       │       └── <simple-expression>
+│   │   │       │           │       │           └── <term>
+│   │   │       │           │       │               └── <factor>
+│   │   │       │           │       │                   └── stringcon(Sisa 2)
+│   │   │       │           │       └── rparent
+│   │   │       │           ├── semicolon
+│   │   │       │           └── <case-block>
+│   │   │       │               ├── <Constant>
+│   │   │       │               │   └── intcon(3)
+│   │   │       │               ├── colon
+│   │   │       │               ├── <statement>
+│   │   │       │               │   └── <procedure/function-call>
+│   │   │       │               │       ├── ident(writeln)
+│   │   │       │               │       ├── lparent
+│   │   │       │               │       ├── <parameter-list>
+│   │   │       │               │       │   └── <expression>
+│   │   │       │               │       │       └── <simple-expression>
+│   │   │       │               │       │           └── <term>
+│   │   │       │               │       │               └── <factor>
+│   │   │       │               │       │                   └── stringcon(Sisa 3)
+│   │   │       │               │       └── rparent
+│   │   │       │               ├── semicolon
+│   │   │       │               └── <case-block>
+│   │   │       │                   ├── <Constant>
+│   │   │       │                   │   └── intcon(4)
+│   │   │       │                   ├── colon
+│   │   │       │                   ├── <statement>
+│   │   │       │                   │   └── <procedure/function-call>
+│   │   │       │                   │       ├── ident(writeln)
+│   │   │       │                   │       ├── lparent
+│   │   │       │                   │       ├── <parameter-list>
+│   │   │       │                   │       │   └── <expression>
+│   │   │       │                   │       │       └── <simple-expression>
+│   │   │       │                   │       │           └── <term>
+│   │   │       │                   │       │               └── <factor>
+│   │   │       │                   │       │                   └── stringcon(Sisa 4)
+│   │   │       │                   │       └── rparent
+│   │   │       │                   └── semicolon
+│   │   │       └── endsy
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <assignment-statement>
+│   │   │       ├── <variable>
+│   │   │       │   └── ident(harakat)
+│   │   │       ├── becomes
+│   │   │       └── <expression>
+│   │   │           └── <simple-expression>
+│   │   │               └── <term>
+│   │   │                   └── <factor>
+│   │   │                       └── charcon(Z)
+│   │   ├── semicolon
+│   │   ├── <statement>
+│   │   │   └── <procedure/function-call>
+│   │   │       ├── ident(writeln)
+│   │   │       ├── lparent
+│   │   │       ├── <parameter-list>
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── <variable>
+│   │   │       │                       └── ident(harakat)
+│   │   │       └── rparent
+│   │   ├── semicolon
+│   │   └── <statement>
+│   └── endsy
+└── period

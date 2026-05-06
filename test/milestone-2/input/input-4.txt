@@ -1,0 +1,45 @@
+(* pengujian 4 - bagian deklarasi tipe kompleks, fungsi, dan prosedur *)
+
+program TipeKompleks;
+const
+    MAX := 10;
+    PI  := 3.14159;
+type
+    Titik : record
+        x : real;
+        y : real;
+    end;
+    Daftar : array [1..10] of integer;
+var
+    p    : Titik;
+    data : Daftar;
+    i    : integer;
+
+{ fungsi ini menerima satu bilangan bulat dan mengembalikan kuadratnya }
+function Kuadrat(n : integer) : integer;
+begin
+    Kuadrat := n * n;
+end;
+
+(* prosedur ini mengisi array dengan nilai kuadrat dari indeksnya *)
+procedure IsiArray(var arr : Daftar; n : integer);
+var
+    j : integer;
+begin
+    for j := 1 to n do
+        arr[j] := j * j;
+end;
+
+begin
+    { isi koordinat titik dengan nilai real }
+    p.x := 3.0;
+    p.y := 4.0;
+
+    (* panggil prosedur untuk mengisi data, lalu tampilkan hasilnya *)
+    IsiArray(data, MAX);
+
+    for i := 1 to MAX do
+        writeln(data[i]);
+
+    writeln(Kuadrat(5));
+end.
