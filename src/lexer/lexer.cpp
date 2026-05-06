@@ -17,6 +17,15 @@ bool isDigit(char c) {
     return c >= '0' && c <= '9';
 }
 
+bool isWhitespace(char c) {
+    switch(c) {
+        case ' ': 
+        case '\n':
+        case '\t': return true;
+        default: return false;
+    }
+}
+
 bool isDelimiter(char c) {
     switch(c) {
         case ' ': 
@@ -254,13 +263,13 @@ vector<Token> tokenize(const std::string& filename) {
                 }
                 break;
             case INT_PERIOD_STATE:
+                curr_value += '.';
                 if (isDigit(curr_char)) {
                     curr_state = REAL_STATE;
-                    curr_value += '.';
                     curr_value += curr_char;
                 } else {
-                    pushtoken(intcon);
-                    pushtoken(period);
+                    curr_state = UNKNOWN_STATE;
+                    curr_value += curr_char;
                 }
                 break;
             case REAL_STATE:
@@ -274,7 +283,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
                 break;
             case UNKNOWN_STATE:
-                if (isDelimiter(curr_char)) {
+                if (isWhitespace(curr_char)) {
                     pushtoken(unknown);
                 } else {
                     curr_value += curr_char;
