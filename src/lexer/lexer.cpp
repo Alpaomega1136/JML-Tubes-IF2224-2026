@@ -272,13 +272,14 @@ vector<Token> tokenize(const std::string& filename) {
                 }
                 break;
             case INT_PERIOD_STATE:
-                curr_value += '.';
                 if (isDigit(curr_char)) {
                     curr_state = REAL_STATE;
+                    curr_value += '.';
                     curr_value += curr_char;
                 } else {
-                    curr_state = UNKNOWN_STATE;
-                    curr_value += curr_char;
+                    pushtoken(intcon);
+                    curr_value = ".";
+                    pushtoken(period);
                 }
                 break;
             case REAL_STATE:

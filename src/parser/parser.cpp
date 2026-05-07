@@ -198,7 +198,7 @@ TreeParser* Parser::parse() {
 // <Program>
 TreeParser* Parser::Program() {
     try {
-        TreeParser* node = new TreeParser("<Program>");
+        TreeParser* node = new TreeParser("<program>");
         node->addChild(Parser::ProgramHeader());
         node->addChild(Parser::DeclarationPart());
         node->addChild(Parser::CompoundStatement());
@@ -218,7 +218,7 @@ TreeParser* Parser::Program() {
 // <ProgramHeader>
 TreeParser* Parser::ProgramHeader() {
     try{
-        TreeParser* node = new TreeParser("<ProgramHeader>");
+        TreeParser* node = new TreeParser("<program-header>");
         node->addChild(Parser::match(programsy));
         node->addChild(Parser::match(ident));
         node->addChild(Parser::match(semicolon));
@@ -231,7 +231,7 @@ TreeParser* Parser::ProgramHeader() {
 
 // <DeclarationPart>
 TreeParser* Parser::DeclarationPart() {
-    TreeParser* node = new TreeParser("<DeclarationPart>");
+    TreeParser* node = new TreeParser("<declaration-part>");
     try{
         bool TypeDecl = false, VarDecl = false, SubprogramDecl = false;
         while(Parser::check(constsy) || Parser::check(typesy) || Parser::check(varsy) || Parser::check(proceduresy) || Parser::check(functionsy)) {
@@ -266,7 +266,7 @@ TreeParser* Parser::DeclarationPart() {
 
 // <const-declaration> -> constsy (ident eql constant semicolon)+
 TreeParser* Parser::ConstDeclaration() {
-    TreeParser* node = new TreeParser("<ConstDeclaration>");
+    TreeParser* node = new TreeParser("<const-declaration>");
     try{
         if(Parser::check(constsy)){
             node->addChild(Parser::match(constsy));
@@ -292,7 +292,7 @@ TreeParser* Parser::ConstDeclaration() {
 
 // <constant> -> charcon | stringcon | [(plus|minus)? (ident|intcon|realcon)]
 TreeParser* Parser::Constant() {
-    TreeParser* node = new TreeParser("<Constant>");
+    TreeParser* node = new TreeParser("<constant>");
     try {
         if (Parser::check(charcon)) {
             node->addChild(Parser::match(charcon));
@@ -325,7 +325,7 @@ TreeParser* Parser::Constant() {
 
 // <type-declaration> -> typesy (ident eql type semicolon)+
 TreeParser* Parser::TypeDeclaration() {
-    TreeParser* node = new TreeParser("<TypeDeclaration>");
+    TreeParser* node = new TreeParser("<type-declaration>");
     try {
         node->addChild(Parser::match(typesy));
         do {
@@ -347,7 +347,7 @@ TreeParser* Parser::TypeDeclaration() {
 
 // <type> -> ident | array-type | range | enumerated | record-type
 TreeParser* Parser::Type() {
-    TreeParser* node = new TreeParser("<Type>");
+    TreeParser* node = new TreeParser("<type>");
     try {
         if (Parser::check(arraysy)) {
             node->addChild(Parser::ArrayType());
@@ -375,7 +375,7 @@ TreeParser* Parser::Type() {
 
 // <array-type> -> arraysy lbrack (range | ident) rbrack ofsy type
 TreeParser* Parser::ArrayType() {
-    TreeParser* node = new TreeParser("<ArrayType>");
+    TreeParser* node = new TreeParser("<array-type>");
     try {
         node->addChild(Parser::match(arraysy));
         node->addChild(Parser::match(lbrack));
@@ -394,14 +394,14 @@ TreeParser* Parser::ArrayType() {
     }
 }
 
-// <range> -> constant period period constant
+// <range> -> expression period period expression
 TreeParser* Parser::Range() {
-    TreeParser* node = new TreeParser("<Range>");
+    TreeParser* node = new TreeParser("<range>");
     try {
-        node->addChild(Parser::Constant());
+        node->addChild(Parser::Expression());
         node->addChild(Parser::match(period));
         node->addChild(Parser::match(period));
-        node->addChild(Parser::Constant());
+        node->addChild(Parser::Expression());
         return node;
     }
     catch (const std::runtime_error& e) {
@@ -411,7 +411,7 @@ TreeParser* Parser::Range() {
 
 // <enumerated> -> lparent ident (comma ident)* rparent
 TreeParser* Parser::Enumerated() {
-    TreeParser* node = new TreeParser("<Enumerated>");
+    TreeParser* node = new TreeParser("<enumerated>");
     try {
         node->addChild(Parser::match(lparent));
         node->addChild(Parser::match(ident));
@@ -429,7 +429,7 @@ TreeParser* Parser::Enumerated() {
 
 // <record-type> -> recordsy field-list endsy
 TreeParser* Parser::RecordType() {
-    TreeParser* node = new TreeParser("<RecordType>");
+    TreeParser* node = new TreeParser("<record-type>");
     try {
         node->addChild(Parser::match(recordsy));
         node->addChild(Parser::FieldList());
@@ -443,7 +443,7 @@ TreeParser* Parser::RecordType() {
 
 // <field-list> -> field-part (semicolon field-part)*
 TreeParser* Parser::FieldList() {
-    TreeParser* node = new TreeParser("<FieldList>");
+    TreeParser* node = new TreeParser("<field-list>");
     try {
         node->addChild(Parser::FieldPart());
         while (Parser::check(semicolon)) {
@@ -463,7 +463,7 @@ TreeParser* Parser::FieldList() {
 
 // <field-part> -> identifier-list colon type
 TreeParser* Parser::FieldPart() {
-    TreeParser* node = new TreeParser("<FieldPart>");
+    TreeParser* node = new TreeParser("<field-part>");
     try {
         node->addChild(Parser::IdentifierList());
         node->addChild(Parser::match(colon));
@@ -477,7 +477,7 @@ TreeParser* Parser::FieldPart() {
 
 // <var-declaration> -> varsy (identifier-list colon type semicolon)+
 TreeParser* Parser::VarDeclaration() {
-    TreeParser* node = new TreeParser("<VarDeclaration>");
+    TreeParser* node = new TreeParser("<var-declaration>");
     try {
         node->addChild(Parser::match(varsy));
         do {
@@ -495,7 +495,7 @@ TreeParser* Parser::VarDeclaration() {
 
 // <identifier-list> -> ident (comma ident)*
 TreeParser* Parser::IdentifierList() {
-    TreeParser* node = new TreeParser("<IdentifierList>");
+    TreeParser* node = new TreeParser("<identifier-list>");
     try {
         node->addChild(Parser::match(ident));
         while (Parser::check(comma)) {
@@ -511,7 +511,7 @@ TreeParser* Parser::IdentifierList() {
 
 // <subprogram-declaration> -> procedure-declaration | function-declaration
 TreeParser* Parser::SubprogramDeclaration() {
-    TreeParser* node = new TreeParser("<SubprogramDeclaration>");
+    TreeParser* node = new TreeParser("<subprogram-declaration>");
     try {
         if (Parser::check(proceduresy)) {
             node->addChild(Parser::ProcedureDeclaration());
@@ -529,7 +529,7 @@ TreeParser* Parser::SubprogramDeclaration() {
 
 // <procedure-declaration> -> proceduresy ident (formal-parameter-list)? semicolon block semicolon
 TreeParser* Parser::ProcedureDeclaration() {
-    TreeParser* node = new TreeParser("<ProcedureDeclaration>");
+    TreeParser* node = new TreeParser("<procedure-declaration>");
     try {
         node->addChild(Parser::match(proceduresy));
         node->addChild(Parser::match(ident));
@@ -548,7 +548,7 @@ TreeParser* Parser::ProcedureDeclaration() {
 
 // <function-declaration> -> functionsy ident (formal-parameter-list)? colon ident semicolon block semicolon
 TreeParser* Parser::FunctionDeclaration() {
-    TreeParser* node = new TreeParser("<FunctionDeclaration>");
+    TreeParser* node = new TreeParser("<function-declaration>");
     try {
         node->addChild(Parser::match(functionsy));
         node->addChild(Parser::match(ident));
@@ -569,7 +569,7 @@ TreeParser* Parser::FunctionDeclaration() {
 
 // <block> -> declaration-part compound-statement
 TreeParser* Parser::Block() {
-    TreeParser* node = new TreeParser("<Block>");
+    TreeParser* node = new TreeParser("<block>");
     try {
         node->addChild(Parser::DeclarationPart());
         node->addChild(Parser::CompoundStatement());
@@ -582,7 +582,7 @@ TreeParser* Parser::Block() {
 
 // <formal-parameter-list> -> lparent parameter-group (semicolon parameter-group)* rparent
 TreeParser* Parser::FormalParameterList() {
-    TreeParser* node = new TreeParser("<FormalParameterList>");
+    TreeParser* node = new TreeParser("<formal-parameter-list>");
     try {
         node->addChild(Parser::match(lparent));
         node->addChild(Parser::ParameterGroup());
@@ -600,7 +600,7 @@ TreeParser* Parser::FormalParameterList() {
 
 // <parameter-group> -> identifier-list colon (ident | array-type)
 TreeParser* Parser::ParameterGroup() {
-    TreeParser* node = new TreeParser("<ParameterGroup>");
+    TreeParser* node = new TreeParser("<parameter-group>");
     try {
         if (Parser::check(varsy)) {
             node->addChild(Parser::match(varsy));
@@ -835,40 +835,33 @@ TreeParser* Parser::ParameterList() {
     }
 }
 
-// <variable> -> ident | component-variable
+// <variable> -> ident (component-variable)*
 TreeParser* Parser::Variable() {
     TreeParser* node = new TreeParser("<variable>");
     try {
-        if ((check(period) && checkNext(ident)) || check(lbrack)) {
-            throw std::runtime_error("variable must start with an identifier");
-        }
-
-        if (check(ident) && (checkNext(period) || checkNext(lbrack))) {
-            node->addChild(ComponentVariable());
-            return node;
-        }
-
         node->addChild(match(ident));
+        while (check(lbrack) || check(period)) {
+            node->addChild(ComponentVariable());
+        }
         return node;
     } catch (const std::runtime_error& e) {
         throw std::runtime_error(std::string("Syntax error in <variable>: ") + e.what());
     }
 }
 
-// <component-variable> -> ident ((lbrack index-list rbrack) | (period ident))+
+// <component-variable> -> (lbrack index-list rbrack) | (period ident)
 TreeParser* Parser::ComponentVariable() {
     TreeParser* node = new TreeParser("<component-variable>");
     try {
-        node->addChild(match(ident));
-        while ((check(period) && checkNext(ident)) || check(lbrack)) {
-            if (check(period)) {
-                node->addChild(match(period));
-                node->addChild(match(ident));
-            } else {
-                node->addChild(match(lbrack));
-                node->addChild(IndexList());
-                node->addChild(match(rbrack));
-            }
+        if (check(lbrack)) {
+            node->addChild(match(lbrack));
+            node->addChild(IndexList());
+            node->addChild(match(rbrack));
+        } else if (check(period)) {
+            node->addChild(match(period));
+            node->addChild(match(ident));
+        } else {
+            throw std::runtime_error("expected array index or record field access");
         }
         return node;
     } catch (const std::runtime_error& e) {
