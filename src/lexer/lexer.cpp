@@ -276,10 +276,13 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = REAL_STATE;
                     curr_value += '.';
                     curr_value += curr_char;
-                } else {
+                } else if (isDelimiter(curr_char)) {
                     pushtoken(intcon);
-                    curr_value = ".";
                     pushtoken(period);
+                } else {
+                    curr_state = UNKNOWN_STATE;
+                    curr_value += '.';
+                    curr_value += curr_char;
                 }
                 break;
             case REAL_STATE:
