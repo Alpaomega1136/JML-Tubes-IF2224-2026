@@ -46,14 +46,14 @@ Fitur utama program:
 
 ## Cara Instalasi dan Penggunaan Program
 
-### 1. Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/Alpaomega1136/JML-Tubes-IF2224-2026.git
 cd JML-Tubes-IF2224-2026
 ```
 
-### 2. Build Program
+### Build Program
 
 ```bash
 make
@@ -61,7 +61,7 @@ make
 
 Perintah ini akan mengompilasi seluruh source code dan menghasilkan executable bernama `lexer`. Walaupun nama executable masih `lexer`, program menjalankan tahap lexer terlebih dahulu lalu parser.
 
-### 3. Menjalankan Program
+### Menjalankan Program
 
 ```bash
 ./lexer <input_file> <output_file>
@@ -77,16 +77,7 @@ Keterangan:
 - `<input_file>`: file teks berisi source code Arion.
 - `<output_file>`: file teks hasil parse tree atau pesan syntax error.
 
-### 4. Menjalankan Semua Test Milestone 2
-
-```bash
-for f in test/milestone-2/input/input-*.txt; do
-  n=$(basename "$f" .txt | sed 's/input-//')
-  ./lexer "$f" "test/milestone-2/output/output-$n.txt"
-done
-```
-
-### 5. Format Output Milestone 2
+### Format Output Milestone 2
 
 Jika input valid, output berupa parse tree:
 
@@ -105,7 +96,7 @@ Jika input tidak valid, output berupa pesan error:
 Syntax error in ProgramHeader: expected semicolon (;), found varsy (var)
 ```
 
-### 6. Membersihkan Build
+### Membersihkan Build
 
 ```bash
 make clean
