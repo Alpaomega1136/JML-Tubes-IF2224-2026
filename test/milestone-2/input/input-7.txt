@@ -1,0 +1,8 @@
+{ pengujian 7 - error parsing karena titik dua pada deklarasi variabel hilang }
+
+program ErrorDeklarasi;
+var
+    x integer;
+begin
+    x := 10;
+end.

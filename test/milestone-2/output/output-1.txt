@@ -1,41 +1,41 @@
-<Program>
-├── <ProgramHeader>
+<program>
+├── <program-header>
 │   ├── programsy
 │   ├── ident(Kalkulator)
 │   └── semicolon
-├── <DeclarationPart>
-│   └── <VarDeclaration>
+├── <declaration-part>
+│   └── <var-declaration>
 │       ├── varsy
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   ├── ident(x)
 │       │   ├── comma
 │       │   └── ident(y)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(phi)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(real)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(inisial)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(char)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(pesan)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(string)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(hasil)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       └── semicolon
 ├── <compound-statement>

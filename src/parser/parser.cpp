@@ -272,11 +272,7 @@ TreeParser* Parser::ConstDeclaration() {
             node->addChild(Parser::match(constsy));
             do {
                 node->addChild(Parser::match(ident));
-                if (Parser::check(eql)) {
-                    node->addChild(Parser::match(eql));
-                } else {
-                    node->addChild(Parser::match(becomes));
-                }
+                node->addChild(Parser::match(eql));
                 node->addChild(Parser::Constant());
                 node->addChild(Parser::match(semicolon));
             } while (Parser::check(ident));
@@ -330,11 +326,7 @@ TreeParser* Parser::TypeDeclaration() {
         node->addChild(Parser::match(typesy));
         do {
             node->addChild(Parser::match(ident));
-            if (Parser::check(eql)) {
-                node->addChild(Parser::match(eql));
-            } else {
-                node->addChild(Parser::match(colon));
-            }
+            node->addChild(Parser::match(eql));
             node->addChild(Parser::Type());
             node->addChild(Parser::match(semicolon));
         } while (Parser::check(ident));
@@ -602,9 +594,6 @@ TreeParser* Parser::FormalParameterList() {
 TreeParser* Parser::ParameterGroup() {
     TreeParser* node = new TreeParser("<parameter-group>");
     try {
-        if (Parser::check(varsy)) {
-            node->addChild(Parser::match(varsy));
-        }
         node->addChild(Parser::IdentifierList());
         node->addChild(Parser::match(colon));
         if (Parser::check(arraysy)) {

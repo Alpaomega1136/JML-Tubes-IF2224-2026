@@ -2,14 +2,14 @@
 
 program TipeKompleks;
 const
-    MAX := 10;
-    PI  := 3.14159;
+    MAX == 10;
+    PI  == 3.14159;
 type
-    Titik : record
+    Titik == record
         x : real;
         y : real;
     end;
-    Daftar : array [1..10] of integer;
+    Daftar == array [1..10] of integer;
 var
     p    : Titik;
     data : Daftar;
@@ -22,7 +22,7 @@ begin
 end;
 
 (* prosedur ini mengisi array dengan nilai kuadrat dari indeksnya *)
-procedure IsiArray(var arr : Daftar; n : integer);
+procedure IsiArray(arr : Daftar; n : integer);
 var
     j : integer;
 begin

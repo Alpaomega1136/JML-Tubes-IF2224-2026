@@ -1,19 +1,19 @@
-<Program>
-├── <ProgramHeader>
+<program>
+├── <program-header>
 │   ├── programsy
 │   ├── ident(Perulangan)
 │   └── semicolon
-├── <DeclarationPart>
-│   └── <VarDeclaration>
+├── <declaration-part>
+│   └── <var-declaration>
 │       ├── varsy
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   ├── ident(i)
 │       │   ├── comma
 │       │   ├── ident(n)
 │       │   ├── comma
 │       │   └── ident(total)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       └── semicolon
 ├── <compound-statement>

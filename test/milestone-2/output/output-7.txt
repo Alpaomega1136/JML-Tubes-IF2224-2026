@@ -1,0 +1,1 @@
+Syntax error in DeclarationPart: Syntax error in VarDeclaration: expected colon (:), found ident (identifier) with value 'integer'

@@ -1,4 +1,4 @@
-# Arion Compiler — Milestone 1: Lexical Analyzer
+# Arion Compiler
 
 **IF2224 Teori Bahasa Formal dan Otomata**  
 Laboratorium Ilmu Rekayasa dan Komputasi, STEI ITB
@@ -9,36 +9,38 @@ Laboratorium Ilmu Rekayasa dan Komputasi, STEI ITB
 
 **Nama Kelompok:** JML
 
-| Nama Lengkap | NIM |
+| NIM | Nama Lengkap |
 |---|---|
-| Mahatma Brahmana | 13524015 |
-| Benedict Darrel Setiawan | 13524057 |
-| Raymond Jonathan Dwi Putra J | 13524059 |
-| Reynard Anderson Wijaya | 13524111 |
+| 13524015 | Mahatma Brahmana |
+| 13524057 | Benedict Darrel Setiawan |
+| 13524059 | Raymond Jonathan Dwi Putra J |
+| 13524111 | Reynard Anderson Wijaya |
 
 ---
 
 ## Deskripsi Program
 
-Program ini merupakan implementasi **lexical analyzer (lexer)** untuk bahasa pemrograman **Arion** sebagai bagian dari Milestone 1 Tugas Besar IF2224. Lexer bertugas membaca kode sumber Arion dan mengonversinya menjadi deretan token menggunakan **Deterministic Finite Automaton (DFA)**.
+Program ini merupakan implementasi compiler tahap awal untuk bahasa pemrograman **Arion** pada Tugas Besar IF2224.
 
-Program mampu mengenali dan mengklasifikasikan 52 jenis token, meliputi:
-- **Literal:** `intcon`, `realcon`, `charcon`, `string`
-- **Identifier:** `ident`
-- **Keyword:** `program`, `var`, `const`, `type`, `function`, `procedure`, `array`, `record`, `begin`, `end`, `if`, `then`, `else`, `case`, `of`, `while`, `do`, `repeat`, `until`, `for`, `to`, `downto`
-- **Operator aritmatika & logika:** `plus`, `minus`, `times`, `idiv`, `rdiv`, `imod`, `andsy`, `orsy`, `notsy`
-- **Operator relasional:** `eql`, `neq`, `gtr`, `geq`, `lss`, `leq`
-- **Delimiter:** `lparent`, `rparent`, `lbrack`, `rbrack`, `comma`, `semicolon`, `period`, `colon`, `becomes`
-- **Komentar:** `comment`
+Pada **Milestone 1**, program mengimplementasikan **lexical analyzer (lexer)**. Lexer membaca kode sumber Arion dan mengubahnya menjadi deretan token menggunakan pendekatan **Deterministic Finite Automaton (DFA)**. Token yang dikenali mencakup literal, identifier, keyword, operator, delimiter, komentar, dan unknown token.
+
+Pada **Milestone 2**, program menambahkan **syntax analyzer (parser)**. Parser menerima token dari lexer, memeriksa kesesuaian urutan token terhadap grammar Arion menggunakan **Recursive Descent Parser**, lalu menghasilkan **Parse Tree**. Parser juga menangani syntax error dengan pesan error yang informatif.
+
+Fitur utama program:
+- Tokenisasi source code Arion.
+- Pengenalan keyword, identifier, konstanta, operator, delimiter, dan komentar.
+- Parsing program Arion sesuai grammar Milestone 2.
+- Pembuatan parse tree terformat ke terminal dan file output.
+- Error handling untuk input yang tidak sesuai grammar.
 
 ---
 
 ## Requirements
 
-- **Compiler:** `g++` (GNU C++ Compiler)
+- **Compiler:** `g++`
 - **Standar C++:** C++17
 - **Build tool:** `make`
-- **Sistem Operasi:** Linux / macOS / Windows (dengan MinGW atau WSL)
+- **Sistem Operasi:** Linux
 
 ---
 
@@ -57,7 +59,7 @@ cd JML-Tubes-IF2224-2026
 make
 ```
 
-Perintah ini akan mengompilasi seluruh source code dan menghasilkan executable bernama `lexer`.
+Perintah ini akan mengompilasi seluruh source code dan menghasilkan executable bernama `lexer`. Walaupun nama executable masih `lexer`, program menjalankan tahap lexer terlebih dahulu lalu parser.
 
 ### 3. Menjalankan Program
 
@@ -65,38 +67,45 @@ Perintah ini akan mengompilasi seluruh source code dan menghasilkan executable b
 ./lexer <input_file> <output_file>
 ```
 
-**Contoh:**
+Contoh:
 
 ```bash
-./lexer input.txt output.txt
+./lexer test/milestone-2/input/input-1.txt test/milestone-2/output/output-1.txt
 ```
 
-- `<input_file>` : file teks berisi kode sumber Arion
-- `<output_file>` : file teks hasil tokenisasi (satu token per baris)
+Keterangan:
+- `<input_file>`: file teks berisi source code Arion.
+- `<output_file>`: file teks hasil parse tree atau pesan syntax error.
 
-### 4. Format Output
+### 4. Menjalankan Semua Test Milestone 2
 
-Setiap baris pada file output merepresentasikan satu token dengan format:
-
-```
-tokenType (value)
-```
-
-Untuk token tanpa nilai literal (misalnya keyword dan operator), formatnya:
-
-```
-tokenType
+```bash
+for f in test/milestone-2/input/input-*.txt; do
+  n=$(basename "$f" .txt | sed 's/input-//')
+  ./lexer "$f" "test/milestone-2/output/output-$n.txt"
+done
 ```
 
-**Contoh output:**
-```
-program
-ident (myProgram)
-semicolon
-intcon (42)
+### 5. Format Output Milestone 2
+
+Jika input valid, output berupa parse tree:
+
+```text
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(Kalkulator)
+│   └── semicolon
+...
 ```
 
-### 5. Membersihkan Build
+Jika input tidak valid, output berupa pesan error:
+
+```text
+Syntax error in ProgramHeader: expected semicolon (;), found varsy (var)
+```
+
+### 6. Membersihkan Build
 
 ```bash
 make clean
@@ -106,34 +115,28 @@ make clean
 
 ## Struktur Repository
 
-```
+```text
 JML-Tubes-IF2224-2026/
 ├── src/
 │   ├── main.cpp
-│   └── lexer/
-│       ├── lexer.hpp
-│       ├── lexer.cpp
-│       ├── token.hpp
-│       └── token.cpp
+│   ├── lexer/
+│   │   ├── lexer.hpp
+│   │   ├── lexer.cpp
+│   │   ├── token.hpp
+│   │   └── token.cpp
+│   └── parser/
+│       ├── parser.hpp
+│       └── parser.cpp
 ├── doc/
-│   └── milestone-1/
-│       ├── Laporan-1-JML-1.pdf
-│       ├── Diagram DFA Lexer.drawio.xml
-│       └── Spesifikasi Milestone 1 - Tubes IF2224 TBFO.pdf
+│   ├── milestone-1/
+│   └── milestone-2/
 ├── test/
-│   └── milestone-1/
+│   ├── milestone-1/
+│   │   ├── input/
+│   │   └── output/
+│   └── milestone-2/
 │       ├── input/
-│       │   ├── input-1.txt
-│       │   ├── input-2.txt
-│       │   ├── input-3.txt
-│       │   ├── input-4.txt
-│       │   └── input-5.txt
 │       └── output/
-│           ├── output-1.txt
-│           ├── output-2.txt
-│           ├── output-3.txt
-│           ├── output-4.txt
-│           └── output-5.txt
 ├── Makefile
 └── README.md
 ```
@@ -142,9 +145,9 @@ JML-Tubes-IF2224-2026/
 
 ## Pembagian Tugas
 
-| Nama Lengkap | NIM | Tugas |
-|---|---|---|
-| Mahatma Brahmana | 13524015 |Membuat diagram DFA & membuat kode lexer |
-| Benedict Darrel Setiawan | 13524057 |Membuat diagram DFA & membuat kode lexer |
-| Raymond Jonathan Dwi Putra J | 13524059 | Membuat diagram DFA & membuat laporan|
-| Reynard Anderson Wijaya | 13524111 | Membuat diagram DFA & membuat laporan |
+| NIM | Nama Lengkap | Milestone 1 | Milestone 2 |
+|---|---|---|---|
+| 13524015 | Mahatma Brahmana | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer |
+| 13524057 | Benedict Darrel Setiawan | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer |
+| 13524059 | Raymond Jonathan Dwi Putra J | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |
+| 13524111 | Reynard Anderson Wijaya | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |

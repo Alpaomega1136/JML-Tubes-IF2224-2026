@@ -1,0 +1,6 @@
+{ pengujian 8 - error parsing karena kurung tutup pada pemanggilan prosedur hilang }
+
+program ErrorPemanggilan;
+begin
+    writeln('Halo Arion';
+end.

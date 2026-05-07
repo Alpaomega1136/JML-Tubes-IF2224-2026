@@ -1,52 +1,52 @@
-<Program>
-├── <ProgramHeader>
+<program>
+├── <program-header>
 │   ├── programsy
 │   ├── ident(TipeKompleks)
 │   └── semicolon
-├── <DeclarationPart>
-│   ├── <ConstDeclaration>
+├── <declaration-part>
+│   ├── <const-declaration>
 │   │   ├── constsy
 │   │   ├── ident(MAX)
-│   │   ├── becomes
-│   │   ├── <Constant>
+│   │   ├── eql
+│   │   ├── <constant>
 │   │   │   └── intcon(10)
 │   │   ├── semicolon
 │   │   ├── ident(PI)
-│   │   ├── becomes
-│   │   ├── <Constant>
+│   │   ├── eql
+│   │   ├── <constant>
 │   │   │   └── realcon(3.14159)
 │   │   └── semicolon
-│   ├── <TypeDeclaration>
+│   ├── <type-declaration>
 │   │   ├── typesy
 │   │   ├── ident(Titik)
-│   │   ├── colon
-│   │   ├── <Type>
-│   │   │   └── <RecordType>
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
 │   │   │       ├── recordsy
-│   │   │       ├── <FieldList>
-│   │   │       │   ├── <FieldPart>
-│   │   │       │   │   ├── <IdentifierList>
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
 │   │   │       │   │   │   └── ident(x)
 │   │   │       │   │   ├── colon
-│   │   │       │   │   └── <Type>
+│   │   │       │   │   └── <type>
 │   │   │       │   │       └── ident(real)
 │   │   │       │   ├── semicolon
-│   │   │       │   ├── <FieldPart>
-│   │   │       │   │   ├── <IdentifierList>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
 │   │   │       │   │   │   └── ident(y)
 │   │   │       │   │   ├── colon
-│   │   │       │   │   └── <Type>
+│   │   │       │   │   └── <type>
 │   │   │       │   │       └── ident(real)
 │   │   │       │   └── semicolon
 │   │   │       └── endsy
 │   │   ├── semicolon
 │   │   ├── ident(Daftar)
-│   │   ├── colon
-│   │   ├── <Type>
-│   │   │   └── <ArrayType>
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <array-type>
 │   │   │       ├── arraysy
 │   │   │       ├── lbrack
-│   │   │       ├── <Range>
+│   │   │       ├── <range>
 │   │   │       │   ├── <expression>
 │   │   │       │   │   └── <simple-expression>
 │   │   │       │   │       └── <term>
@@ -61,37 +61,37 @@
 │   │   │       │                   └── intcon(10)
 │   │   │       ├── rbrack
 │   │   │       ├── ofsy
-│   │   │       └── <Type>
+│   │   │       └── <type>
 │   │   │           └── ident(integer)
 │   │   └── semicolon
-│   ├── <VarDeclaration>
+│   ├── <var-declaration>
 │   │   ├── varsy
-│   │   ├── <IdentifierList>
+│   │   ├── <identifier-list>
 │   │   │   └── ident(p)
 │   │   ├── colon
-│   │   ├── <Type>
+│   │   ├── <type>
 │   │   │   └── ident(Titik)
 │   │   ├── semicolon
-│   │   ├── <IdentifierList>
+│   │   ├── <identifier-list>
 │   │   │   └── ident(data)
 │   │   ├── colon
-│   │   ├── <Type>
+│   │   ├── <type>
 │   │   │   └── ident(Daftar)
 │   │   ├── semicolon
-│   │   ├── <IdentifierList>
+│   │   ├── <identifier-list>
 │   │   │   └── ident(i)
 │   │   ├── colon
-│   │   ├── <Type>
+│   │   ├── <type>
 │   │   │   └── ident(integer)
 │   │   └── semicolon
-│   ├── <SubprogramDeclaration>
-│   │   └── <FunctionDeclaration>
+│   ├── <subprogram-declaration>
+│   │   └── <function-declaration>
 │   │       ├── functionsy
 │   │       ├── ident(Kuadrat)
-│   │       ├── <FormalParameterList>
+│   │       ├── <formal-parameter-list>
 │   │       │   ├── lparent
-│   │       │   ├── <ParameterGroup>
-│   │       │   │   ├── <IdentifierList>
+│   │       │   ├── <parameter-group>
+│   │       │   │   ├── <identifier-list>
 │   │       │   │   │   └── ident(n)
 │   │       │   │   ├── colon
 │   │       │   │   └── ident(integer)
@@ -99,8 +99,8 @@
 │   │       ├── colon
 │   │       ├── ident(integer)
 │   │       ├── semicolon
-│   │       ├── <Block>
-│   │       │   ├── <DeclarationPart>
+│   │       ├── <block>
+│   │       │   ├── <declaration-part>
 │   │       │   └── <compound-statement>
 │   │       │       ├── beginsy
 │   │       │       ├── <statement-list>
@@ -124,34 +124,33 @@
 │   │       │       │   └── <statement>
 │   │       │       └── endsy
 │   │       └── semicolon
-│   └── <SubprogramDeclaration>
-│       └── <ProcedureDeclaration>
+│   └── <subprogram-declaration>
+│       └── <procedure-declaration>
 │           ├── proceduresy
 │           ├── ident(IsiArray)
-│           ├── <FormalParameterList>
+│           ├── <formal-parameter-list>
 │           │   ├── lparent
-│           │   ├── <ParameterGroup>
-│           │   │   ├── varsy
-│           │   │   ├── <IdentifierList>
+│           │   ├── <parameter-group>
+│           │   │   ├── <identifier-list>
 │           │   │   │   └── ident(arr)
 │           │   │   ├── colon
 │           │   │   └── ident(Daftar)
 │           │   ├── semicolon
-│           │   ├── <ParameterGroup>
-│           │   │   ├── <IdentifierList>
+│           │   ├── <parameter-group>
+│           │   │   ├── <identifier-list>
 │           │   │   │   └── ident(n)
 │           │   │   ├── colon
 │           │   │   └── ident(integer)
 │           │   └── rparent
 │           ├── semicolon
-│           ├── <Block>
-│           │   ├── <DeclarationPart>
-│           │   │   └── <VarDeclaration>
+│           ├── <block>
+│           │   ├── <declaration-part>
+│           │   │   └── <var-declaration>
 │           │   │       ├── varsy
-│           │   │       ├── <IdentifierList>
+│           │   │       ├── <identifier-list>
 │           │   │       │   └── ident(j)
 │           │   │       ├── colon
-│           │   │       ├── <Type>
+│           │   │       ├── <type>
 │           │   │       │   └── ident(integer)
 │           │   │       └── semicolon
 │           │   └── <compound-statement>
@@ -179,14 +178,11 @@
 │           │       │   │           └── <assignment-statement>
 │           │       │   │               ├── <variable>
 │           │       │   │               │   ├── ident(arr)
-│           │       │   │               │   ├── lbrack
-│           │       │   │               │   ├── <expression>
-│           │       │   │               │   │   └── <simple-expression>
-│           │       │   │               │   │       └── <term>
-│           │       │   │               │   │           └── <factor>
-│           │       │   │               │   │               └── <variable>
-│           │       │   │               │   │                   └── ident(j)
-│           │       │   │               │   └── rbrack
+│           │       │   │               │   └── <component-variable>
+│           │       │   │               │       ├── lbrack
+│           │       │   │               │       ├── <index-list>
+│           │       │   │               │       │   └── ident(j)
+│           │       │   │               │       └── rbrack
 │           │       │   │               ├── becomes
 │           │       │   │               └── <expression>
 │           │       │   │                   └── <simple-expression>
@@ -210,8 +206,9 @@
 │   │   │   └── <assignment-statement>
 │   │   │       ├── <variable>
 │   │   │       │   ├── ident(p)
-│   │   │       │   ├── period
-│   │   │       │   └── ident(x)
+│   │   │       │   └── <component-variable>
+│   │   │       │       ├── period
+│   │   │       │       └── ident(x)
 │   │   │       ├── becomes
 │   │   │       └── <expression>
 │   │   │           └── <simple-expression>
@@ -223,8 +220,9 @@
 │   │   │   └── <assignment-statement>
 │   │   │       ├── <variable>
 │   │   │       │   ├── ident(p)
-│   │   │       │   ├── period
-│   │   │       │   └── ident(y)
+│   │   │       │   └── <component-variable>
+│   │   │       │       ├── period
+│   │   │       │       └── ident(y)
 │   │   │       ├── becomes
 │   │   │       └── <expression>
 │   │   │           └── <simple-expression>
@@ -281,14 +279,11 @@
 │   │   │               │               └── <factor>
 │   │   │               │                   └── <variable>
 │   │   │               │                       ├── ident(data)
-│   │   │               │                       ├── lbrack
-│   │   │               │                       ├── <expression>
-│   │   │               │                       │   └── <simple-expression>
-│   │   │               │                       │       └── <term>
-│   │   │               │                       │           └── <factor>
-│   │   │               │                       │               └── <variable>
-│   │   │               │                       │                   └── ident(i)
-│   │   │               │                       └── rbrack
+│   │   │               │                       └── <component-variable>
+│   │   │               │                           ├── lbrack
+│   │   │               │                           ├── <index-list>
+│   │   │               │                           │   └── ident(i)
+│   │   │               │                           └── rbrack
 │   │   │               └── rparent
 │   │   ├── semicolon
 │   │   ├── <statement>

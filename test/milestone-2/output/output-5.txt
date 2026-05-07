@@ -1,33 +1,33 @@
-<Program>
-├── <ProgramHeader>
+<program>
+├── <program-header>
 │   ├── programsy
 │   ├── ident(KasusLengkap)
 │   └── semicolon
-├── <DeclarationPart>
-│   └── <VarDeclaration>
+├── <declaration-part>
+│   └── <var-declaration>
 │       ├── varsy
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(angka)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(bagi)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(sisa)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(harakat)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(char)
 │       └── semicolon
 ├── <compound-statement>
@@ -113,7 +113,7 @@
 │   │   │       │                   └── ident(sisa)
 │   │   │       ├── ofsy
 │   │   │       ├── <case-block>
-│   │   │       │   ├── <Constant>
+│   │   │       │   ├── <constant>
 │   │   │       │   │   └── intcon(0)
 │   │   │       │   ├── colon
 │   │   │       │   ├── <statement>
@@ -129,7 +129,7 @@
 │   │   │       │   │       └── rparent
 │   │   │       │   ├── semicolon
 │   │   │       │   └── <case-block>
-│   │   │       │       ├── <Constant>
+│   │   │       │       ├── <constant>
 │   │   │       │       │   └── intcon(1)
 │   │   │       │       ├── colon
 │   │   │       │       ├── <statement>
@@ -145,7 +145,7 @@
 │   │   │       │       │       └── rparent
 │   │   │       │       ├── semicolon
 │   │   │       │       └── <case-block>
-│   │   │       │           ├── <Constant>
+│   │   │       │           ├── <constant>
 │   │   │       │           │   └── intcon(2)
 │   │   │       │           ├── colon
 │   │   │       │           ├── <statement>
@@ -161,7 +161,7 @@
 │   │   │       │           │       └── rparent
 │   │   │       │           ├── semicolon
 │   │   │       │           └── <case-block>
-│   │   │       │               ├── <Constant>
+│   │   │       │               ├── <constant>
 │   │   │       │               │   └── intcon(3)
 │   │   │       │               ├── colon
 │   │   │       │               ├── <statement>
@@ -177,7 +177,7 @@
 │   │   │       │               │       └── rparent
 │   │   │       │               ├── semicolon
 │   │   │       │               └── <case-block>
-│   │   │       │                   ├── <Constant>
+│   │   │       │                   ├── <constant>
 │   │   │       │                   │   └── intcon(4)
 │   │   │       │                   ├── colon
 │   │   │       │                   ├── <statement>

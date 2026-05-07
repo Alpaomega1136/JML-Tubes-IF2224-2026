@@ -1,21 +1,21 @@
-<Program>
-├── <ProgramHeader>
+<program>
+├── <program-header>
 │   ├── programsy
 │   ├── ident(CekNilai)
 │   └── semicolon
-├── <DeclarationPart>
-│   └── <VarDeclaration>
+├── <declaration-part>
+│   └── <var-declaration>
 │       ├── varsy
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(nilai)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       ├── semicolon
-│       ├── <IdentifierList>
+│       ├── <identifier-list>
 │       │   └── ident(lulus)
 │       ├── colon
-│       ├── <Type>
+│       ├── <type>
 │       │   └── ident(integer)
 │       └── semicolon
 ├── <compound-statement>
