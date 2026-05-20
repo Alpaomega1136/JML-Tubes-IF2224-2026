@@ -4,6 +4,8 @@
 #include "lexer/lexer.hpp"
 #include "lexer/token.hpp"
 #include "parser/parser.hpp"
+#include "semantic_analysis/ast.hpp"
+#include "semantic_analysis/semantic_analyzer.hpp"
 
 using namespace std;
 
@@ -20,6 +22,21 @@ int main(int argc, char* argv[]){
         vector<Token> tokens = tokenize(inputFile);
         Parser parser(tokens);
         TreeParser* parseTree = parser.parse();
+        ASTNode* ast = buildAST(parseTree);
+        if (ast != nullptr) {
+            cout << "AST construction completed." << endl;
+        } else {
+            cout << "AST construction returned nullptr." << endl;
+        }
+        SemanticAnalyzer analyzer;
+        analyzer.analyze(ast);
+        if (analyzer.hasErrors()) {
+            analyzer.printErrors();
+        } else {
+            cout << "Semantic analysis completed successfully." << endl;
+        }
+        cout << "=== Symbol Tables ===" << endl;
+        analyzer.printSymbolTables();
         parser.printParseTree(parseTree, outputFile);
         return 0;
     } catch (const std::exception& e) {

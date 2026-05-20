@@ -167,6 +167,18 @@ class ArrayTypeNode : public TypeNode {
                                       cout<<")";}
 };
 
+class FieldPartNode : public ASTNode {
+    public:
+        string fieldIdent;
+        TypeNode* fieldType;
+    
+        FieldPartNode(string fieldIdent, TypeNode* fieldType) : ASTNode(FIELD_PART_NODE), fieldIdent(fieldIdent), fieldType(fieldType) {}
+        void visit() override;
+        void print() const override { cout<<"FieldPart(fieldIdent: "<<fieldIdent<<", type: ";
+                                              fieldType->print();
+                                               cout<<")";}
+};
+
 class RecordTypeNode : public TypeNode {
     public:
         vector<FieldPartNode*> fieldList;
@@ -183,19 +195,6 @@ class RecordTypeNode : public TypeNode {
             }
             cout<<"])";
         }
-};
-
-
-class FieldPartNode : public ASTNode {
-    public:
-        string fieldIdent;
-        TypeNode* fieldType;
-    
-        FieldPartNode(string fieldIdent, TypeNode* fieldType) : ASTNode(FIELD_PART_NODE), fieldIdent(fieldIdent), fieldType(fieldType) {}
-        void visit() override;
-        void print() const override { cout<<"FieldPart(fieldIdent: "<<fieldIdent<<", type: ";
-                                              fieldType->print();
-                                              cout<<")";}
 };
 
 

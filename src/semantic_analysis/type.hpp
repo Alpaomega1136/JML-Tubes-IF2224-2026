@@ -14,7 +14,7 @@ enum SimpleType {
     RECORD
 };
 
-string simpleTypeToString(SimpleType type) {
+inline string simpleTypeToString(SimpleType type) {
     switch(type) {
         case REAL : return "real";
         case INTEGER : return "integer";
