@@ -1,0 +1,160 @@
+=== Semantic Analysis Result ===
+AST construction: completed
+Semantic analysis: completed successfully
+
+=== Decorated AST ===
+ProgramNode(name: 'CekNilai')
+  Declarations
+    VarDecl(name: 'nilai')
+      Type(name: 'integer')
+    VarDecl(name: 'lulus')
+      Type(name: 'integer')
+  Block
+    Assign
+      target:
+        Var(name: 'nilai')
+      value:
+        Number(value: 75)
+    Assign
+      target:
+        Var(name: 'lulus')
+      value:
+        Number(value: 0)
+    If
+      condition:
+        BinOp(op: gtr)
+          left:
+            Var(name: 'nilai')
+          right:
+            Number(value: 90)
+      then:
+        ProcCall(name: 'writeln')
+          String(value: 'Sangat Baik')
+      else:
+        If
+          condition:
+            BinOp(op: geq)
+              left:
+                Var(name: 'nilai')
+              right:
+                Number(value: 75)
+          then:
+            ProcCall(name: 'writeln')
+              String(value: 'Baik')
+          else:
+            If
+              condition:
+                BinOp(op: lss)
+                  left:
+                    Var(name: 'nilai')
+                  right:
+                    Number(value: 50)
+              then:
+                ProcCall(name: 'writeln')
+                  String(value: 'Kurang')
+              else:
+                If
+                  condition:
+                    BinOp(op: leq)
+                      left:
+                        Var(name: 'nilai')
+                      right:
+                        Number(value: 59)
+                  then:
+                    ProcCall(name: 'writeln')
+                      String(value: 'Cukup')
+                  else:
+                    ProcCall(name: 'writeln')
+                      String(value: 'Sedang')
+    If
+      condition:
+        BinOp(op: neq)
+          left:
+            Var(name: 'nilai')
+          right:
+            Number(value: 0)
+      then:
+        ProcCall(name: 'writeln')
+          String(value: 'Nilai tidak nol')
+    If
+      condition:
+        UnaryOp(op: not)
+          BinOp(op: lss)
+            left:
+              Var(name: 'nilai')
+            right:
+              Number(value: 0)
+      then:
+        Assign
+          target:
+            Var(name: 'lulus')
+          value:
+            Number(value: 1)
+    If
+      condition:
+        BinOp(op: andsy)
+          left:
+            BinOp(op: geq)
+              left:
+                Var(name: 'nilai')
+              right:
+                Number(value: 75)
+          right:
+            BinOp(op: leq)
+              left:
+                Var(name: 'nilai')
+              right:
+                Number(value: 100)
+      then:
+        ProcCall(name: 'writeln')
+          String(value: 'Lulus')
+    If
+      condition:
+        BinOp(op: orsy)
+          left:
+            BinOp(op: lss)
+              left:
+                Var(name: 'nilai')
+              right:
+                Number(value: 0)
+          right:
+            BinOp(op: gtr)
+              left:
+                Var(name: 'nilai')
+              right:
+                Number(value: 100)
+      then:
+        ProcCall(name: 'writeln')
+          String(value: 'Nilai tidak valid')
+    If
+      condition:
+        BinOp(op: eql)
+          left:
+            Var(name: 'nilai')
+          right:
+            Number(value: 75)
+      then:
+        ProcCall(name: 'writeln')
+          String(value: 'Tepat 75')
+
+=== Symbol Tables ===
+=== TAB ===
+identifier | obj | type | lev | ref | adr
+integer | 3 | 1 | 0 | 0 | 0
+real | 3 | 2 | 0 | 0 | 0
+char | 3 | 3 | 0 | 0 | 0
+boolean | 3 | 4 | 0 | 0 | 0
+string | 3 | 5 | 0 | 0 | 0
+true | 2 | 4 | 0 | 0 | 0
+false | 2 | 4 | 0 | 0 | 0
+readln | 5 | 8 | 0 | 0 | 0
+writeln | 5 | 8 | 0 | 0 | 0
+nilai | 1 | 1 | 0 | 0 | 0
+lulus | 1 | 1 | 0 | 0 | 0
+
+=== ATAB ===
+indexType | elementType | low | high | elementSize | totalSize
+
+=== BTAB ===
+last | lpar | psze | vsze
+0 | 0 | 0 | 0

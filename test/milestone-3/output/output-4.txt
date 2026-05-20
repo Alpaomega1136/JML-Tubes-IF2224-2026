@@ -1,0 +1,145 @@
+=== Semantic Analysis Result ===
+AST construction: completed
+Semantic analysis: completed successfully
+
+=== Decorated AST ===
+ProgramNode(name: 'TipeKompleks')
+  Declarations
+    ConstDecl(name: 'MAX')
+      Number(value: 10)
+    ConstDecl(name: 'PI')
+      Number(value: 3.14159)
+    TypeDecl(name: 'Titik')
+      RecordType
+        Field(name: 'x')
+          Type(name: 'real')
+        Field(name: 'y')
+          Type(name: 'real')
+    TypeDecl(name: 'Daftar')
+      ArrayType
+        index:
+          RangeType
+            first:
+              Number(value: 1)
+            last:
+              Number(value: 10)
+            base:
+              Type(name: 'integer')
+        element:
+          Type(name: 'integer')
+    VarDecl(name: 'p')
+      Type(name: 'Titik')
+    VarDecl(name: 'data')
+      Type(name: 'Daftar')
+    VarDecl(name: 'i')
+      Type(name: 'integer')
+    FunctionDecl(name: 'Kuadrat')
+      returnType:
+        Type(name: 'integer')
+      Parameter(name: 'n')
+        Type(name: 'integer')
+      Declarations
+      Block
+        Assign
+          target:
+            Var(name: 'Kuadrat')
+          value:
+            BinOp(op: times)
+              left:
+                Var(name: 'n')
+              right:
+                Var(name: 'n')
+    ProcedureDecl(name: 'IsiArray')
+      Parameter(name: 'arr')
+        Type(name: 'Daftar')
+      Parameter(name: 'n')
+        Type(name: 'integer')
+      Declarations
+        VarDecl(name: 'j')
+          Type(name: 'integer')
+      Block
+        For
+          Assign
+            target:
+              Var(name: 'j')
+            value:
+              Number(value: 1)
+          to:
+            Var(name: 'n')
+          body:
+            Block
+              Assign
+                target:
+                  Var(name: 'arr')
+                value:
+                  BinOp(op: times)
+                    left:
+                      Var(name: 'j')
+                    right:
+                      Var(name: 'j')
+  Block
+    Assign
+      target:
+        Var(name: 'p')
+      value:
+        Number(value: 3.0)
+    Assign
+      target:
+        Var(name: 'p')
+      value:
+        Number(value: 4.0)
+    ProcCall(name: 'IsiArray')
+      Var(name: 'data')
+      Var(name: 'MAX')
+    For
+      Assign
+        target:
+          Var(name: 'i')
+        value:
+          Number(value: 1)
+      to:
+        Var(name: 'MAX')
+      body:
+        Block
+          ProcCall(name: 'writeln')
+            ArrayAccess(name: 'data')
+              Var(name: 'i')
+    ProcCall(name: 'writeln')
+      FuncCall(name: 'Kuadrat')
+        Number(value: 5)
+
+=== Symbol Tables ===
+=== TAB ===
+identifier | obj | type | lev | ref | adr
+integer | 3 | 1 | 0 | 0 | 0
+real | 3 | 2 | 0 | 0 | 0
+char | 3 | 3 | 0 | 0 | 0
+boolean | 3 | 4 | 0 | 0 | 0
+string | 3 | 5 | 0 | 0 | 0
+true | 2 | 4 | 0 | 0 | 0
+false | 2 | 4 | 0 | 0 | 0
+readln | 5 | 8 | 0 | 0 | 0
+writeln | 5 | 8 | 0 | 0 | 0
+MAX | 2 | 1 | 0 | 0 | 0
+PI | 2 | 2 | 0 | 0 | 0
+Titik | 3 | 7 | 0 | 0 | 0
+Daftar | 3 | 6 | 0 | 0 | 0
+p | 1 | 0 | 0 | 0 | 0
+data | 1 | 0 | 0 | 0 | 0
+i | 1 | 1 | 0 | 0 | 0
+Kuadrat | 4 | 1 | 0 | 0 | 0
+Kuadrat | 1 | 1 | 1 | 0 | 0
+n | 6 | 1 | 1 | 0 | 0
+IsiArray | 5 | 8 | 0 | 0 | 0
+arr | 6 | 0 | 1 | 0 | 0
+n | 6 | 1 | 1 | 0 | 0
+j | 1 | 1 | 1 | 0 | 0
+
+=== ATAB ===
+indexType | elementType | low | high | elementSize | totalSize
+
+=== BTAB ===
+last | lpar | psze | vsze
+0 | 0 | 0 | 0
+0 | 0 | 0 | 0
+0 | 0 | 0 | 0

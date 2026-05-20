@@ -1,0 +1,42 @@
+(* pengujian 2 - bagian percabangan dan operator logika *)
+
+program CekNilai;
+var
+    nilai : integer;
+    lulus : integer;
+begin
+    nilai := 75;
+    lulus := 0;
+
+    { bandingkan nilai dengan beberapa ambang batas menggunakan operator relasional }
+    if nilai > 90 then
+        writeln('Sangat Baik')
+    else if nilai >= 75 then
+        writeln('Baik')
+    else if nilai < 50 then
+        writeln('Kurang')
+    else if nilai <= 59 then
+        writeln('Cukup')
+    else
+        writeln('Sedang');
+
+    (* pastikan nilai tidak sama dengan nol sebelum diproses lebih lanjut *)
+    if nilai <> 0 then
+        writeln('Nilai tidak nol');
+
+    { operator NOT membalik nilai logika dari kondisi yang dibungkus kurung }
+    if NOT (nilai < 0) then
+        lulus := 1;
+
+    (* operator AND mensyaratkan kedua sisi bernilai benar secara bersamaan *)
+    if (nilai >= 75) AND (nilai <= 100) then
+        writeln('Lulus');
+
+    { cek apakah nilai di luar rentang yang diperbolehkan }
+    if (nilai < 0) OR (nilai > 100) then
+        writeln('Nilai tidak valid');
+
+    (* operator == diuji di sini, perhatikan jika ada bug pada EQL_STATE di lexer *)
+    if nilai == 75 then
+        writeln('Tepat 75');
+end.

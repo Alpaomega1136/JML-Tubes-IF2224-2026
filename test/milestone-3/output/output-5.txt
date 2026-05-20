@@ -1,0 +1,97 @@
+=== Semantic Analysis Result ===
+AST construction: completed
+Semantic analysis: completed successfully
+
+=== Decorated AST ===
+ProgramNode(name: 'KasusLengkap')
+  Declarations
+    VarDecl(name: 'angka')
+      Type(name: 'integer')
+    VarDecl(name: 'bagi')
+      Type(name: 'integer')
+    VarDecl(name: 'sisa')
+      Type(name: 'integer')
+    VarDecl(name: 'harakat')
+      Type(name: 'char')
+  Block
+    Assign
+      target:
+        Var(name: 'angka')
+      value:
+        Number(value: 17)
+    Assign
+      target:
+        Var(name: 'bagi')
+      value:
+        BinOp(op: idiv)
+          left:
+            Var(name: 'angka')
+          right:
+            Number(value: 5)
+    Assign
+      target:
+        Var(name: 'sisa')
+      value:
+        BinOp(op: imod)
+          left:
+            Var(name: 'angka')
+          right:
+            Number(value: 5)
+    ProcCall(name: 'writeln')
+      Var(name: 'bagi')
+    ProcCall(name: 'writeln')
+      Var(name: 'sisa')
+    Case
+      selector:
+        Var(name: 'sisa')
+      CaseBlock
+        Number(value: 0)
+        ProcCall(name: 'writeln')
+          String(value: 'Habis dibagi 5')
+      CaseBlock
+        Number(value: 1)
+        ProcCall(name: 'writeln')
+          String(value: 'Sisa 1')
+      CaseBlock
+        Number(value: 2)
+        ProcCall(name: 'writeln')
+          String(value: 'Sisa 2')
+      CaseBlock
+        Number(value: 3)
+        ProcCall(name: 'writeln')
+          String(value: 'Sisa 3')
+      CaseBlock
+        Number(value: 4)
+        ProcCall(name: 'writeln')
+          String(value: 'Sisa 4')
+    Assign
+      target:
+        Var(name: 'harakat')
+      value:
+        Char(value: 'Z')
+    ProcCall(name: 'writeln')
+      Var(name: 'harakat')
+
+=== Symbol Tables ===
+=== TAB ===
+identifier | obj | type | lev | ref | adr
+integer | 3 | 1 | 0 | 0 | 0
+real | 3 | 2 | 0 | 0 | 0
+char | 3 | 3 | 0 | 0 | 0
+boolean | 3 | 4 | 0 | 0 | 0
+string | 3 | 5 | 0 | 0 | 0
+true | 2 | 4 | 0 | 0 | 0
+false | 2 | 4 | 0 | 0 | 0
+readln | 5 | 8 | 0 | 0 | 0
+writeln | 5 | 8 | 0 | 0 | 0
+angka | 1 | 1 | 0 | 0 | 0
+bagi | 1 | 1 | 0 | 0 | 0
+sisa | 1 | 1 | 0 | 0 | 0
+harakat | 1 | 3 | 0 | 0 | 0
+
+=== ATAB ===
+indexType | elementType | low | high | elementSize | totalSize
+
+=== BTAB ===
+last | lpar | psze | vsze
+0 | 0 | 0 | 0

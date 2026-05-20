@@ -1,0 +1,130 @@
+=== Semantic Analysis Result ===
+AST construction: completed
+Semantic analysis: completed successfully
+
+=== Decorated AST ===
+ProgramNode(name: 'Perulangan')
+  Declarations
+    VarDecl(name: 'i')
+      Type(name: 'integer')
+    VarDecl(name: 'n')
+      Type(name: 'integer')
+    VarDecl(name: 'total')
+      Type(name: 'integer')
+  Block
+    Assign
+      target:
+        Var(name: 'n')
+      value:
+        Number(value: 5)
+    Assign
+      target:
+        Var(name: 'total')
+      value:
+        Number(value: 0)
+    For
+      Assign
+        target:
+          Var(name: 'i')
+        value:
+          Number(value: 1)
+      to:
+        Var(name: 'n')
+      body:
+        Block
+          Assign
+            target:
+              Var(name: 'total')
+            value:
+              BinOp(op: plus)
+                left:
+                  Var(name: 'total')
+                right:
+                  Var(name: 'i')
+    ProcCall(name: 'writeln')
+      Var(name: 'total')
+    For
+      Assign
+        target:
+          Var(name: 'i')
+        value:
+          Var(name: 'n')
+      to:
+        Number(value: 1)
+      body:
+        Block
+          ProcCall(name: 'writeln')
+            Var(name: 'i')
+    Assign
+      target:
+        Var(name: 'i')
+      value:
+        Number(value: 1)
+    While
+      condition:
+        BinOp(op: leq)
+          left:
+            Var(name: 'i')
+          right:
+            Var(name: 'n')
+      body:
+        Block
+          ProcCall(name: 'writeln')
+            Var(name: 'i')
+          Assign
+            target:
+              Var(name: 'i')
+            value:
+              BinOp(op: plus)
+                left:
+                  Var(name: 'i')
+                right:
+                  Number(value: 1)
+    Assign
+      target:
+        Var(name: 'i')
+      value:
+        Number(value: 1)
+    Repeat
+      body:
+        Block
+          ProcCall(name: 'writeln')
+            Var(name: 'i')
+          Assign
+            target:
+              Var(name: 'i')
+            value:
+              BinOp(op: plus)
+                left:
+                  Var(name: 'i')
+                right:
+                  Number(value: 1)
+      until:
+        BinOp(op: gtr)
+          left:
+            Var(name: 'i')
+          right:
+            Var(name: 'n')
+
+=== Symbol Tables ===
+=== TAB ===
+identifier | obj | type | lev | ref | adr
+integer | 3 | 1 | 0 | 0 | 0
+real | 3 | 2 | 0 | 0 | 0
+char | 3 | 3 | 0 | 0 | 0
+boolean | 3 | 4 | 0 | 0 | 0
+string | 3 | 5 | 0 | 0 | 0
+true | 2 | 4 | 0 | 0 | 0
+false | 2 | 4 | 0 | 0 | 0
+readln | 5 | 8 | 0 | 0 | 0
+writeln | 5 | 8 | 0 | 0 | 0
+i | 1 | 1 | 0 | 0 | 0
+n | 1 | 1 | 0 | 0 | 0
+total | 1 | 1 | 0 | 0 | 0
+
+=== ATAB ===
+indexType | elementType | low | high | elementSize | totalSize
+
+=== BTAB ===
+last | lpar | psze | vsze
+0 | 0 | 0 | 0
