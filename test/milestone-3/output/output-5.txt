@@ -1,76 +1,77 @@
-=== Semantic Analysis Result ===
-AST construction: completed
-Semantic analysis: completed successfully
+=== Arion Milestone 3 Semantic Report ===
+Pipeline status:
+- AST builder        : OK
+- Semantic analyzer  : OK
 
-=== Decorated AST ===
-ProgramNode(name: 'KasusLengkap')
-  Declarations
-    VarDecl(name: 'angka')
-      Type(name: 'integer')
-    VarDecl(name: 'bagi')
-      Type(name: 'integer')
-    VarDecl(name: 'sisa')
-      Type(name: 'integer')
-    VarDecl(name: 'harakat')
-      Type(name: 'char')
-  Block
-    Assign
-      target:
-        Var(name: 'angka')
-      value:
-        Number(value: 17)
-    Assign
-      target:
-        Var(name: 'bagi')
-      value:
-        BinOp(op: idiv)
-          left:
-            Var(name: 'angka')
-          right:
-            Number(value: 5)
-    Assign
-      target:
-        Var(name: 'sisa')
-      value:
-        BinOp(op: imod)
-          left:
-            Var(name: 'angka')
-          right:
-            Number(value: 5)
-    ProcCall(name: 'writeln')
-      Var(name: 'bagi')
-    ProcCall(name: 'writeln')
-      Var(name: 'sisa')
-    Case
-      selector:
-        Var(name: 'sisa')
-      CaseBlock
-        Number(value: 0)
-        ProcCall(name: 'writeln')
-          String(value: 'Habis dibagi 5')
-      CaseBlock
-        Number(value: 1)
-        ProcCall(name: 'writeln')
-          String(value: 'Sisa 1')
-      CaseBlock
-        Number(value: 2)
-        ProcCall(name: 'writeln')
-          String(value: 'Sisa 2')
-      CaseBlock
-        Number(value: 3)
-        ProcCall(name: 'writeln')
-          String(value: 'Sisa 3')
-      CaseBlock
-        Number(value: 4)
-        ProcCall(name: 'writeln')
-          String(value: 'Sisa 4')
-    Assign
-      target:
-        Var(name: 'harakat')
-      value:
-        Char(value: 'Z')
-    ProcCall(name: 'writeln')
-      Var(name: 'harakat')
+=== Decorated AST Tree ===
+ProgramNode(name: 'KasusLengkap') [type=program, tab=-1, lev=0]
+|-- Declarations [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'harakat') [type=char, tab=14, lev=0]
+|   |   |-- Type(name: 'char') [type=unknown, tab=-1, lev=-1]
+|-- Block [type=unknown, tab=-1, lev=-1]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 17) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: idiv) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: imod) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |-- Case [type=integer, tab=-1, lev=0]
+|   |   |-- selector:
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |-- String(value: 'Habis dibagi 5') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 1') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 2) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 2') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 3) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 3') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 4) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 4') [type=string, tab=-1, lev=0]
+|   |-- Assign [type=char, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'harakat') [type=char, tab=14, lev=0]
+|   |   |-- value:
+|   |   |   |-- Char(value: 'Z') [type=char, tab=-1, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'harakat') [type=char, tab=14, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -82,7 +83,9 @@ boolean | 3 | 4 | 0 | 0 | 0
 string | 3 | 5 | 0 | 0 | 0
 true | 2 | 4 | 0 | 0 | 0
 false | 2 | 4 | 0 | 0 | 0
+read | 5 | 8 | 0 | 0 | 0
 readln | 5 | 8 | 0 | 0 | 0
+write | 5 | 8 | 0 | 0 | 0
 writeln | 5 | 8 | 0 | 0 | 0
 angka | 1 | 1 | 0 | 0 | 0
 bagi | 1 | 1 | 0 | 0 | 0

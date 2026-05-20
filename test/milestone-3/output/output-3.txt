@@ -1,110 +1,111 @@
-=== Semantic Analysis Result ===
-AST construction: completed
-Semantic analysis: completed successfully
+=== Arion Milestone 3 Semantic Report ===
+Pipeline status:
+- AST builder        : OK
+- Semantic analyzer  : OK
 
-=== Decorated AST ===
-ProgramNode(name: 'Perulangan')
-  Declarations
-    VarDecl(name: 'i')
-      Type(name: 'integer')
-    VarDecl(name: 'n')
-      Type(name: 'integer')
-    VarDecl(name: 'total')
-      Type(name: 'integer')
-  Block
-    Assign
-      target:
-        Var(name: 'n')
-      value:
-        Number(value: 5)
-    Assign
-      target:
-        Var(name: 'total')
-      value:
-        Number(value: 0)
-    For
-      Assign
-        target:
-          Var(name: 'i')
-        value:
-          Number(value: 1)
-      to:
-        Var(name: 'n')
-      body:
-        Block
-          Assign
-            target:
-              Var(name: 'total')
-            value:
-              BinOp(op: plus)
-                left:
-                  Var(name: 'total')
-                right:
-                  Var(name: 'i')
-    ProcCall(name: 'writeln')
-      Var(name: 'total')
-    For
-      Assign
-        target:
-          Var(name: 'i')
-        value:
-          Var(name: 'n')
-      to:
-        Number(value: 1)
-      body:
-        Block
-          ProcCall(name: 'writeln')
-            Var(name: 'i')
-    Assign
-      target:
-        Var(name: 'i')
-      value:
-        Number(value: 1)
-    While
-      condition:
-        BinOp(op: leq)
-          left:
-            Var(name: 'i')
-          right:
-            Var(name: 'n')
-      body:
-        Block
-          ProcCall(name: 'writeln')
-            Var(name: 'i')
-          Assign
-            target:
-              Var(name: 'i')
-            value:
-              BinOp(op: plus)
-                left:
-                  Var(name: 'i')
-                right:
-                  Number(value: 1)
-    Assign
-      target:
-        Var(name: 'i')
-      value:
-        Number(value: 1)
-    Repeat
-      body:
-        Block
-          ProcCall(name: 'writeln')
-            Var(name: 'i')
-          Assign
-            target:
-              Var(name: 'i')
-            value:
-              BinOp(op: plus)
-                left:
-                  Var(name: 'i')
-                right:
-                  Number(value: 1)
-      until:
-        BinOp(op: gtr)
-          left:
-            Var(name: 'i')
-          right:
-            Var(name: 'n')
+=== Decorated AST Tree ===
+ProgramNode(name: 'Perulangan') [type=program, tab=-1, lev=0]
+|-- Declarations [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'n') [type=integer, tab=12, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'total') [type=integer, tab=13, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|-- Block [type=unknown, tab=-1, lev=-1]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'n') [type=integer, tab=12, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'total') [type=integer, tab=13, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
+|   |-- For [type=integer, tab=-1, lev=0]
+|   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |-- target:
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |-- value:
+|   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |-- to:
+|   |   |   |-- Var(name: 'n') [type=integer, tab=12, lev=0]
+|   |   |-- body:
+|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- target:
+|   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=13, lev=0]
+|   |   |   |   |   |-- value:
+|   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=13, lev=0]
+|   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'total') [type=integer, tab=13, lev=0]
+|   |-- For [type=integer, tab=-1, lev=0]
+|   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |-- target:
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |-- value:
+|   |   |   |   |-- Var(name: 'n') [type=integer, tab=12, lev=0]
+|   |   |-- to:
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |-- body:
+|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |-- While [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=12, lev=0]
+|   |   |-- body:
+|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- target:
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- value:
+|   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |-- Repeat [type=boolean, tab=-1, lev=0]
+|   |   |-- body:
+|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- target:
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- value:
+|   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |-- until:
+|   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=12, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -116,7 +117,9 @@ boolean | 3 | 4 | 0 | 0 | 0
 string | 3 | 5 | 0 | 0 | 0
 true | 2 | 4 | 0 | 0 | 0
 false | 2 | 4 | 0 | 0 | 0
+read | 5 | 8 | 0 | 0 | 0
 readln | 5 | 8 | 0 | 0 | 0
+write | 5 | 8 | 0 | 0 | 0
 writeln | 5 | 8 | 0 | 0 | 0
 i | 1 | 1 | 0 | 0 | 0
 n | 1 | 1 | 0 | 0 | 0

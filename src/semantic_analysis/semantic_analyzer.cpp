@@ -18,6 +18,8 @@ static bool isRealLiteral(const std::string& literal) {
 
 void SemanticAnalyzer::analyze(ASTNode* root) {
     errors.clear();
+    typeRegistry.clear();
+    initializeBuiltinTypes();
 
     if (root == nullptr) {
         errors.push_back("Semantic error: AST root is null.");
@@ -59,10 +61,141 @@ const std::vector<std::string>& SemanticAnalyzer::getErrors() const {
     return errors;
 }
 
+std::string SemanticAnalyzer::normalizeName(const std::string& text) const {
+    return toLowerString(text);
+}
+
+void SemanticAnalyzer::addError(const std::string& message) {
+    if (!hasError(message)) {
+        errors.push_back(message);
+    }
+}
+
+void SemanticAnalyzer::initializeBuiltinTypes() {
+    const std::vector<std::string> builtinTypes = {
+        "integer", "real", "char", "boolean", "string", "procedure", "unknown"
+    };
+
+    for (const std::string& typeName : builtinTypes) {
+        TypeInfo info;
+        info.kind = "simple";
+        info.baseType = typeName;
+        typeRegistry[typeName] = info;
+    }
+}
+
+SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
+    TypeInfo info;
+
+    if (typeNode == nullptr) {
+        info.kind = "unknown";
+        info.baseType = "unknown";
+        return info;
+    }
+
+    if (RangeNode* range = dynamic_cast<RangeNode*>(typeNode)) {
+        info.kind = "subrange";
+        info.baseType = typeNameFromTypeNode(range->rangeType);
+        if (info.baseType == "unknown") {
+            info.baseType = "integer";
+        }
+        return info;
+    }
+
+    if (ArrayTypeNode* array = dynamic_cast<ArrayTypeNode*>(typeNode)) {
+        info.kind = "array";
+        info.baseType = "array";
+        info.indexType = typeNameFromTypeNode(array->idxType);
+        info.elementType = typeNameFromTypeNode(array->elType);
+        return info;
+    }
+
+    if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(typeNode)) {
+        info.kind = "record";
+        info.baseType = "record";
+        for (FieldPartNode* field : record->fieldList) {
+            if (field == nullptr) {
+                continue;
+            }
+            info.fields[normalizeName(field->fieldIdent)] = typeNameFromTypeNode(field->fieldType);
+        }
+        return info;
+    }
+
+    info.kind = "alias";
+    info.baseType = normalizeName(typeNode->typeIdent);
+    return info;
+}
+
+void SemanticAnalyzer::registerTypeDeclaration(TypeDeclNode* typeDecl) {
+    if (typeDecl == nullptr) {
+        return;
+    }
+
+    typeRegistry[normalizeName(typeDecl->name)] = describeType(typeDecl->simpleType);
+}
+
+std::string SemanticAnalyzer::resolveTypeName(const std::string& typeName) const {
+    std::string normalizedType = normalizeName(typeName);
+    if (normalizedType.empty()) {
+        return "unknown";
+    }
+
+    auto found = typeRegistry.find(normalizedType);
+    if (found == typeRegistry.end()) {
+        return normalizedType;
+    }
+
+    const TypeInfo& info = found->second;
+    if (info.kind == "simple") {
+        return info.baseType.empty() ? normalizedType : info.baseType;
+    }
+
+    if (info.kind == "alias" || info.kind == "subrange") {
+        if (normalizeName(info.baseType) == normalizedType) {
+            return normalizedType;
+        }
+        return resolveTypeName(info.baseType);
+    }
+
+    if (info.kind == "array" || info.kind == "record") {
+        return normalizedType;
+    }
+
+    return normalizedType;
+}
+
+bool SemanticAnalyzer::isBooleanType(const std::string& typeName) const {
+    return resolveTypeName(typeName) == "boolean";
+}
+
+std::string SemanticAnalyzer::targetDisplayName(ValueNode* value) const {
+    if (value == nullptr) {
+        return "<unknown>";
+    }
+
+    if (VarNode* var = dynamic_cast<VarNode*>(value)) {
+        return var->name;
+    }
+
+    if (ArrayAccessNode* arrayAccess = dynamic_cast<ArrayAccessNode*>(value)) {
+        return arrayAccess->name + "[]";
+    }
+
+    if (RecordAccessNode* recordAccess = dynamic_cast<RecordAccessNode*>(value)) {
+        return recordAccess->name + "." + recordAccess->fieldName;
+    }
+
+    return "<target>";
+}
+
 void SemanticAnalyzer::analyzeProgram(ProgramNode* program) {
     if (program == nullptr) {
         return;
     }
+
+    program->semanticType = "program";
+    program->lexicalLevel = symbolTable.currentLevel();
 
     for (ASTNode* child : program->getChildren()) {
         ProcCallNode* container = dynamic_cast<ProcCallNode*>(child);
@@ -123,32 +256,45 @@ void SemanticAnalyzer::analyzeDeclaration(ASTNode* node) {
     }
 
     if (VarDeclNode* varDecl = dynamic_cast<VarDeclNode*>(node)) {
+        std::string declaredType = typeNameFromTypeNode(varDecl->type);
         declareOrReport({
             varDecl->name,
             SymbolKind::Variable,
-            typeNameFromTypeNode(varDecl->type),
+            declaredType,
             symbolTable.currentLevel()
         });
+        varDecl->semanticType = declaredType;
+        varDecl->tabIndex = symbolTable.lookupTabIndex(varDecl->name);
+        varDecl->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
     if (ConstDeclNode* constDecl = dynamic_cast<ConstDeclNode*>(node)) {
+        std::string valueType = inferExpressionType(constDecl->value);
         declareOrReport({
             constDecl->name,
             SymbolKind::Constant,
-            typeNameFromValueNode(constDecl->value),
+            valueType,
             symbolTable.currentLevel()
         });
+        constDecl->semanticType = valueType;
+        constDecl->tabIndex = symbolTable.lookupTabIndex(constDecl->name);
+        constDecl->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
     if (TypeDeclNode* typeDecl = dynamic_cast<TypeDeclNode*>(node)) {
+        registerTypeDeclaration(typeDecl);
+        std::string typeName = typeNameFromTypeNode(typeDecl->simpleType);
         declareOrReport({
             typeDecl->name,
             SymbolKind::Type,
-            typeNameFromTypeNode(typeDecl->simpleType),
+            typeName,
             symbolTable.currentLevel()
         });
+        typeDecl->semanticType = typeName;
+        typeDecl->tabIndex = symbolTable.lookupTabIndex(typeDecl->name);
+        typeDecl->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
@@ -173,9 +319,13 @@ void SemanticAnalyzer::analyzeProcDeclaration(ProcDeclNode* procDecl) {
         SymbolKind::Procedure,
         "procedure",
         symbolTable.currentLevel(),
+        -1,
         collectParameterTypes(procDecl->parameterList),
         collectParameterNames(procDecl->parameterList)
     });
+    procDecl->semanticType = "procedure";
+    procDecl->tabIndex = symbolTable.lookupTabIndex(procDecl->name);
+    procDecl->lexicalLevel = symbolTable.currentLevel();
 
     symbolTable.enterScope();
     declareParameters(procDecl->parameterList);
@@ -194,9 +344,13 @@ void SemanticAnalyzer::analyzeFuncDeclaration(FuncDeclNode* funcDecl) {
         SymbolKind::Function,
         returnType,
         symbolTable.currentLevel(),
+        -1,
         collectParameterTypes(funcDecl->parameterList),
         collectParameterNames(funcDecl->parameterList)
     });
+    funcDecl->semanticType = returnType;
+    funcDecl->tabIndex = symbolTable.lookupTabIndex(funcDecl->name);
+    funcDecl->lexicalLevel = symbolTable.currentLevel();
 
     symbolTable.enterScope();
 
@@ -243,12 +397,16 @@ void SemanticAnalyzer::declareParameters(const std::vector<ParameterNode*>& para
             continue;
         }
 
+        std::string parameterType = typeNameFromTypeNode(parameter->type);
         declareOrReport({
             parameter->name,
             SymbolKind::Parameter,
-            typeNameFromTypeNode(parameter->type),
+            parameterType,
             symbolTable.currentLevel()
         });
+        parameter->semanticType = parameterType;
+        parameter->tabIndex = symbolTable.lookupTabIndex(parameter->name);
+        parameter->lexicalLevel = symbolTable.currentLevel();
     }
 }
 
@@ -284,38 +442,32 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
     }
 
     if (AssignNode* assign = dynamic_cast<AssignNode*>(node)) {
-        std::string targetType = "unknown";
-
-        if (assign->target != nullptr) {
-            SymbolEntry* target = symbolTable.lookup(assign->target->name);
-            if (target == nullptr) {
-                checkIdentifierDeclared(assign->target->name);
-            } else {
-                targetType = target->typeName;
-            }
-        }
-
+        std::string targetType = inferExpressionType(assign->target);
         std::string valueType = inferExpressionType(assign->value);
         if (!isAssignmentCompatible(targetType, valueType)) {
-            std::string targetName = (assign->target == nullptr) ? "<unknown>" : assign->target->name;
-            errors.push_back(
+            std::string targetName = targetDisplayName(assign->target);
+            addError(
                 "Semantic error: cannot assign value of type '" + valueType +
                 "' to variable '" + targetName +
                 "' of type '" + targetType + "'."
             );
         }
 
+        assign->semanticType = targetType;
+        assign->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
     if (IfNode* ifNode = dynamic_cast<IfNode*>(node)) {
         std::string conditionType = inferExpressionType(ifNode->condition);
-        if (conditionType != "unknown" && conditionType != "boolean") {
-            errors.push_back(
+        if (conditionType != "unknown" && !isBooleanType(conditionType)) {
+            addError(
                 "Semantic error: if condition must be boolean, got '" +
                 conditionType + "'."
             );
         }
+        ifNode->semanticType = "boolean";
+        ifNode->lexicalLevel = symbolTable.currentLevel();
         analyzeNode(ifNode->then);
         analyzeNode(ifNode->elseThen);
         return;
@@ -323,12 +475,14 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
 
     if (WhileNode* whileNode = dynamic_cast<WhileNode*>(node)) {
         std::string conditionType = inferExpressionType(whileNode->condition);
-        if (conditionType != "unknown" && conditionType != "boolean") {
-            errors.push_back(
+        if (conditionType != "unknown" && !isBooleanType(conditionType)) {
+            addError(
                 "Semantic error: while condition must be boolean, got '" +
                 conditionType + "'."
             );
         }
+        whileNode->semanticType = "boolean";
+        whileNode->lexicalLevel = symbolTable.currentLevel();
         analyzeNode(whileNode->statement);
         return;
     }
@@ -336,12 +490,14 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
     if (RepeatNode* repeatNode = dynamic_cast<RepeatNode*>(node)) {
         analyzeNode(repeatNode->statement);
         std::string conditionType = inferExpressionType(repeatNode->untilCondition);
-        if (conditionType != "unknown" && conditionType != "boolean") {
-            errors.push_back(
+        if (conditionType != "unknown" && !isBooleanType(conditionType)) {
+            addError(
                 "Semantic error: repeat-until condition must be boolean, got '" +
                 conditionType + "'."
             );
         }
+        repeatNode->semanticType = "boolean";
+        repeatNode->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
@@ -352,53 +508,75 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
 
         if (forNode->traversalAssign != nullptr) {
             if (forNode->traversalAssign->target != nullptr) {
-                loopVariableName = forNode->traversalAssign->target->name;
-                SymbolEntry* loopVariable = symbolTable.lookup(loopVariableName);
-                if (loopVariable == nullptr) {
-                    checkIdentifierDeclared(loopVariableName);
-                } else {
-                    loopVariableType = loopVariable->typeName;
-                    if (loopVariableType != "unknown" && loopVariableType != "integer") {
-                        errors.push_back(
-                            "Semantic error: for loop variable '" + loopVariableName +
-                            "' must be integer, got '" + loopVariableType + "'."
-                        );
+                loopVariableType = inferExpressionType(forNode->traversalAssign->target);
+                if (VarNode* loopVar = dynamic_cast<VarNode*>(forNode->traversalAssign->target)) {
+                    loopVariableName = loopVar->name;
+                    SymbolEntry* loopVariable = symbolTable.lookup(loopVariableName);
+                    if (loopVariable == nullptr) {
+                        checkIdentifierDeclared(loopVariableName);
+                    } else {
+                        loopVariableType = loopVariable->typeName;
+                        if (loopVariableType != "unknown" && resolveTypeName(loopVariableType) != "integer") {
+                            addError(
+                                "Semantic error: for loop variable '" + loopVariableName +
+                                "' must be integer, got '" + loopVariableType + "'."
+                            );
+                        }
                     }
+                } else {
+                    addError("Semantic error: for loop variable must be a simple variable.");
                 }
             }
 
             startType = inferExpressionType(forNode->traversalAssign->value);
-            if (startType != "unknown" && startType != "integer") {
-                errors.push_back(
+            if (startType != "unknown" && resolveTypeName(startType) != "integer") {
+                addError(
                     "Semantic error: for loop start expression must be integer, got '" +
                     startType + "'."
                 );
             }
+            forNode->traversalAssign->semanticType = loopVariableType;
+            forNode->traversalAssign->lexicalLevel = symbolTable.currentLevel();
         }
 
         std::string endType = inferExpressionType(forNode->to);
-        if (endType != "unknown" && endType != "integer") {
-            errors.push_back(
+        if (endType != "unknown" && resolveTypeName(endType) != "integer") {
+            addError(
                 "Semantic error: for loop end expression must be integer, got '" +
                 endType + "'."
             );
         }
 
+        forNode->semanticType = "integer";
+        forNode->lexicalLevel = symbolTable.currentLevel();
         analyzeNode(forNode->statement);
         return;
     }
 
     if (CaseNode* caseNode = dynamic_cast<CaseNode*>(node)) {
-        inferExpressionType(caseNode->condition);
+        std::string selectorType = inferExpressionType(caseNode->condition);
         for (CaseBlockNode* caseBlock : caseNode->caseBlocks) {
+            if (caseBlock != nullptr) {
+                std::string labelType = inferExpressionType(caseBlock->caseCondition);
+                if (!isComparisonCompatible(selectorType, labelType)) {
+                    addError(
+                        "Semantic error: case label type '" + labelType +
+                        "' is not compatible with selector type '" + selectorType + "'."
+                    );
+                }
+            }
             analyzeNode(caseBlock);
         }
+        caseNode->semanticType = selectorType;
+        caseNode->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
     if (CaseBlockNode* caseBlock = dynamic_cast<CaseBlockNode*>(node)) {
         inferExpressionType(caseBlock->caseCondition);
         analyzeNode(caseBlock->statement);
+        caseBlock->semanticType = typeNameFromValueNode(caseBlock->caseCondition);
+        caseBlock->lexicalLevel = symbolTable.currentLevel();
         return;
     }
 
@@ -420,7 +598,7 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
         }
 
         if (entry->kind != SymbolKind::Procedure && entry->kind != SymbolKind::Function) {
-            errors.push_back(
+            addError(
                 "Semantic error: identifier '" + procCall->name +
                 "' is not callable."
             );
@@ -431,6 +609,9 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
         }
 
         checkCallArguments(procCall->name, procCall->args, entry);
+        procCall->semanticType = entry->typeName;
+        procCall->tabIndex = symbolTable.lookupTabIndex(procCall->name);
+        procCall->lexicalLevel = entry->lexicalLevel;
         return;
     }
 
@@ -445,7 +626,7 @@ void SemanticAnalyzer::analyzeExpression(ValueNode* expr) {
 
 void SemanticAnalyzer::declareOrReport(const SymbolEntry& entry) {
     if (!symbolTable.declareSymbol(entry)) {
-        errors.push_back(
+        addError(
             "Semantic error: identifier '" + entry.name +
             "' is already declared in this scope."
         );
@@ -459,9 +640,7 @@ void SemanticAnalyzer::checkIdentifierDeclared(const std::string& name) {
 
     if (symbolTable.lookup(name) == nullptr) {
         std::string message = "Semantic error: identifier '" + name + "' is not declared.";
-        if (!hasError(message)) {
-            errors.push_back(message);
-        }
+        addError(message);
     }
 }
 
@@ -478,47 +657,63 @@ bool SemanticAnalyzer::isContainerNode(ProcCallNode* callNode) const {
 }
 
 bool SemanticAnalyzer::isVariadicBuiltin(const std::string& name) const {
-    return name == "readln" || name == "writeln";
+    std::string normalizedName = normalizeName(name);
+    return normalizedName == "read" ||
+           normalizedName == "readln" ||
+           normalizedName == "write" ||
+           normalizedName == "writeln";
 }
 
 bool SemanticAnalyzer::isNumericType(const std::string& typeName) const {
-    return typeName == "integer" || typeName == "real";
+    std::string resolvedType = resolveTypeName(typeName);
+    return resolvedType == "integer" || resolvedType == "real";
 }
 
 bool SemanticAnalyzer::isSimpleAssignableType(const std::string& typeName) const {
-    return typeName == "integer" ||
-           typeName == "real" ||
-           typeName == "char" ||
-           typeName == "string" ||
-           typeName == "boolean";
+    std::string resolvedType = resolveTypeName(typeName);
+    return resolvedType == "integer" ||
+           resolvedType == "real" ||
+           resolvedType == "char" ||
+           resolvedType == "string" ||
+           resolvedType == "boolean";
 }
 
 bool SemanticAnalyzer::isAssignmentCompatible(const std::string& targetType, const std::string& valueType) const {
-    if (targetType == "unknown" || valueType == "unknown") {
+    std::string resolvedTarget = resolveTypeName(targetType);
+    std::string resolvedValue = resolveTypeName(valueType);
+
+    if (resolvedTarget == "unknown" || resolvedValue == "unknown") {
         return true;
     }
 
-    if (!isSimpleAssignableType(targetType) || !isSimpleAssignableType(valueType)) {
+    if (resolvedTarget == resolvedValue) {
         return true;
     }
 
-    if (targetType == valueType) {
+    if (resolvedTarget == "real" && resolvedValue == "integer") {
         return true;
     }
 
-    return targetType == "real" && valueType == "integer";
+    if (!isSimpleAssignableType(resolvedTarget) || !isSimpleAssignableType(resolvedValue)) {
+        return normalizeName(targetType) == normalizeName(valueType);
+    }
+
+    return false;
 }
 
 bool SemanticAnalyzer::isComparisonCompatible(const std::string& leftType, const std::string& rightType) const {
-    if (leftType == "unknown" || rightType == "unknown") {
+    std::string resolvedLeft = resolveTypeName(leftType);
+    std::string resolvedRight = resolveTypeName(rightType);
+
+    if (resolvedLeft == "unknown" || resolvedRight == "unknown") {
         return true;
     }
 
-    if (leftType == rightType) {
+    if (resolvedLeft == resolvedRight) {
         return true;
     }
 
-    return isNumericType(leftType) && isNumericType(rightType);
+    return isNumericType(resolvedLeft) && isNumericType(resolvedRight);
 }
 
 void SemanticAnalyzer::checkCallArguments(const std::string& callName, const std::vector<ValueNode*>& args, SymbolEntry* entry) {
@@ -538,7 +733,7 @@ void SemanticAnalyzer::checkCallArguments(const std::string& callName, const std
 
     if (expectedCount != actualCount) {
         std::string callableKind = (entry->kind == SymbolKind::Function) ? "function" : "procedure";
-        errors.push_back(
+        addError(
             "Semantic error: " + callableKind + " '" + callName +
             "' expects " + std::to_string(expectedCount) +
             " argument(s), got " + std::to_string(actualCount) + "."
@@ -555,7 +750,7 @@ void SemanticAnalyzer::checkCallArguments(const std::string& callName, const std
         std::string actualType = inferExpressionType(args[i]);
 
         if (!isAssignmentCompatible(expectedType, actualType)) {
-            errors.push_back(
+            addError(
                 "Semantic error: argument " + std::to_string(i + 1) +
                 " of '" + callName + "' expects '" + expectedType +
                 "', got '" + actualType + "'."
@@ -570,24 +765,34 @@ std::string SemanticAnalyzer::inferExpressionType(ValueNode* expr) {
     }
 
     if (NumberNode* number = dynamic_cast<NumberNode*>(expr)) {
-        return isRealLiteral(number->num) ? "real" : "integer";
+        number->semanticType = isRealLiteral(number->num) ? "real" : "integer";
+        number->lexicalLevel = symbolTable.currentLevel();
+        return number->semanticType;
     }
 
-    if (dynamic_cast<StringNode*>(expr) != nullptr) {
-        return "string";
+    if (StringNode* stringNode = dynamic_cast<StringNode*>(expr)) {
+        stringNode->semanticType = "string";
+        stringNode->lexicalLevel = symbolTable.currentLevel();
+        return stringNode->semanticType;
     }
 
-    if (dynamic_cast<CharNode*>(expr) != nullptr) {
-        return "char";
+    if (CharNode* charNode = dynamic_cast<CharNode*>(expr)) {
+        charNode->semanticType = "char";
+        charNode->lexicalLevel = symbolTable.currentLevel();
+        return charNode->semanticType;
     }
 
     if (VarNode* var = dynamic_cast<VarNode*>(expr)) {
         SymbolEntry* entry = symbolTable.lookup(var->name);
         if (entry == nullptr) {
             checkIdentifierDeclared(var->name);
+            var->semanticType = "unknown";
             return "unknown";
         }
-        return entry->typeName;
+        var->semanticType = entry->typeName;
+        var->tabIndex = symbolTable.lookupTabIndex(var->name);
+        var->lexicalLevel = entry->lexicalLevel;
+        return var->semanticType;
     }
 
     if (UnaryOpNode* unary = dynamic_cast<UnaryOpNode*>(expr)) {
@@ -596,26 +801,33 @@ std::string SemanticAnalyzer::inferExpressionType(ValueNode* expr) {
 
         if (op == "plus" || op == "+" || op == "minus" || op == "-") {
             if (valueType != "unknown" && !isNumericType(valueType)) {
-                errors.push_back(
+                addError(
                     "Semantic error: operator '" + unary->op +
                     "' requires numeric operand, got '" + valueType + "'."
                 );
+                unary->semanticType = "unknown";
                 return "unknown";
             }
+            unary->semanticType = valueType;
+            unary->lexicalLevel = symbolTable.currentLevel();
             return valueType;
         }
 
         if (op == "not" || op == "notsy") {
-            if (valueType != "unknown" && valueType != "boolean") {
-                errors.push_back(
+            if (valueType != "unknown" && !isBooleanType(valueType)) {
+                addError(
                     "Semantic error: operator 'not' requires boolean operand, got '" +
                     valueType + "'."
                 );
+                unary->semanticType = "unknown";
                 return "unknown";
             }
-            return valueType == "unknown" ? "unknown" : "boolean";
+            unary->semanticType = valueType == "unknown" ? "unknown" : "boolean";
+            unary->lexicalLevel = symbolTable.currentLevel();
+            return unary->semanticType;
         }
 
+        unary->semanticType = "unknown";
         return "unknown";
     }
 
@@ -628,72 +840,90 @@ std::string SemanticAnalyzer::inferExpressionType(ValueNode* expr) {
             op == "times" || op == "*") {
             if ((leftType != "unknown" && !isNumericType(leftType)) ||
                 (rightType != "unknown" && !isNumericType(rightType))) {
-                errors.push_back(
+                addError(
                     "Semantic error: operator '" + binOp->op +
                     "' requires numeric operands, got '" + leftType +
                     "' and '" + rightType + "'."
                 );
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
             if (leftType == "unknown" || rightType == "unknown") {
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
-            return (leftType == "real" || rightType == "real") ? "real" : "integer";
+            binOp->semanticType = (resolveTypeName(leftType) == "real" ||
+                                   resolveTypeName(rightType) == "real") ? "real" : "integer";
+            binOp->lexicalLevel = symbolTable.currentLevel();
+            return binOp->semanticType;
         }
 
         if (op == "rdiv" || op == "/") {
             if ((leftType != "unknown" && !isNumericType(leftType)) ||
                 (rightType != "unknown" && !isNumericType(rightType))) {
-                errors.push_back(
+                addError(
                     "Semantic error: operator '" + binOp->op +
                     "' requires numeric operands, got '" + leftType +
                     "' and '" + rightType + "'."
                 );
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
-            return (leftType == "unknown" || rightType == "unknown") ? "unknown" : "real";
+            binOp->semanticType = (leftType == "unknown" || rightType == "unknown") ? "unknown" : "real";
+            binOp->lexicalLevel = symbolTable.currentLevel();
+            return binOp->semanticType;
         }
 
         if (op == "idiv" || op == "div" || op == "imod" || op == "mod") {
-            if ((leftType != "unknown" && leftType != "integer") ||
-                (rightType != "unknown" && rightType != "integer")) {
-                errors.push_back(
+            if ((leftType != "unknown" && resolveTypeName(leftType) != "integer") ||
+                (rightType != "unknown" && resolveTypeName(rightType) != "integer")) {
+                addError(
                     "Semantic error: operator '" + binOp->op +
                     "' requires integer operands, got '" + leftType +
                     "' and '" + rightType + "'."
                 );
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
-            return (leftType == "unknown" || rightType == "unknown") ? "unknown" : "integer";
+            binOp->semanticType = (leftType == "unknown" || rightType == "unknown") ? "unknown" : "integer";
+            binOp->lexicalLevel = symbolTable.currentLevel();
+            return binOp->semanticType;
         }
 
         if (op == "andsy" || op == "and" || op == "orsy" || op == "or") {
-            if ((leftType != "unknown" && leftType != "boolean") ||
-                (rightType != "unknown" && rightType != "boolean")) {
-                errors.push_back(
+            if ((leftType != "unknown" && !isBooleanType(leftType)) ||
+                (rightType != "unknown" && !isBooleanType(rightType))) {
+                addError(
                     "Semantic error: operator '" + binOp->op +
                     "' requires boolean operands, got '" + leftType +
                     "' and '" + rightType + "'."
                 );
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
-            return (leftType == "unknown" || rightType == "unknown") ? "unknown" : "boolean";
+            binOp->semanticType = (leftType == "unknown" || rightType == "unknown") ? "unknown" : "boolean";
+            binOp->lexicalLevel = symbolTable.currentLevel();
+            return binOp->semanticType;
         }
 
         if (op == "eql" || op == "=" || op == "neq" || op == "<>" ||
             op == "lss" || op == "<" || op == "leq" || op == "<=" ||
             op == "gtr" || op == ">" || op == "geq" || op == ">=") {
             if (!isComparisonCompatible(leftType, rightType)) {
-                errors.push_back(
+                addError(
                     "Semantic error: operator '" + binOp->op +
                     "' requires compatible operands, got '" + leftType +
                     "' and '" + rightType + "'."
                 );
+                binOp->semanticType = "unknown";
                 return "unknown";
             }
-            return (leftType == "unknown" || rightType == "unknown") ? "unknown" : "boolean";
+            binOp->semanticType = (leftType == "unknown" || rightType == "unknown") ? "unknown" : "boolean";
+            binOp->lexicalLevel = symbolTable.currentLevel();
+            return binOp->semanticType;
         }
 
+        binOp->semanticType = "unknown";
         return "unknown";
     }
 
@@ -704,50 +934,128 @@ std::string SemanticAnalyzer::inferExpressionType(ValueNode* expr) {
             for (ValueNode* arg : funcCall->args) {
                 inferExpressionType(arg);
             }
+            funcCall->semanticType = "unknown";
             return "unknown";
         }
 
         if (entry->kind == SymbolKind::Procedure) {
-            errors.push_back(
+            addError(
                 "Semantic error: procedure '" + funcCall->name +
                 "' cannot be used as a function."
             );
             checkCallArguments(funcCall->name, funcCall->args, entry);
+            funcCall->semanticType = "unknown";
             return "unknown";
         }
 
         if (entry->kind != SymbolKind::Function) {
-            errors.push_back(
+            addError(
                 "Semantic error: identifier '" + funcCall->name +
                 "' is not callable."
             );
             for (ValueNode* arg : funcCall->args) {
                 inferExpressionType(arg);
             }
+            funcCall->semanticType = "unknown";
             return "unknown";
         }
 
         checkCallArguments(funcCall->name, funcCall->args, entry);
-        return entry->typeName;
+        funcCall->semanticType = entry->typeName;
+        funcCall->tabIndex = symbolTable.lookupTabIndex(funcCall->name);
+        funcCall->lexicalLevel = entry->lexicalLevel;
+        return funcCall->semanticType;
     }
 
     if (ArrayAccessNode* arrayAccess = dynamic_cast<ArrayAccessNode*>(expr)) {
         SymbolEntry* entry = symbolTable.lookup(arrayAccess->name);
         if (entry == nullptr) {
             checkIdentifierDeclared(arrayAccess->name);
+            inferExpressionType(arrayAccess->idx);
+            arrayAccess->semanticType = "unknown";
+            return "unknown";
         }
-        inferExpressionType(arrayAccess->idx);
-        return entry == nullptr ? "unknown" : entry->typeName;
+
+        std::string indexType = inferExpressionType(arrayAccess->idx);
+        std::string declaredType = normalizeName(entry->typeName);
+        auto typeInfo = typeRegistry.find(declaredType);
+        while (typeInfo != typeRegistry.end() &&
+               (typeInfo->second.kind == "alias" || typeInfo->second.kind == "subrange") &&
+               normalizeName(typeInfo->second.baseType) != declaredType) {
+            declaredType = normalizeName(typeInfo->second.baseType);
+            typeInfo = typeRegistry.find(declaredType);
+        }
+        if (typeInfo == typeRegistry.end() || typeInfo->second.kind != "array") {
+            addError(
+                "Semantic error: identifier '" + arrayAccess->name +
+                "' is not an array."
+            );
+            arrayAccess->semanticType = "unknown";
+            arrayAccess->tabIndex = symbolTable.lookupTabIndex(arrayAccess->name);
+            arrayAccess->lexicalLevel = entry->lexicalLevel;
+            return "unknown";
+        }
+
+        if (!isAssignmentCompatible(typeInfo->second.indexType, indexType)) {
+            addError(
+                "Semantic error: array index for '" + arrayAccess->name +
+                "' expects '" + typeInfo->second.indexType +
+                "', got '" + indexType + "'."
+            );
+        }
+
+        arrayAccess->semanticType = typeInfo->second.elementType;
+        arrayAccess->tabIndex = symbolTable.lookupTabIndex(arrayAccess->name);
+        arrayAccess->lexicalLevel = entry->lexicalLevel;
+        return arrayAccess->semanticType;
     }
 
     if (RecordAccessNode* recordAccess = dynamic_cast<RecordAccessNode*>(expr)) {
         SymbolEntry* entry = symbolTable.lookup(recordAccess->name);
         if (entry == nullptr) {
             checkIdentifierDeclared(recordAccess->name);
+            recordAccess->semanticType = "unknown";
+            return "unknown";
         }
-        return entry == nullptr ? "unknown" : entry->typeName;
+
+        std::string declaredType = normalizeName(entry->typeName);
+        auto typeInfo = typeRegistry.find(declaredType);
+        while (typeInfo != typeRegistry.end() &&
+               (typeInfo->second.kind == "alias" || typeInfo->second.kind == "subrange") &&
+               normalizeName(typeInfo->second.baseType) != declaredType) {
+            declaredType = normalizeName(typeInfo->second.baseType);
+            typeInfo = typeRegistry.find(declaredType);
+        }
+        if (typeInfo == typeRegistry.end() || typeInfo->second.kind != "record") {
+            addError(
+                "Semantic error: identifier '" + recordAccess->name +
+                "' is not a record."
+            );
+            recordAccess->semanticType = "unknown";
+            recordAccess->tabIndex = symbolTable.lookupTabIndex(recordAccess->name);
+            recordAccess->lexicalLevel = entry->lexicalLevel;
+            return "unknown";
+        }
+
+        auto field = typeInfo->second.fields.find(normalizeName(recordAccess->fieldName));
+        if (field == typeInfo->second.fields.end()) {
+            addError(
+                "Semantic error: record '" + recordAccess->name +
+                "' has no field '" + recordAccess->fieldName + "'."
+            );
+            recordAccess->semanticType = "unknown";
+            recordAccess->tabIndex = symbolTable.lookupTabIndex(recordAccess->name);
+            recordAccess->lexicalLevel = entry->lexicalLevel;
+            return "unknown";
+        }
+
+        recordAccess->semanticType = field->second;
+        recordAccess->tabIndex = symbolTable.lookupTabIndex(recordAccess->name);
+        recordAccess->lexicalLevel = entry->lexicalLevel;
+        return recordAccess->semanticType;
     }
 
+    expr->semanticType = "unknown";
     return "unknown";
 }
 
@@ -756,7 +1064,19 @@ std::string SemanticAnalyzer::typeNameFromTypeNode(TypeNode* typeNode) const {
         return "unknown";
     }
 
-    return typeNode->typeIdent;
+    if (RangeNode* range = dynamic_cast<RangeNode*>(typeNode)) {
+        return typeNameFromTypeNode(range->rangeType);
+    }
+
+    if (dynamic_cast<ArrayTypeNode*>(typeNode) != nullptr) {
+        return "array";
+    }
+
+    if (dynamic_cast<RecordTypeNode*>(typeNode) != nullptr) {
+        return "record";
+    }
+
+    return normalizeName(typeNode->typeIdent);
 }
 
 std::string SemanticAnalyzer::typeNameFromValueNode(ValueNode* valueNode) const {
@@ -784,6 +1104,16 @@ std::string SemanticAnalyzer::typeNameFromValueNode(ValueNode* valueNode) const 
         if (op == "plus" || op == "+" || op == "minus" || op == "-" ||
             op == "not" || op == "notsy") {
             return typeNameFromValueNode(unary->value);
+        }
+    }
+
+    if (BinOpNode* binOp = dynamic_cast<BinOpNode*>(valueNode)) {
+        std::string op = toLowerString(binOp->op);
+        if (op == "eql" || op == "=" || op == "neq" || op == "<>" ||
+            op == "lss" || op == "<" || op == "leq" || op == "<=" ||
+            op == "gtr" || op == ">" || op == "geq" || op == ">=" ||
+            op == "andsy" || op == "and" || op == "orsy" || op == "or") {
+            return "boolean";
         }
     }
 

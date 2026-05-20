@@ -1,92 +1,93 @@
-=== Semantic Analysis Result ===
-AST construction: completed
-Semantic analysis: completed successfully
+=== Arion Milestone 3 Semantic Report ===
+Pipeline status:
+- AST builder        : OK
+- Semantic analyzer  : OK
 
-=== Decorated AST ===
-ProgramNode(name: 'Kalkulator')
-  Declarations
-    VarDecl(name: 'x')
-      Type(name: 'integer')
-    VarDecl(name: 'y')
-      Type(name: 'integer')
-    VarDecl(name: 'phi')
-      Type(name: 'real')
-    VarDecl(name: 'inisial')
-      Type(name: 'char')
-    VarDecl(name: 'pesan')
-      Type(name: 'string')
-    VarDecl(name: 'hasil')
-      Type(name: 'integer')
-  Block
-    Assign
-      target:
-        Var(name: 'x')
-      value:
-        Number(value: 20)
-    Assign
-      target:
-        Var(name: 'y')
-      value:
-        Number(value: 7)
-    Assign
-      target:
-        Var(name: 'phi')
-      value:
-        Number(value: 3.14)
-    Assign
-      target:
-        Var(name: 'inisial')
-      value:
-        Char(value: 'A')
-    Assign
-      target:
-        Var(name: 'pesan')
-      value:
-        String(value: 'Halo Arion')
-    Assign
-      target:
-        Var(name: 'hasil')
-      value:
-        BinOp(op: plus)
-          left:
-            Var(name: 'x')
-          right:
-            Var(name: 'y')
-    Assign
-      target:
-        Var(name: 'hasil')
-      value:
-        BinOp(op: minus)
-          left:
-            Var(name: 'x')
-          right:
-            Var(name: 'y')
-    Assign
-      target:
-        Var(name: 'hasil')
-      value:
-        BinOp(op: times)
-          left:
-            Var(name: 'x')
-          right:
-            Var(name: 'y')
-    Assign
-      target:
-        Var(name: 'phi')
-      value:
-        BinOp(op: rdiv)
-          left:
-            Number(value: 22)
-          right:
-            Number(value: 7)
-    ProcCall(name: 'writeln')
-      Var(name: 'hasil')
-    ProcCall(name: 'writeln')
-      Var(name: 'phi')
-    ProcCall(name: 'writeln')
-      Var(name: 'inisial')
-    ProcCall(name: 'writeln')
-      Var(name: 'pesan')
+=== Decorated AST Tree ===
+ProgramNode(name: 'Kalkulator') [type=program, tab=-1, lev=0]
+|-- Declarations [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'x') [type=integer, tab=11, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'y') [type=integer, tab=12, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'phi') [type=real, tab=13, lev=0]
+|   |   |-- Type(name: 'real') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'inisial') [type=char, tab=14, lev=0]
+|   |   |-- Type(name: 'char') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'pesan') [type=string, tab=15, lev=0]
+|   |   |-- Type(name: 'string') [type=unknown, tab=-1, lev=-1]
+|   |-- VarDecl(name: 'hasil') [type=integer, tab=16, lev=0]
+|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|-- Block [type=unknown, tab=-1, lev=-1]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'x') [type=integer, tab=11, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 20) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'y') [type=integer, tab=12, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 7) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=real, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'phi') [type=real, tab=13, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 3.14) [type=real, tab=-1, lev=0]
+|   |-- Assign [type=char, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'inisial') [type=char, tab=14, lev=0]
+|   |   |-- value:
+|   |   |   |-- Char(value: 'A') [type=char, tab=-1, lev=0]
+|   |-- Assign [type=string, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'pesan') [type=string, tab=15, lev=0]
+|   |   |-- value:
+|   |   |   |-- String(value: 'Halo Arion') [type=string, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=16, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=12, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=16, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: minus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=12, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=16, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=11, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=12, lev=0]
+|   |-- Assign [type=real, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'phi') [type=real, tab=13, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: rdiv) [type=real, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Number(value: 22) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 7) [type=integer, tab=-1, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'hasil') [type=integer, tab=16, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'phi') [type=real, tab=13, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'inisial') [type=char, tab=14, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
+|   |   |-- Var(name: 'pesan') [type=string, tab=15, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -98,7 +99,9 @@ boolean | 3 | 4 | 0 | 0 | 0
 string | 3 | 5 | 0 | 0 | 0
 true | 2 | 4 | 0 | 0 | 0
 false | 2 | 4 | 0 | 0 | 0
+read | 5 | 8 | 0 | 0 | 0
 readln | 5 | 8 | 0 | 0 | 0
+write | 5 | 8 | 0 | 0 | 0
 writeln | 5 | 8 | 0 | 0 | 0
 x | 1 | 1 | 0 | 0 | 0
 y | 1 | 1 | 0 | 0 | 0

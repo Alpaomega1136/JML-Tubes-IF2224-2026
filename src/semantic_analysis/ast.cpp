@@ -292,9 +292,9 @@ static ASTNode* buildStatement(TreeParser* node) {
     TreeParser* inner = node->children[0];
 
     if (inner->data == "<assignment-statement>") {
-        string varName = extractIdent(inner->children[0]->children[0]->data);
+        ValueNode* target = buildVariable(inner->children[0]);
         ValueNode* val = buildExpression(inner->children[2]);
-        return new AssignNode(new VarNode(varName), val);
+        return new AssignNode(target, val);
     }
 
     if (inner->data == "<procedure/function-call>") {

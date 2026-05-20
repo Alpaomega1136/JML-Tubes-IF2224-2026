@@ -19,6 +19,7 @@ struct SymbolEntry {
     SymbolKind kind;
     std::string typeName;
     int lexicalLevel;
+    int tabIndex = -1;
     std::vector<std::string> parameterTypes;
     std::vector<std::string> parameterNames;
 };
@@ -69,6 +70,7 @@ public:
     bool declareSymbol(const SymbolEntry& entry);
     SymbolEntry* lookup(const std::string& name);
     SymbolEntry* lookupCurrentScope(const std::string& name);
+    int lookupTabIndex(const std::string& name) const;
 
     int currentLevel() const;
     int mapKindToObj(SymbolKind kind) const;

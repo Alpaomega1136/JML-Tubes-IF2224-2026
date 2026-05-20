@@ -32,20 +32,23 @@ bool SymbolTable::declareSymbol(const SymbolEntry& entry) {
     }
 
     auto& currentScope = scopes.back();
-    if (currentScope.find(entry.name) != currentScope.end()) {
+    std::string normalizedName = toLowerString(entry.name);
+    if (currentScope.find(normalizedName) != currentScope.end()) {
         return false;
     }
 
     SymbolEntry storedEntry = entry;
     storedEntry.lexicalLevel = currentLevel();
-    currentScope[storedEntry.name] = storedEntry;
     appendTabEntry(storedEntry);
+    storedEntry.tabIndex = static_cast<int>(tab.size()) - 1;
+    currentScope[normalizedName] = storedEntry;
     return true;
 }
 
 SymbolEntry* SymbolTable::lookup(const std::string& name) {
+    std::string normalizedName = toLowerString(name);
     for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
-        auto found = it->find(name);
+        auto found = it->find(normalizedName);
         if (found != it->end()) {
             return &found->second;
         }
@@ -60,12 +63,24 @@ SymbolEntry* SymbolTable::lookupCurrentScope(const std::string& name) {
     }
 
     auto& currentScope = scopes.back();
-    auto found = currentScope.find(name);
+    auto found = currentScope.find(toLowerString(name));
     if (found != currentScope.end()) {
         return &found->second;
     }
 
     return nullptr;
+}
+
+int SymbolTable::lookupTabIndex(const std::string& name) const {
+    std::string normalizedName = toLowerString(name);
+    for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
+        auto found = it->find(normalizedName);
+        if (found != it->end()) {
+            return found->second.tabIndex;
+        }
+    }
+
+    return -1;
 }
 
 int SymbolTable::currentLevel() const {
@@ -198,6 +213,8 @@ void SymbolTable::addPredefinedSymbols() {
     declareSymbol({"string", SymbolKind::Type, "string", currentLevel()});
     declareSymbol({"true", SymbolKind::Constant, "boolean", currentLevel()});
     declareSymbol({"false", SymbolKind::Constant, "boolean", currentLevel()});
+    declareSymbol({"read", SymbolKind::Procedure, "procedure", currentLevel()});
     declareSymbol({"readln", SymbolKind::Procedure, "procedure", currentLevel()});
+    declareSymbol({"write", SymbolKind::Procedure, "procedure", currentLevel()});
     declareSymbol({"writeln", SymbolKind::Procedure, "procedure", currentLevel()});
 }

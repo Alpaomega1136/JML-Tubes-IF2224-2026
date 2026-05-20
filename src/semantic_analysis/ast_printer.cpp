@@ -5,9 +5,24 @@ void ASTPrinter::print(ASTNode* root, std::ostream& out) const {
 }
 
 void ASTPrinter::writeIndent(std::ostream& out, int indentLevel) const {
-    for (int i = 0; i < indentLevel; i++) {
-        out << "  ";
+    if (indentLevel <= 0) {
+        return;
     }
+
+    for (int i = 0; i < indentLevel - 1; i++) {
+        out << "|   ";
+    }
+    out << "|-- ";
+}
+
+void ASTPrinter::writeAnnotation(ASTNode* node, std::ostream& out) const {
+    if (node == nullptr) {
+        return;
+    }
+
+    out << " [type=" << node->semanticType
+        << ", tab=" << node->tabIndex
+        << ", lev=" << node->lexicalLevel << "]";
 }
 
 std::string ASTPrinter::containerName(const ProcCallNode* node) const {
@@ -45,7 +60,9 @@ void ASTPrinter::printType(TypeNode* node, std::ostream& out, int indentLevel) c
 
     if (RangeNode* range = dynamic_cast<RangeNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "RangeType" << '\n';
+        out << "RangeType";
+        writeAnnotation(range, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "first:" << '\n';
         printValue(range->first, out, indentLevel + 2);
@@ -60,7 +77,9 @@ void ASTPrinter::printType(TypeNode* node, std::ostream& out, int indentLevel) c
 
     if (ArrayTypeNode* array = dynamic_cast<ArrayTypeNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "ArrayType" << '\n';
+        out << "ArrayType";
+        writeAnnotation(array, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "index:" << '\n';
         printType(array->idxType, out, indentLevel + 2);
@@ -72,7 +91,9 @@ void ASTPrinter::printType(TypeNode* node, std::ostream& out, int indentLevel) c
 
     if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "RecordType" << '\n';
+        out << "RecordType";
+        writeAnnotation(record, out);
+        out << '\n';
         for (FieldPartNode* field : record->fieldList) {
             printNode(field, out, indentLevel + 1);
         }
@@ -80,7 +101,9 @@ void ASTPrinter::printType(TypeNode* node, std::ostream& out, int indentLevel) c
     }
 
     writeIndent(out, indentLevel);
-    out << "Type(name: '" << node->typeIdent << "')" << '\n';
+    out << "Type(name: '" << node->typeIdent << "')";
+    writeAnnotation(node, out);
+    out << '\n';
 }
 
 void ASTPrinter::printValue(ValueNode* node, std::ostream& out, int indentLevel) const {
@@ -92,38 +115,50 @@ void ASTPrinter::printValue(ValueNode* node, std::ostream& out, int indentLevel)
 
     if (NumberNode* number = dynamic_cast<NumberNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Number(value: " << number->num << ")" << '\n';
+        out << "Number(value: " << number->num << ")";
+        writeAnnotation(number, out);
+        out << '\n';
         return;
     }
 
     if (CharNode* character = dynamic_cast<CharNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Char(value: '" << character->c << "')" << '\n';
+        out << "Char(value: '" << character->c << "')";
+        writeAnnotation(character, out);
+        out << '\n';
         return;
     }
 
     if (StringNode* stringNode = dynamic_cast<StringNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "String(value: '" << stringNode->str << "')" << '\n';
+        out << "String(value: '" << stringNode->str << "')";
+        writeAnnotation(stringNode, out);
+        out << '\n';
         return;
     }
 
     if (VarNode* variable = dynamic_cast<VarNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Var(name: '" << variable->name << "')" << '\n';
+        out << "Var(name: '" << variable->name << "')";
+        writeAnnotation(variable, out);
+        out << '\n';
         return;
     }
 
     if (UnaryOpNode* unary = dynamic_cast<UnaryOpNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "UnaryOp(op: " << unary->op << ")" << '\n';
+        out << "UnaryOp(op: " << unary->op << ")";
+        writeAnnotation(unary, out);
+        out << '\n';
         printValue(unary->value, out, indentLevel + 1);
         return;
     }
 
     if (BinOpNode* binary = dynamic_cast<BinOpNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "BinOp(op: " << binary->op << ")" << '\n';
+        out << "BinOp(op: " << binary->op << ")";
+        writeAnnotation(binary, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "left:" << '\n';
         printValue(binary->left, out, indentLevel + 2);
@@ -135,7 +170,9 @@ void ASTPrinter::printValue(ValueNode* node, std::ostream& out, int indentLevel)
 
     if (FuncCallNode* call = dynamic_cast<FuncCallNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "FuncCall(name: '" << call->name << "')" << '\n';
+        out << "FuncCall(name: '" << call->name << "')";
+        writeAnnotation(call, out);
+        out << '\n';
         for (ValueNode* arg : call->args) {
             printValue(arg, out, indentLevel + 1);
         }
@@ -144,7 +181,9 @@ void ASTPrinter::printValue(ValueNode* node, std::ostream& out, int indentLevel)
 
     if (ArrayAccessNode* array = dynamic_cast<ArrayAccessNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "ArrayAccess(name: '" << array->name << "')" << '\n';
+        out << "ArrayAccess(name: '" << array->name << "')";
+        writeAnnotation(array, out);
+        out << '\n';
         printValue(array->idx, out, indentLevel + 1);
         return;
     }
@@ -152,7 +191,9 @@ void ASTPrinter::printValue(ValueNode* node, std::ostream& out, int indentLevel)
     if (RecordAccessNode* record = dynamic_cast<RecordAccessNode*>(node)) {
         writeIndent(out, indentLevel);
         out << "RecordAccess(name: '" << record->name
-            << "', field: '" << record->fieldName << "')" << '\n';
+            << "', field: '" << record->fieldName << "')";
+        writeAnnotation(record, out);
+        out << '\n';
         return;
     }
 
@@ -173,49 +214,63 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (ProgramNode* program = dynamic_cast<ProgramNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "ProgramNode(name: '" << program->name << "')" << '\n';
+        out << "ProgramNode(name: '" << program->name << "')";
+        writeAnnotation(program, out);
+        out << '\n';
         printChildren(program, out, indentLevel + 1);
         return;
     }
 
     if (VarDeclNode* varDecl = dynamic_cast<VarDeclNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "VarDecl(name: '" << varDecl->name << "')" << '\n';
+        out << "VarDecl(name: '" << varDecl->name << "')";
+        writeAnnotation(varDecl, out);
+        out << '\n';
         printType(varDecl->type, out, indentLevel + 1);
         return;
     }
 
     if (TypeDeclNode* typeDecl = dynamic_cast<TypeDeclNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "TypeDecl(name: '" << typeDecl->name << "')" << '\n';
+        out << "TypeDecl(name: '" << typeDecl->name << "')";
+        writeAnnotation(typeDecl, out);
+        out << '\n';
         printType(typeDecl->simpleType, out, indentLevel + 1);
         return;
     }
 
     if (ConstDeclNode* constDecl = dynamic_cast<ConstDeclNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "ConstDecl(name: '" << constDecl->name << "')" << '\n';
+        out << "ConstDecl(name: '" << constDecl->name << "')";
+        writeAnnotation(constDecl, out);
+        out << '\n';
         printValue(constDecl->value, out, indentLevel + 1);
         return;
     }
 
     if (ParameterNode* parameter = dynamic_cast<ParameterNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Parameter(name: '" << parameter->name << "')" << '\n';
+        out << "Parameter(name: '" << parameter->name << "')";
+        writeAnnotation(parameter, out);
+        out << '\n';
         printType(parameter->type, out, indentLevel + 1);
         return;
     }
 
     if (FieldPartNode* field = dynamic_cast<FieldPartNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Field(name: '" << field->fieldIdent << "')" << '\n';
+        out << "Field(name: '" << field->fieldIdent << "')";
+        writeAnnotation(field, out);
+        out << '\n';
         printType(field->fieldType, out, indentLevel + 1);
         return;
     }
 
     if (FuncDeclNode* funcDecl = dynamic_cast<FuncDeclNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "FunctionDecl(name: '" << funcDecl->name << "')" << '\n';
+        out << "FunctionDecl(name: '" << funcDecl->name << "')";
+        writeAnnotation(funcDecl, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "returnType:" << '\n';
         printType(funcDecl->returnType, out, indentLevel + 2);
@@ -228,7 +283,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (ProcDeclNode* procDecl = dynamic_cast<ProcDeclNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "ProcedureDecl(name: '" << procDecl->name << "')" << '\n';
+        out << "ProcedureDecl(name: '" << procDecl->name << "')";
+        writeAnnotation(procDecl, out);
+        out << '\n';
         for (ParameterNode* parameter : procDecl->parameterList) {
             printNode(parameter, out, indentLevel + 1);
         }
@@ -238,7 +295,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (AssignNode* assign = dynamic_cast<AssignNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Assign" << '\n';
+        out << "Assign";
+        writeAnnotation(assign, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "target:" << '\n';
         printValue(assign->target, out, indentLevel + 2);
@@ -250,7 +309,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (IfNode* ifNode = dynamic_cast<IfNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "If" << '\n';
+        out << "If";
+        writeAnnotation(ifNode, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "condition:" << '\n';
         printValue(ifNode->condition, out, indentLevel + 2);
@@ -267,7 +328,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (CaseBlockNode* caseBlock = dynamic_cast<CaseBlockNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "CaseBlock" << '\n';
+        out << "CaseBlock";
+        writeAnnotation(caseBlock, out);
+        out << '\n';
         printValue(caseBlock->caseCondition, out, indentLevel + 1);
         printNode(caseBlock->statement, out, indentLevel + 1);
         return;
@@ -275,7 +338,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (CaseNode* caseNode = dynamic_cast<CaseNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Case" << '\n';
+        out << "Case";
+        writeAnnotation(caseNode, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "selector:" << '\n';
         printValue(caseNode->condition, out, indentLevel + 2);
@@ -287,7 +352,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (WhileNode* whileNode = dynamic_cast<WhileNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "While" << '\n';
+        out << "While";
+        writeAnnotation(whileNode, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "condition:" << '\n';
         printValue(whileNode->condition, out, indentLevel + 2);
@@ -299,7 +366,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (RepeatNode* repeatNode = dynamic_cast<RepeatNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "Repeat" << '\n';
+        out << "Repeat";
+        writeAnnotation(repeatNode, out);
+        out << '\n';
         writeIndent(out, indentLevel + 1);
         out << "body:" << '\n';
         printNode(repeatNode->statement, out, indentLevel + 2);
@@ -311,7 +380,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (ForNode* forNode = dynamic_cast<ForNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << "For" << '\n';
+        out << "For";
+        writeAnnotation(forNode, out);
+        out << '\n';
         printNode(forNode->traversalAssign, out, indentLevel + 1);
         writeIndent(out, indentLevel + 1);
         out << "to:" << '\n';
@@ -324,7 +395,9 @@ void ASTPrinter::printNode(ASTNode* node, std::ostream& out, int indentLevel) co
 
     if (ProcCallNode* call = dynamic_cast<ProcCallNode*>(node)) {
         writeIndent(out, indentLevel);
-        out << containerName(call) << '\n';
+        out << containerName(call);
+        writeAnnotation(call, out);
+        out << '\n';
         for (ValueNode* arg : call->args) {
             printValue(arg, out, indentLevel + 1);
         }

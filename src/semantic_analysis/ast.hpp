@@ -40,6 +40,10 @@ class ASTNode {
         ASTNodeType nodeType;
         vector<ASTNode*> children;
     public:
+        string semanticType = "unknown";
+        int tabIndex = -1;
+        int lexicalLevel = -1;
+
         ASTNode(ASTNodeType nodeType) : nodeType(nodeType) {}
         vector<ASTNode*> getChildren() { return children; }
         void addChild(ASTNode* node) { children.push_back(node); }
@@ -216,10 +220,10 @@ class ProcDeclNode : public ASTNode {
 
 class AssignNode : public ASTNode {
     public:
-        VarNode* target;
+        ValueNode* target;
         ValueNode* value;
     
-        AssignNode(VarNode* target, ValueNode* value) : ASTNode(ASSIGN_NODE), target(target), value(value) {}
+        AssignNode(ValueNode* target, ValueNode* value) : ASTNode(ASSIGN_NODE), target(target), value(value) {}
         void visit() override;
 };
 
