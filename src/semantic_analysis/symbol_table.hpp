@@ -1,48 +1,80 @@
 #pragma once
-#include <iostream>
+
+#include <string>
+#include <unordered_map>
 #include <vector>
-using namespace std;
 
-class TabEntry {
-    private:
-        string identifier;
-        int link;
-        int obj;
-        int type;
-        int ref;
-        int nrm;
-        int lev;
-        int adr;
-    public:
-        TabEntry();
-        TabEntry(string, int, int, int, int, int, int, int);
+enum class SymbolKind {
+    Variable,
+    Constant,
+    Type,
+    Function,
+    Procedure,
+    Parameter
 };
 
-void insertPredefinedIdent();
-
-class ATabEntry {
-    private:
-        int arrays;
-        int xtype;
-        int etype;
-        int eref;
-        int low;
-        int high;
-        int elsz;
-        int size;
-    public:
-        ATabEntry();
-        ATabEntry(int, int, int, int, int, int, int, int);
+struct SymbolEntry {
+    std::string name;
+    SymbolKind kind;
+    std::string typeName;
+    int lexicalLevel;
+    std::vector<std::string> parameterTypes;
+    std::vector<std::string> parameterNames;
 };
 
-class BTabEntry {
-    private:
-        int blocks;
-        int last;
-        int lpar;
-        int psze;
-        int vsze;
-    public:
-        BTabEntry();
-        BTabEntry(int, int, int, int, int);
+struct TabEntry {
+    std::string identifier;
+    int link;
+    int obj;
+    int type;
+    int ref;
+    int nrm;
+    int lev;
+    int adr;
+};
+
+struct ATabEntry {
+    int indexType;
+    int elementType;
+    int low;
+    int high;
+    int elementSize;
+    int totalSize;
+};
+
+struct BTabEntry {
+    int last;
+    int lpar;
+    int psze;
+    int vsze;
+};
+
+class SymbolTable {
+private:
+    std::vector<std::unordered_map<std::string, SymbolEntry>> scopes;
+    std::vector<TabEntry> tab;
+    std::vector<ATabEntry> atab;
+    std::vector<BTabEntry> btab;
+
+    void addPredefinedSymbols();
+    void appendTabEntry(const SymbolEntry& entry);
+
+public:
+    SymbolTable();
+
+    void enterScope();
+    void exitScope();
+
+    bool declareSymbol(const SymbolEntry& entry);
+    SymbolEntry* lookup(const std::string& name);
+    SymbolEntry* lookupCurrentScope(const std::string& name);
+
+    int currentLevel() const;
+    int mapKindToObj(SymbolKind kind) const;
+    int mapTypeNameToCode(const std::string& typeName) const;
+
+    const std::vector<TabEntry>& getTab() const;
+    const std::vector<ATabEntry>& getATab() const;
+    const std::vector<BTabEntry>& getBTab() const;
+    void printSpecTables() const;
 };

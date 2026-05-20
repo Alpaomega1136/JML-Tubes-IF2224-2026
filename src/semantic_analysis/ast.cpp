@@ -106,10 +106,52 @@ static ValueNode* buildExpression(TreeParser* node);
 static ValueNode* buildSimpleExpression(TreeParser* node);
 static ValueNode* buildTerm(TreeParser* node);
 static ValueNode* buildFactor(TreeParser* node);
+static ValueNode* buildVariable(TreeParser* node);
 static TypeNode*  buildType(TreeParser* node);
 static ASTNode*   buildStatement(TreeParser* node);
 static ASTNode*   buildStatementList(TreeParser* node);
 static ASTNode*   buildDeclarationPart(TreeParser* node);
+
+static ValueNode* buildIndexValue(TreeParser* node) {
+    if (!node || node->children.empty()) return nullptr;
+
+    string d = node->children[0]->data;
+    if (d.size() >= 6 && d.substr(0, 6) == "intcon")
+        return new NumberNode(extractIdent(d));
+    if (d.size() >= 6 && d.substr(0, 6) == "charco") {
+        size_t lp = d.find('(');
+        char c = (lp != string::npos && lp + 1 < d.size()) ? d[lp + 1] : '?';
+        return new CharNode(c);
+    }
+    if (d.size() >= 5 && d.substr(0, 5) == "ident")
+        return new VarNode(extractIdent(d));
+
+    return new VarNode(d);
+}
+
+static ValueNode* buildVariable(TreeParser* node) {
+    if (!node || node->children.empty()) return new VarNode("");
+
+    string baseName = extractIdent(node->children[0]->data);
+    if (node->children.size() == 1) {
+        return new VarNode(baseName);
+    }
+
+    TreeParser* component = node->children[1];
+    if (!component || component->children.empty()) {
+        return new VarNode(baseName);
+    }
+
+    if (component->children[0]->data == "lbrack" && component->children.size() > 1) {
+        return new ArrayAccessNode(baseName, buildIndexValue(component->children[1]));
+    }
+
+    if (component->children[0]->data == "period" && component->children.size() > 1) {
+        return new RecordAccessNode(baseName, extractIdent(component->children[1]->data));
+    }
+
+    return new VarNode(baseName);
+}
 
 static ValueNode* buildFactor(TreeParser* node) {
     TreeParser* first = node->children[0];
@@ -130,6 +172,9 @@ static ValueNode* buildFactor(TreeParser* node) {
                     callNode->args.push_back(buildExpression(c));
         return callNode;
     }
+
+    if (first->data == "<variable>")
+        return buildVariable(first);
 
     string d = first->data;
 
@@ -304,7 +349,7 @@ static ASTNode* buildStatement(TreeParser* node) {
     TreeParser* inner = node->children[0];
 
     if (inner->data == "<assignment-statement>") {
-        string varName = extractIdent(inner->children[0]->data);
+        string varName = extractIdent(inner->children[0]->children[0]->data);
         ValueNode* val = buildExpression(inner->children[2]);
         return new AssignNode(new VarNode(varName), val);
     }
