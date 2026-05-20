@@ -156,47 +156,52 @@
 │           │   └── <compound-statement>
 │           │       ├── beginsy
 │           │       ├── <statement-list>
-│           │       │   ├── <statement>
-│           │       │   │   └── <for-statement>
-│           │       │   │       ├── forsy
-│           │       │   │       ├── ident(j)
-│           │       │   │       ├── becomes
-│           │       │   │       ├── <expression>
-│           │       │   │       │   └── <simple-expression>
-│           │       │   │       │       └── <term>
-│           │       │   │       │           └── <factor>
-│           │       │   │       │               └── intcon(1)
-│           │       │   │       ├── tosy
-│           │       │   │       ├── <expression>
-│           │       │   │       │   └── <simple-expression>
-│           │       │   │       │       └── <term>
-│           │       │   │       │           └── <factor>
-│           │       │   │       │               └── <variable>
-│           │       │   │       │                   └── ident(n)
-│           │       │   │       ├── dosy
-│           │       │   │       └── <statement>
-│           │       │   │           └── <assignment-statement>
-│           │       │   │               ├── <variable>
-│           │       │   │               │   ├── ident(arr)
-│           │       │   │               │   └── <component-variable>
-│           │       │   │               │       ├── lbrack
-│           │       │   │               │       ├── <index-list>
-│           │       │   │               │       │   └── ident(j)
-│           │       │   │               │       └── rbrack
-│           │       │   │               ├── becomes
-│           │       │   │               └── <expression>
-│           │       │   │                   └── <simple-expression>
-│           │       │   │                       └── <term>
-│           │       │   │                           ├── <factor>
-│           │       │   │                           │   └── <variable>
-│           │       │   │                           │       └── ident(j)
-│           │       │   │                           ├── <multiplicative-operator>
-│           │       │   │                           │   └── times
-│           │       │   │                           └── <factor>
-│           │       │   │                               └── <variable>
-│           │       │   │                                   └── ident(j)
-│           │       │   ├── semicolon
 │           │       │   └── <statement>
+│           │       │       └── <for-statement>
+│           │       │           ├── forsy
+│           │       │           ├── ident(j)
+│           │       │           ├── becomes
+│           │       │           ├── <expression>
+│           │       │           │   └── <simple-expression>
+│           │       │           │       └── <term>
+│           │       │           │           └── <factor>
+│           │       │           │               └── intcon(1)
+│           │       │           ├── tosy
+│           │       │           ├── <expression>
+│           │       │           │   └── <simple-expression>
+│           │       │           │       └── <term>
+│           │       │           │           └── <factor>
+│           │       │           │               └── <variable>
+│           │       │           │                   └── ident(n)
+│           │       │           ├── dosy
+│           │       │           ├── <compound-statement>
+│           │       │           │   ├── beginsy
+│           │       │           │   ├── <statement-list>
+│           │       │           │   │   ├── <statement>
+│           │       │           │   │   │   └── <assignment-statement>
+│           │       │           │   │   │       ├── <variable>
+│           │       │           │   │   │       │   ├── ident(arr)
+│           │       │           │   │   │       │   └── <component-variable>
+│           │       │           │   │   │       │       ├── lbrack
+│           │       │           │   │   │       │       ├── <index-list>
+│           │       │           │   │   │       │       │   └── ident(j)
+│           │       │           │   │   │       │       └── rbrack
+│           │       │           │   │   │       ├── becomes
+│           │       │           │   │   │       └── <expression>
+│           │       │           │   │   │           └── <simple-expression>
+│           │       │           │   │   │               └── <term>
+│           │       │           │   │   │                   ├── <factor>
+│           │       │           │   │   │                   │   └── <variable>
+│           │       │           │   │   │                   │       └── ident(j)
+│           │       │           │   │   │                   ├── <multiplicative-operator>
+│           │       │           │   │   │                   │   └── times
+│           │       │           │   │   │                   └── <factor>
+│           │       │           │   │   │                       └── <variable>
+│           │       │           │   │   │                           └── ident(j)
+│           │       │           │   │   ├── semicolon
+│           │       │           │   │   └── <statement>
+│           │       │           │   └── endsy
+│           │       │           └── semicolon
 │           │       └── endsy
 │           └── semicolon
 ├── <compound-statement>
@@ -268,24 +273,30 @@
 │   │   │       │               └── <variable>
 │   │   │       │                   └── ident(MAX)
 │   │   │       ├── dosy
-│   │   │       └── <statement>
-│   │   │           └── <procedure/function-call>
-│   │   │               ├── ident(writeln)
-│   │   │               ├── lparent
-│   │   │               ├── <parameter-list>
-│   │   │               │   └── <expression>
-│   │   │               │       └── <simple-expression>
-│   │   │               │           └── <term>
-│   │   │               │               └── <factor>
-│   │   │               │                   └── <variable>
-│   │   │               │                       ├── ident(data)
-│   │   │               │                       └── <component-variable>
-│   │   │               │                           ├── lbrack
-│   │   │               │                           ├── <index-list>
-│   │   │               │                           │   └── ident(i)
-│   │   │               │                           └── rbrack
-│   │   │               └── rparent
-│   │   ├── semicolon
+│   │   │       ├── <compound-statement>
+│   │   │       │   ├── beginsy
+│   │   │       │   ├── <statement-list>
+│   │   │       │   │   ├── <statement>
+│   │   │       │   │   │   └── <procedure/function-call>
+│   │   │       │   │   │       ├── ident(writeln)
+│   │   │       │   │   │       ├── lparent
+│   │   │       │   │   │       ├── <parameter-list>
+│   │   │       │   │   │       │   └── <expression>
+│   │   │       │   │   │       │       └── <simple-expression>
+│   │   │       │   │   │       │           └── <term>
+│   │   │       │   │   │       │               └── <factor>
+│   │   │       │   │   │       │                   └── <variable>
+│   │   │       │   │   │       │                       ├── ident(data)
+│   │   │       │   │   │       │                       └── <component-variable>
+│   │   │       │   │   │       │                           ├── lbrack
+│   │   │       │   │   │       │                           ├── <index-list>
+│   │   │       │   │   │       │                           │   └── ident(i)
+│   │   │       │   │   │       │                           └── rbrack
+│   │   │       │   │   │       └── rparent
+│   │   │       │   │   ├── semicolon
+│   │   │       │   │   └── <statement>
+│   │   │       │   └── endsy
+│   │   │       └── semicolon
 │   │   ├── <statement>
 │   │   │   └── <procedure/function-call>
 │   │   │       ├── ident(writeln)

@@ -375,7 +375,7 @@ static ASTNode* buildStatement(TreeParser* node) {
 
     if (inner->data == "<while-statement>") {
         ValueNode* cond = buildExpression(inner->children[1]);
-        ASTNode*   stmt = buildStatement(inner->children[3]);
+        ASTNode*   stmt = buildStatementList(inner->children[3]->children[1]);
         return new WhileNode(cond, stmt);
     }
 
@@ -391,7 +391,7 @@ static ASTNode* buildStatement(TreeParser* node) {
         ValueNode* from    = buildExpression(ch[3]);
         AssignNode* assign = new AssignNode(new VarNode(varName), from);
         ValueNode* toVal   = buildExpression(ch[5]);
-        ASTNode*   stmt    = buildStatement(ch[7]);
+        ASTNode*   stmt    = buildStatementList(ch[7]->children[1]);
         return new ForNode(assign, toVal, stmt);
     }
 

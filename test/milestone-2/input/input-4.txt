@@ -27,7 +27,9 @@ var
     j : integer;
 begin
     for j := 1 to n do
+    begin
         arr[j] := j * j;
+    end;
 end;
 
 begin
@@ -39,7 +41,9 @@ begin
     IsiArray(data, MAX);
 
     for i := 1 to MAX do
+    begin
         writeln(data[i]);
+    end;
 
     writeln(Kuadrat(5));
 end.

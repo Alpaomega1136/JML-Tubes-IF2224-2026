@@ -9,13 +9,17 @@ begin
 
     { jumlahkan angka 1 sampai n menggunakan perulangan for naik }
     for i := 1 to n do
+    begin
         total := total + i;
+    end;
 
     writeln(total);
 
     (* cetak angka dari n turun ke 1 menggunakan for downto *)
     for i := n downto 1 do
+    begin
         writeln(i);
+    end;
 
     { perulangan while akan terus berjalan selama kondisinya benar }
     i := 1;

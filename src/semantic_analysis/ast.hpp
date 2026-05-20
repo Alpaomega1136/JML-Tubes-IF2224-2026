@@ -187,7 +187,7 @@ class RecordTypeNode : public TypeNode {
         void visit() override;
         void print() const override {
             cout<<"RecordType(fieldList: [";
-            for(int i = 0; i < fieldList.size(); i++) {
+            for(size_t i = 0; i < fieldList.size(); i++) {
                 fieldList[i]->print();
                 if (i != fieldList.size() - 1) {
                     cout<<", ";
