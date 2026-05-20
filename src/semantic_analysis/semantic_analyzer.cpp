@@ -38,13 +38,21 @@ bool SemanticAnalyzer::hasErrors() const {
 }
 
 void SemanticAnalyzer::printErrors() const {
+    printErrors(std::cout);
+}
+
+void SemanticAnalyzer::printErrors(std::ostream& output) const {
     for (const std::string& error : errors) {
-        std::cout << error << std::endl;
+        output << error << std::endl;
     }
 }
 
 void SemanticAnalyzer::printSymbolTables() const {
-    symbolTable.printSpecTables();
+    printSymbolTables(std::cout);
+}
+
+void SemanticAnalyzer::printSymbolTables(std::ostream& output) const {
+    symbolTable.printSpecTables(output);
 }
 
 const std::vector<std::string>& SemanticAnalyzer::getErrors() const {

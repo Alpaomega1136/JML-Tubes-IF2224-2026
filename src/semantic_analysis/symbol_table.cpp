@@ -139,37 +139,41 @@ const std::vector<BTabEntry>& SymbolTable::getBTab() const {
 }
 
 void SymbolTable::printSpecTables() const {
-    std::cout << "=== TAB ===" << std::endl;
-    std::cout << "identifier | obj | type | lev | ref | adr" << std::endl;
+    printSpecTables(std::cout);
+}
+
+void SymbolTable::printSpecTables(std::ostream& output) const {
+    output << "=== TAB ===" << std::endl;
+    output << "identifier | obj | type | lev | ref | adr" << std::endl;
     for (const TabEntry& entry : tab) {
-        std::cout << entry.identifier << " | "
-                  << entry.obj << " | "
-                  << entry.type << " | "
-                  << entry.lev << " | "
-                  << entry.ref << " | "
-                  << entry.adr << std::endl;
+        output << entry.identifier << " | "
+               << entry.obj << " | "
+               << entry.type << " | "
+               << entry.lev << " | "
+               << entry.ref << " | "
+               << entry.adr << std::endl;
     }
 
-    std::cout << std::endl;
-    std::cout << "=== ATAB ===" << std::endl;
-    std::cout << "indexType | elementType | low | high | elementSize | totalSize" << std::endl;
+    output << std::endl;
+    output << "=== ATAB ===" << std::endl;
+    output << "indexType | elementType | low | high | elementSize | totalSize" << std::endl;
     for (const ATabEntry& entry : atab) {
-        std::cout << entry.indexType << " | "
-                  << entry.elementType << " | "
-                  << entry.low << " | "
-                  << entry.high << " | "
-                  << entry.elementSize << " | "
-                  << entry.totalSize << std::endl;
+        output << entry.indexType << " | "
+               << entry.elementType << " | "
+               << entry.low << " | "
+               << entry.high << " | "
+               << entry.elementSize << " | "
+               << entry.totalSize << std::endl;
     }
 
-    std::cout << std::endl;
-    std::cout << "=== BTAB ===" << std::endl;
-    std::cout << "last | lpar | psze | vsze" << std::endl;
+    output << std::endl;
+    output << "=== BTAB ===" << std::endl;
+    output << "last | lpar | psze | vsze" << std::endl;
     for (const BTabEntry& entry : btab) {
-        std::cout << entry.last << " | "
-                  << entry.lpar << " | "
-                  << entry.psze << " | "
-                  << entry.vsze << std::endl;
+        output << entry.last << " | "
+               << entry.lpar << " | "
+               << entry.psze << " | "
+               << entry.vsze << std::endl;
     }
 }
 

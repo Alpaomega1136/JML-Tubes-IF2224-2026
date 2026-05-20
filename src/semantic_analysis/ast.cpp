@@ -32,63 +32,6 @@ void FuncCallNode::visit()    {}
 void ArrayAccessNode::visit() {}
 void RecordAccessNode::visit(){}
 
-// Implementasi print() ast.hpp (tanya nanti)
-void IfNode::print() const {
-    cout << "If(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void CaseBlockNode::print() const {
-    cout << "CaseBlock(condition: ";
-    caseCondition->print();
-    cout << ")";
-}
-
-void CaseNode::print() const {
-    cout << "Case(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void WhileNode::print() const {
-    cout << "While(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void RepeatNode::print() const {
-    cout << "Repeat(until: ";
-    untilCondition->print();
-    cout << ")";
-}
-
-void ForNode::print() const {
-    cout << "For(assign: ";
-    traversalAssign->print();
-    cout << ", to: ";
-    to->print();
-    cout << ")";
-}
-
-void ProcCallNode::print() const {
-    cout << "ProcCall(name: '" << name << "')";
-}
-
-void FuncCallNode::print() const {
-    cout << "FuncCall(name: '" << name << "')";
-}
-
-void ArrayAccessNode::print() const {
-    cout << "ArrayAccess(name: '" << name << "', idx: ";
-    idx->print();
-    cout << ")";
-}
-
-void RecordAccessNode::print() const {
-    cout << "RecordAccess(name: '" << name << "', field: '" << fieldName << "')";
-}
-
 static string extractIdent(const string& s) {
     size_t lp = s.find('(');
     size_t rp = s.rfind(')');
@@ -546,9 +489,4 @@ ASTNode* buildAST(TreeParser* root) {
     program->addChild(buildStatementList(root->children[2]->children[1]));
 
     return program;
-}
-
-// printAST stub
-void printAST(ASTNode* tree) {
-    
 }

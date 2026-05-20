@@ -44,7 +44,6 @@ class ASTNode {
         vector<ASTNode*> getChildren() { return children; }
         void addChild(ASTNode* node) { children.push_back(node); }
         virtual void visit() = 0;
-        virtual void print() const = 0;
 };
 
 class ProgramNode : public ASTNode {
@@ -54,7 +53,6 @@ class ProgramNode : public ASTNode {
     
         ProgramNode(string name) : ASTNode(PROGRAM_NODE), name(name) {}
         void visit() override;
-        void print() const override { cout<<"ProgramNode(name: '"<<name<<"')"; }
 };
 
 
@@ -70,7 +68,6 @@ class NumberNode : public ValueNode {
     
         NumberNode(string num) : ValueNode(NUMBER_NODE), num(num) {}
         void visit() override;
-        void print() const override { cout<<"Number("<<num<<")"; }
 };
 
 class CharNode : public ValueNode {
@@ -79,7 +76,6 @@ class CharNode : public ValueNode {
     
         CharNode(char c) : ValueNode(CHAR_NODE), c(c) {}
         void visit() override;
-        void print() const override { cout<<"Char('"<<c<<"')"; }
 };
 
 class StringNode : public ValueNode {
@@ -88,7 +84,6 @@ class StringNode : public ValueNode {
     
         StringNode(string str) : ValueNode(STRING_NODE), str(str) {}
         void visit() override;
-        void print() const override { cout<<"String('"<<str<<"')"; }
 };
 
 class VarNode : public ValueNode {
@@ -97,7 +92,6 @@ class VarNode : public ValueNode {
     
         VarNode(string name) : ValueNode(VAR_NODE), name(name) {}
         void visit() override;
-        void print() const override { cout<<"Var('"<<name<<"')"; }
 };
 
 class UnaryOpNode : public ValueNode {
@@ -107,9 +101,6 @@ class UnaryOpNode : public ValueNode {
     
         UnaryOpNode(string op, ValueNode* value) : ValueNode(UNOP_NODE), op(op), value(value) {}
         void visit() override;
-        void print() const override { cout<<"UnaryOp(op: "<<op<<", value: ";
-                                      value->print();
-                                      cout<<")";}
 };
 
 class BinOpNode : public ValueNode {
@@ -120,11 +111,6 @@ class BinOpNode : public ValueNode {
     
         BinOpNode(string op, ValueNode* left, ValueNode* right) : ValueNode(BINOP_NODE), op(op), left(left), right(right) {}
         void visit() override;
-        void print() const override { cout<<"BinOp(op: "<<op<<", left: ";
-                                      left->print();
-                                      cout<<", right: ";
-                                      right->print();
-                                      cout<<")";}
 };
 
 class TypeNode : public ASTNode {
@@ -133,7 +119,6 @@ class TypeNode : public ASTNode {
     
         TypeNode(string typeIdent) : ASTNode(TYPE_NODE), typeIdent(typeIdent) {}
         virtual void visit() override;
-        virtual void print() const override { cout<<"Type(type: '"<<typeIdent<<"')"; }
 };
 
 class RangeNode : public TypeNode {
@@ -144,13 +129,6 @@ class RangeNode : public TypeNode {
     
         RangeNode(ValueNode* first, ValueNode* last, TypeNode* type) : TypeNode("subrange"), first(first), last(last), rangeType(type) {}
         void visit() override;
-        void print() const override { cout<<"Range(first: ";
-                                      first->print();
-                                      cout<<", last: ";
-                                      last ->print();
-                                      cout<<", type: ";
-                                      rangeType->print();
-                                      cout<<")";}
 };
 
 class ArrayTypeNode : public TypeNode {
@@ -160,11 +138,6 @@ class ArrayTypeNode : public TypeNode {
     
         ArrayTypeNode(TypeNode* idxType, TypeNode* elType) : TypeNode("array"), idxType(idxType), elType(elType) {}
         void visit() override;
-        void print() const override { cout<<"ArrayType(idxType: ";
-                                      idxType->print();
-                                      cout<<", elType: ";
-                                      elType->print();
-                                      cout<<")";}
 };
 
 class FieldPartNode : public ASTNode {
@@ -174,9 +147,6 @@ class FieldPartNode : public ASTNode {
     
         FieldPartNode(string fieldIdent, TypeNode* fieldType) : ASTNode(FIELD_PART_NODE), fieldIdent(fieldIdent), fieldType(fieldType) {}
         void visit() override;
-        void print() const override { cout<<"FieldPart(fieldIdent: "<<fieldIdent<<", type: ";
-                                              fieldType->print();
-                                               cout<<")";}
 };
 
 class RecordTypeNode : public TypeNode {
@@ -185,16 +155,6 @@ class RecordTypeNode : public TypeNode {
     
         RecordTypeNode() : TypeNode("record") {}
         void visit() override;
-        void print() const override {
-            cout<<"RecordType(fieldList: [";
-            for(size_t i = 0; i < fieldList.size(); i++) {
-                fieldList[i]->print();
-                if (i != fieldList.size() - 1) {
-                    cout<<", ";
-                }
-            }
-            cout<<"])";
-        }
 };
 
 
@@ -205,9 +165,6 @@ class VarDeclNode : public ASTNode {
     
         VarDeclNode(string name, TypeNode* type) : ASTNode(VAR_DECL_NODE), name(name), type(type) {}
         void visit() override;
-        void print() const override { cout<<"VarDecl(name: "<<name<<", type: ";
-                                      type->print();
-                                      cout<<")";}
 };
 
 class TypeDeclNode : public ASTNode {
@@ -217,9 +174,6 @@ class TypeDeclNode : public ASTNode {
     
         TypeDeclNode(string name, TypeNode* simpleType) : ASTNode(TYPE_DECL_NODE), name(name), simpleType(simpleType) {}
         void visit() override;
-        void print() const override { cout<<"TypeDecl(name: "<<name<<", simpleType: ";
-                                      simpleType->print();
-                                      cout<<")";}
 };
 
 class ConstDeclNode : public ASTNode {
@@ -229,9 +183,6 @@ class ConstDeclNode : public ASTNode {
     
         ConstDeclNode(string name, ValueNode* value) : ASTNode(CONST_DECL_NODE), name(name), value(value) {}
         void visit() override;
-        void print() const override { cout<<"ConstDecl(name: "<<name<<", value: ";
-                                      value->print();
-                                      cout<<")";}
 };
 
 class ParameterNode : public ASTNode {
@@ -241,9 +192,6 @@ class ParameterNode : public ASTNode {
     
         ParameterNode(string name, TypeNode* type) : ASTNode(PARAMETER_NODE), name(name), type(type) {}
         void visit() override;
-        void print() const override { cout<<"Parameter(name: "<<name<<", type: ";
-                                      type->print();
-                                      cout<<")";}
 };
 
 class FuncDeclNode : public ASTNode {
@@ -254,8 +202,6 @@ class FuncDeclNode : public ASTNode {
     
         FuncDeclNode(string name, TypeNode* returnType) : ASTNode(FUNC_DECL_NODE), name(name), returnType(returnType) {}
         void visit() override;
-        void print() const override { 
-            cout<<"FunctionDecl(name: "<<name<<", returnType: "<<returnType<<")";}
 };
 
 class ProcDeclNode : public ASTNode {
@@ -265,8 +211,6 @@ class ProcDeclNode : public ASTNode {
     
         ProcDeclNode(string name, TypeNode* returnType) : ASTNode(PROC_DECL_NODE), name(name){}
         void visit() override;
-        void print() const override { 
-            cout<<"ProcedureDecl(name: "<<name<<")";}
 };
 
 
@@ -277,11 +221,6 @@ class AssignNode : public ASTNode {
     
         AssignNode(VarNode* target, ValueNode* value) : ASTNode(ASSIGN_NODE), target(target), value(value) {}
         void visit() override;
-        void print() const override { cout<<"Assign(target: ";
-                                      target->print();
-                                      cout<<", value: ";
-                                      value->print();
-                                      cout<<")";}
 };
 
 class IfNode : public ASTNode {
@@ -292,7 +231,6 @@ class IfNode : public ASTNode {
     
         IfNode(ValueNode* condition, ASTNode* then, ASTNode* elseThen) : ASTNode(IF_NODE), condition(condition), then(then), elseThen(elseThen) {}
         void visit() override;
-        void print() const override;
 };
 
 class CaseBlockNode : public ASTNode {
@@ -302,7 +240,6 @@ class CaseBlockNode : public ASTNode {
     
         CaseBlockNode(ValueNode* caseCondition, ASTNode* statement) : ASTNode(CASE_BLOCK_NODE), caseCondition(caseCondition), statement(statement) {}
         void visit() override;
-        void print() const override;
 };
 
 class CaseNode : public ASTNode {
@@ -312,7 +249,6 @@ class CaseNode : public ASTNode {
     
         CaseNode(ValueNode* condition) : ASTNode(CASE_NODE), condition(condition) {}
         void visit() override;
-        void print() const override;
 };
 
 class WhileNode : public ASTNode {
@@ -322,7 +258,6 @@ class WhileNode : public ASTNode {
     
         WhileNode(ValueNode* condition, ASTNode* statement) : ASTNode(WHILE_NODE), condition(condition), statement(statement) {}
         void visit() override;
-        void print() const override;
 };
 
 class RepeatNode : public ASTNode {
@@ -332,7 +267,6 @@ class RepeatNode : public ASTNode {
     
         RepeatNode(ValueNode* condition, ASTNode* statement) : ASTNode(REPEAT_NODE), untilCondition(condition), statement(statement) {}
         void visit() override;
-        void print() const override;
 };
 
 class ForNode : public ASTNode {
@@ -343,7 +277,6 @@ class ForNode : public ASTNode {
     
         ForNode(AssignNode* traversalAssign, ValueNode* to, ASTNode* statement) : ASTNode(FOR_NODE), traversalAssign(traversalAssign), to(to), statement(statement) {}
         void visit() override;
-        void print() const override;
 };
 
 class ProcCallNode : public ASTNode {
@@ -353,7 +286,6 @@ class ProcCallNode : public ASTNode {
 
         ProcCallNode(string name) : ASTNode(PROC_CALL_NODE), name(name) {}
         void visit() override;
-        void print() const override;
 };
 
 class FuncCallNode : public ValueNode {
@@ -363,7 +295,6 @@ class FuncCallNode : public ValueNode {
 
         FuncCallNode(string name) : ValueNode(FUNC_CALL_NODE), name(name) {}
         void visit() override;
-        void print() const override;
 };
 
 class ArrayAccessNode : public ValueNode {
@@ -373,7 +304,6 @@ class ArrayAccessNode : public ValueNode {
 
         ArrayAccessNode(string name, ValueNode* idx) : ValueNode(ARRAY_ACCESS_NODE), name(name), idx(idx) {}
         void visit() override;
-        void print() const override;
 };
 
 class RecordAccessNode : public ValueNode {
@@ -383,10 +313,7 @@ class RecordAccessNode : public ValueNode {
     
         RecordAccessNode(string name, string fieldName) : ValueNode(RECORD_ACCESS_NODE), name(name), fieldName(fieldName) {}
         void visit() override;
-        void print() const override;
 };
 
 
 ASTNode* buildAST(TreeParser* root);
-
-void printAST(ASTNode* tree);

@@ -2,6 +2,7 @@
 
 #include "ast.hpp"
 #include "symbol_table.hpp"
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -39,6 +40,8 @@ public:
     void analyze(ASTNode* root);
     bool hasErrors() const;
     void printErrors() const;
+    void printErrors(std::ostream& output) const;
     void printSymbolTables() const;
+    void printSymbolTables(std::ostream& output) const;
     const std::vector<std::string>& getErrors() const;
 };

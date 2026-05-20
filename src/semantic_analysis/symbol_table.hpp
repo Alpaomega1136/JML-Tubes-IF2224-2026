@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -77,4 +78,5 @@ public:
     const std::vector<ATabEntry>& getATab() const;
     const std::vector<BTabEntry>& getBTab() const;
     void printSpecTables() const;
+    void printSpecTables(std::ostream& output) const;
 };

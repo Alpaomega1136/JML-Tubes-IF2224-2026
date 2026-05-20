@@ -5,6 +5,7 @@
 #include "lexer/token.hpp"
 #include "parser/parser.hpp"
 #include "semantic_analysis/ast.hpp"
+#include "semantic_analysis/ast_printer.hpp"
 #include "semantic_analysis/semantic_analyzer.hpp"
 
 using namespace std;
@@ -23,21 +24,48 @@ int main(int argc, char* argv[]){
         Parser parser(tokens);
         TreeParser* parseTree = parser.parse();
         ASTNode* ast = buildAST(parseTree);
-        if (ast != nullptr) {
-            cout << "AST construction completed." << endl;
-        } else {
-            cout << "AST construction returned nullptr." << endl;
-        }
         SemanticAnalyzer analyzer;
         analyzer.analyze(ast);
-        if (analyzer.hasErrors()) {
-            analyzer.printErrors();
-        } else {
-            cout << "Semantic analysis completed successfully." << endl;
+
+        std::filesystem::path path(outputFile);
+        if (path.has_parent_path()) {
+            std::filesystem::create_directories(path.parent_path());
         }
-        cout << "=== Symbol Tables ===" << endl;
-        analyzer.printSymbolTables();
-        parser.printParseTree(parseTree, outputFile);
+
+        std::ofstream output(outputFile);
+        if (!output.is_open()) {
+            throw std::runtime_error("failed to open output file: " + outputFile);
+        }
+
+        ASTPrinter printer;
+        auto writeSemanticOutput = [&](std::ostream& out) {
+            out << "=== Semantic Analysis Result ===" << endl;
+            if (ast != nullptr) {
+                out << "AST construction: completed" << endl;
+            } else {
+                out << "AST construction: returned nullptr" << endl;
+            }
+
+            if (analyzer.hasErrors()) {
+                out << "Semantic analysis: failed" << endl;
+                out << endl;
+                out << "=== Semantic Errors ===" << endl;
+                analyzer.printErrors(out);
+            } else {
+                out << "Semantic analysis: completed successfully" << endl;
+            }
+
+            out << endl;
+            out << "=== Decorated AST ===" << endl;
+            printer.print(ast, out);
+
+            out << endl;
+            out << "=== Symbol Tables ===" << endl;
+            analyzer.printSymbolTables(out);
+        };
+
+        writeSemanticOutput(cout);
+        writeSemanticOutput(output);
         return 0;
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
