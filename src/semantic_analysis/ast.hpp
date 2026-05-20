@@ -107,7 +107,7 @@ class UnaryOpNode : public ValueNode {
     
         UnaryOpNode(string op, ValueNode* value) : ValueNode(UNOP_NODE), op(op), value(value) {}
         void visit() override;
-        void print() const override { cout<<"ArrayType(op: "<<op<<", value: ";
+        void print() const override { cout<<"UnaryOp(op: "<<op<<", value: ";
                                       value->print();
                                       cout<<")";}
 };
@@ -120,7 +120,7 @@ class BinOpNode : public ValueNode {
     
         BinOpNode(string op, ValueNode* left, ValueNode* right) : ValueNode(BINOP_NODE), op(op), left(left), right(right) {}
         void visit() override;
-        void print() const override { cout<<"ArrayType(op: "<<op<<", left: ";
+        void print() const override { cout<<"BinOp(op: "<<op<<", left: ";
                                       left->print();
                                       cout<<", right: ";
                                       right->print();
@@ -293,6 +293,7 @@ class IfNode : public ASTNode {
     
         IfNode(ValueNode* condition, ASTNode* then, ASTNode* elseThen) : ASTNode(IF_NODE), condition(condition), then(then), elseThen(elseThen) {}
         void visit() override;
+        void print() const override;
 };
 
 class CaseBlockNode : public ASTNode {
@@ -302,6 +303,7 @@ class CaseBlockNode : public ASTNode {
     
         CaseBlockNode(ValueNode* caseCondition, ASTNode* statement) : ASTNode(CASE_BLOCK_NODE), caseCondition(caseCondition), statement(statement) {}
         void visit() override;
+        void print() const override;
 };
 
 class CaseNode : public ASTNode {
@@ -311,6 +313,7 @@ class CaseNode : public ASTNode {
     
         CaseNode(ValueNode* condition) : ASTNode(CASE_NODE), condition(condition) {}
         void visit() override;
+        void print() const override;
 };
 
 class WhileNode : public ASTNode {
@@ -320,6 +323,7 @@ class WhileNode : public ASTNode {
     
         WhileNode(ValueNode* condition, ASTNode* statement) : ASTNode(WHILE_NODE), condition(condition), statement(statement) {}
         void visit() override;
+        void print() const override;
 };
 
 class RepeatNode : public ASTNode {
@@ -329,6 +333,7 @@ class RepeatNode : public ASTNode {
     
         RepeatNode(ValueNode* condition, ASTNode* statement) : ASTNode(REPEAT_NODE), untilCondition(condition), statement(statement) {}
         void visit() override;
+        void print() const override;
 };
 
 class ForNode : public ASTNode {
@@ -339,6 +344,7 @@ class ForNode : public ASTNode {
     
         ForNode(AssignNode* traversalAssign, ValueNode* to, ASTNode* statement) : ASTNode(FOR_NODE), traversalAssign(traversalAssign), to(to), statement(statement) {}
         void visit() override;
+        void print() const override;
 };
 
 class ProcCallNode : public ASTNode {
@@ -348,6 +354,7 @@ class ProcCallNode : public ASTNode {
 
         ProcCallNode(string name) : ASTNode(PROC_CALL_NODE), name(name) {}
         void visit() override;
+        void print() const override;
 };
 
 class FuncCallNode : public ValueNode {
@@ -357,6 +364,7 @@ class FuncCallNode : public ValueNode {
 
         FuncCallNode(string name) : ValueNode(FUNC_CALL_NODE), name(name) {}
         void visit() override;
+        void print() const override;
 };
 
 class ArrayAccessNode : public ValueNode {
@@ -366,6 +374,7 @@ class ArrayAccessNode : public ValueNode {
 
         ArrayAccessNode(string name, ValueNode* idx) : ValueNode(ARRAY_ACCESS_NODE), name(name), idx(idx) {}
         void visit() override;
+        void print() const override;
 };
 
 class RecordAccessNode : public ValueNode {
@@ -375,6 +384,7 @@ class RecordAccessNode : public ValueNode {
     
         RecordAccessNode(string name, string fieldName) : ValueNode(RECORD_ACCESS_NODE), name(name), fieldName(fieldName) {}
         void visit() override;
+        void print() const override;
 };
 
 
