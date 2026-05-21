@@ -111,6 +111,11 @@ bool SemanticAnalyzer::extractOrdinalValue(ValueNode* valueNode, int& value) con
 }
 
 int SemanticAnalyzer::typeCodeFor(const std::string& typeName) const {
+    auto foundType = typeRegistry.find(normalizeName(typeName));
+    if (foundType != typeRegistry.end() && foundType->second.kind == "enumerated") {
+        return symbolTable.mapTypeNameToCode("enumerated");
+    }
+
     return symbolTable.mapTypeNameToCode(resolveTypeName(typeName));
 }
 
@@ -192,6 +197,20 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
         return info;
     }
 
+    if (EnumeratedTypeNode* enumerated = dynamic_cast<EnumeratedTypeNode*>(typeNode)) {
+        info.kind = "enumerated";
+        info.baseType = "enumerated";
+        for (const std::string& member : enumerated->members) {
+            std::string normalizedMember = normalizeName(member);
+            if (std::find(info.members.begin(), info.members.end(), normalizedMember) != info.members.end()) {
+                addError("Semantic error: enumerated member '" + member + "' is already declared in this type.");
+                continue;
+            }
+            info.members.push_back(normalizedMember);
+        }
+        return info;
+    }
+
     if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(typeNode)) {
         info.kind = "record";
         info.baseType = "record";
@@ -248,7 +267,11 @@ void SemanticAnalyzer::registerTypeDeclaration(TypeDeclNode* typeDecl) {
         return;
     }
 
-    typeRegistry[normalizeName(typeDecl->name)] = describeType(typeDecl->simpleType);
+    TypeInfo info = describeType(typeDecl->simpleType);
+    if (info.kind == "enumerated") {
+        info.baseType = normalizeName(typeDecl->name);
+    }
+    typeRegistry[normalizeName(typeDecl->name)] = info;
 }
 
 std::string SemanticAnalyzer::resolveTypeName(const std::string& typeName) const {
@@ -274,7 +297,7 @@ std::string SemanticAnalyzer::resolveTypeName(const std::string& typeName) const
         return resolveTypeName(info.baseType);
     }
 
-    if (info.kind == "array" || info.kind == "record") {
+    if (info.kind == "array" || info.kind == "record" || info.kind == "enumerated") {
         return normalizedType;
     }
 
@@ -446,6 +469,21 @@ void SemanticAnalyzer::analyzeDeclaration(ASTNode* node) {
         typeDecl->semanticType = typeName;
         typeDecl->tabIndex = symbolTable.lookupTabIndex(typeDecl->name);
         typeDecl->lexicalLevel = symbolTable.currentLevel();
+
+        if (foundType != typeRegistry.end() && foundType->second.kind == "enumerated") {
+            int ordinal = 0;
+            for (const std::string& member : foundType->second.members) {
+                SymbolEntry memberEntry{
+                    member,
+                    SymbolKind::Constant,
+                    normalizeName(typeDecl->name),
+                    symbolTable.currentLevel()
+                };
+                memberEntry.typeCode = symbolTable.mapTypeNameToCode("enumerated");
+                memberEntry.adr = ordinal++;
+                declareOrReport(memberEntry);
+            }
+        }
         return;
     }
 
@@ -1298,6 +1336,10 @@ std::string SemanticAnalyzer::typeNameFromTypeNode(TypeNode* typeNode) const {
 
     if (dynamic_cast<RecordTypeNode*>(typeNode) != nullptr) {
         return "record";
+    }
+
+    if (dynamic_cast<EnumeratedTypeNode*>(typeNode) != nullptr) {
+        return "enumerated";
     }
 
     return normalizeName(typeNode->typeIdent);

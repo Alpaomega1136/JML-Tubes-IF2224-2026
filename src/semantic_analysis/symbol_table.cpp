@@ -156,6 +156,9 @@ int SymbolTable::mapTypeNameToCode(const std::string& typeName) const {
     if (normalizedType == "procedure") {
         return 8;
     }
+    if (normalizedType == "enumerated") {
+        return 9;
+    }
 
     return 0;
 }

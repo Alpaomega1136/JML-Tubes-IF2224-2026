@@ -14,6 +14,7 @@ enum ASTNodeType {
     FUNC_DECL_NODE,
     PARAMETER_NODE,
     TYPE_NODE,
+    ENUMERATED_TYPE_NODE,
     FIELD_PART_NODE,
     BLOCK,
     ASSIGN_NODE,
@@ -141,6 +142,16 @@ class ArrayTypeNode : public TypeNode {
         TypeNode* elType;
     
         ArrayTypeNode(TypeNode* idxType, TypeNode* elType) : TypeNode("array"), idxType(idxType), elType(elType) {}
+        void visit() override;
+};
+
+class EnumeratedTypeNode : public TypeNode {
+    public:
+        vector<string> members;
+
+        EnumeratedTypeNode() : TypeNode("enumerated") {
+            nodeType = ENUMERATED_TYPE_NODE;
+        }
         void visit() override;
 };
 
