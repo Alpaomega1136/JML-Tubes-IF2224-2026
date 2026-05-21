@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <utility>
 
 static std::string toLowerString(const std::string& text) {
     std::string result = text;
@@ -124,6 +125,8 @@ int SymbolTable::mapKindToObj(SymbolKind kind) const {
             return 6;
         case SymbolKind::Field:
             return 7;
+        case SymbolKind::Reserved:
+            return 8;
         default:
             return 0;
     }
@@ -227,7 +230,7 @@ void SymbolTable::printSpecTables() const {
 }
 
 void SymbolTable::printSpecTables(std::ostream& output) const {
-    int maxLength = 10;
+    std::string::size_type maxLength = 10;
     for (const TabEntry& entry : tab) {
         if (entry.identifier.length() > maxLength) {
             maxLength = entry.identifier.length(); 
@@ -284,11 +287,48 @@ void SymbolTable::appendTabEntry(const SymbolEntry& entry) {
 }
 
 void SymbolTable::addPredefinedSymbols() {
-    declareSymbol({"integer", SymbolKind::Type, "integer", currentLevel()});
-    declareSymbol({"real", SymbolKind::Type, "real", currentLevel()});
-    declareSymbol({"char", SymbolKind::Type, "char", currentLevel()});
-    declareSymbol({"boolean", SymbolKind::Type, "boolean", currentLevel()});
-    declareSymbol({"string", SymbolKind::Type, "string", currentLevel()});
+    const std::vector<std::pair<std::string, SymbolKind>> reservedWords = {
+        {"and", SymbolKind::Reserved},
+        {"array", SymbolKind::Reserved},
+        {"begin", SymbolKind::Reserved},
+        {"case", SymbolKind::Reserved},
+        {"const", SymbolKind::Reserved},
+        {"div", SymbolKind::Reserved},
+        {"downto", SymbolKind::Reserved},
+        {"do", SymbolKind::Reserved},
+        {"else", SymbolKind::Reserved},
+        {"end", SymbolKind::Reserved},
+        {"for", SymbolKind::Reserved},
+        {"function", SymbolKind::Reserved},
+        {"if", SymbolKind::Reserved},
+        {"mod", SymbolKind::Reserved},
+        {"not", SymbolKind::Reserved},
+        {"of", SymbolKind::Reserved},
+        {"or", SymbolKind::Reserved},
+        {"procedure", SymbolKind::Reserved},
+        {"program", SymbolKind::Reserved},
+        {"record", SymbolKind::Reserved},
+        {"repeat", SymbolKind::Reserved},
+        {"integer", SymbolKind::Type},
+        {"real", SymbolKind::Type},
+        {"boolean", SymbolKind::Type},
+        {"char", SymbolKind::Type},
+        {"string", SymbolKind::Type},
+        {"then", SymbolKind::Reserved},
+        {"to", SymbolKind::Reserved},
+        {"type", SymbolKind::Reserved},
+        {"until", SymbolKind::Reserved},
+        {"var", SymbolKind::Reserved},
+        {"while", SymbolKind::Reserved}
+    };
+
+    for (const auto& reservedWord : reservedWords) {
+        const std::string& name = reservedWord.first;
+        SymbolKind kind = reservedWord.second;
+        std::string typeName = kind == SymbolKind::Type ? name : "reserved";
+        declareSymbol({name, kind, typeName, currentLevel()});
+    }
+
     declareSymbol({"true", SymbolKind::Constant, "boolean", currentLevel()});
     declareSymbol({"false", SymbolKind::Constant, "boolean", currentLevel()});
     declareSymbol({"read", SymbolKind::Procedure, "procedure", currentLevel()});

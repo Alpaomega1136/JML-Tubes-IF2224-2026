@@ -4,151 +4,178 @@ Pipeline status:
 - Semantic analyzer  : OK
 
 === Decorated AST Tree ===
-ProgramNode(name: 'TipeKompleks') [type=program, tab=11, lev=0]
-|-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |-- ConstDecl(name: 'MAX') [type=integer, tab=12, lev=0]
+ProgramNode(name: 'TipeKompleks') [type=program, tab=38, lev=0]
+|-- Declarations
+|   |-- ConstDecl(name: 'MAX') [type=integer, tab=39, lev=0]
 |   |   |-- Number(value: 10) [type=integer, tab=-1, lev=0]
-|   |-- ConstDecl(name: 'PI') [type=real, tab=13, lev=0]
+|   |-- ConstDecl(name: 'PI') [type=real, tab=40, lev=0]
 |   |   |-- Number(value: 3.14159) [type=real, tab=-1, lev=0]
-|   |-- TypeDecl(name: 'Titik') [type=record, tab=16, lev=0]
-|   |   |-- RecordType [type=unknown, tab=-1, lev=-1]
-|   |   |   |-- Field(name: 'x') [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- Type(name: 'real') [type=unknown, tab=-1, lev=-1]
-|   |   |   |-- Field(name: 'y') [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- Type(name: 'real') [type=unknown, tab=-1, lev=-1]
-|   |-- TypeDecl(name: 'Daftar') [type=array, tab=17, lev=0]
-|   |   |-- ArrayType [type=unknown, tab=-1, lev=-1]
+|   |-- TypeDecl(name: 'Titik') [type=record, tab=43, lev=0]
+|   |   |-- RecordType
+|   |   |   |-- Field(name: 'x')
+|   |   |   |   |-- Type(name: 'real')
+|   |   |   |-- Field(name: 'y')
+|   |   |   |   |-- Type(name: 'real')
+|   |-- TypeDecl(name: 'Daftar') [type=array, tab=44, lev=0]
+|   |   |-- ArrayType
 |   |   |   |-- index:
-|   |   |   |   |-- RangeType [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |-- RangeType
 |   |   |   |   |   |-- first:
-|   |   |   |   |   |   |-- Number(value: 1) [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |   |-- Number(value: 1)
 |   |   |   |   |   |-- last:
-|   |   |   |   |   |   |-- Number(value: 10) [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |   |-- Number(value: 10)
 |   |   |   |   |   |-- base:
-|   |   |   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |   |-- Type(name: 'integer')
 |   |   |   |-- element:
-|   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'p') [type=titik, tab=18, lev=0]
-|   |   |-- Type(name: 'Titik') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'data') [type=daftar, tab=19, lev=0]
-|   |   |-- Type(name: 'Daftar') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'i') [type=integer, tab=20, lev=0]
-|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- FunctionDecl(name: 'Kuadrat') [type=integer, tab=21, lev=0]
+|   |   |   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'p') [type=titik, tab=45, lev=0]
+|   |   |-- Type(name: 'Titik')
+|   |-- VarDecl(name: 'data') [type=daftar, tab=46, lev=0]
+|   |   |-- Type(name: 'Daftar')
+|   |-- VarDecl(name: 'i') [type=integer, tab=47, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- FunctionDecl(name: 'Kuadrat') [type=integer, tab=48, lev=0]
 |   |   |-- returnType:
-|   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Parameter(name: 'n') [type=integer, tab=23, lev=1]
-|   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |-- Type(name: 'integer')
+|   |   |-- Parameter(name: 'n') [type=integer, tab=50, lev=1]
+|   |   |   |-- Type(name: 'integer')
+|   |   |-- Declarations
+|   |   |-- Block
 |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- target:
-|   |   |   |   |   |-- Var(name: 'Kuadrat') [type=integer, tab=22, lev=1]
+|   |   |   |   |   |-- Var(name: 'Kuadrat') [type=integer, tab=49, lev=1]
 |   |   |   |   |-- value:
 |   |   |   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=23, lev=1]
+|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=50, lev=1]
 |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=23, lev=1]
-|   |-- ProcedureDecl(name: 'IsiArray') [type=procedure, tab=24, lev=0]
-|   |   |-- Parameter(name: 'arr') [type=daftar, tab=25, lev=1]
-|   |   |   |-- Type(name: 'Daftar') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Parameter(name: 'n') [type=integer, tab=26, lev=1]
-|   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |   |   |-- VarDecl(name: 'j') [type=integer, tab=27, lev=1]
-|   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=50, lev=1]
+|   |-- ProcedureDecl(name: 'IsiArray') [type=procedure, tab=51, lev=0]
+|   |   |-- Parameter(name: 'arr') [type=daftar, tab=52, lev=1]
+|   |   |   |-- Type(name: 'Daftar')
+|   |   |-- Parameter(name: 'n') [type=integer, tab=53, lev=1]
+|   |   |   |-- Type(name: 'integer')
+|   |   |-- Declarations
+|   |   |   |-- VarDecl(name: 'j') [type=integer, tab=54, lev=1]
+|   |   |   |   |-- Type(name: 'integer')
+|   |   |-- Block
 |   |   |   |-- For [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
+|   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=54, lev=1]
 |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- to:
-|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=26, lev=1]
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=53, lev=1]
 |   |   |   |   |-- body:
-|   |   |   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |-- Block
 |   |   |   |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |   |   |-- ArrayAccess(name: 'arr') [type=integer, tab=25, lev=1]
-|   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
+|   |   |   |   |   |   |   |   |-- ArrayAccess(name: 'arr') [type=integer, tab=52, lev=1]
+|   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=54, lev=1]
 |   |   |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
+|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=54, lev=1]
 |   |   |   |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
-|-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=54, lev=1]
+|-- Block
 |   |-- Assign [type=real, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- RecordAccess(name: 'p', field: 'x') [type=real, tab=18, lev=0]
+|   |   |   |-- RecordAccess(name: 'p', field: 'x') [type=real, tab=45, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 3.0) [type=real, tab=-1, lev=0]
 |   |-- Assign [type=real, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- RecordAccess(name: 'p', field: 'y') [type=real, tab=18, lev=0]
+|   |   |   |-- RecordAccess(name: 'p', field: 'y') [type=real, tab=45, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 4.0) [type=real, tab=-1, lev=0]
-|   |-- ProcCall(name: 'IsiArray') [type=procedure, tab=24, lev=0]
-|   |   |-- Var(name: 'data') [type=daftar, tab=19, lev=0]
-|   |   |-- Var(name: 'MAX') [type=integer, tab=12, lev=0]
+|   |-- ProcCall(name: 'IsiArray') [type=procedure, tab=51, lev=0]
+|   |   |-- Var(name: 'data') [type=daftar, tab=46, lev=0]
+|   |   |-- Var(name: 'MAX') [type=integer, tab=39, lev=0]
 |   |-- For [type=integer, tab=-1, lev=0]
 |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |-- target:
-|   |   |   |   |-- Var(name: 'i') [type=integer, tab=20, lev=0]
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=47, lev=0]
 |   |   |   |-- value:
 |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |   |-- to:
-|   |   |   |-- Var(name: 'MAX') [type=integer, tab=12, lev=0]
+|   |   |   |-- Var(name: 'MAX') [type=integer, tab=39, lev=0]
 |   |   |-- body:
-|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=19, lev=0]
-|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=20, lev=0]
-|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- FuncCall(name: 'Kuadrat') [type=integer, tab=21, lev=0]
+|   |   |   |-- Block
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=46, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=47, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- FuncCall(name: 'Kuadrat') [type=integer, tab=48, lev=0]
 |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 
 === Symbol Tables ===
 === TAB ===
-identifier | link | obj | type | ref | nrm | lev | adr
-integer | 0 | 3 | 1 | 0 | 1 | 0 | 0
-real | 0 | 3 | 2 | 0 | 1 | 0 | 0
-char | 1 | 3 | 3 | 0 | 1 | 0 | 0
-boolean | 2 | 3 | 4 | 0 | 1 | 0 | 0
-string | 3 | 3 | 5 | 0 | 1 | 0 | 0
-true | 4 | 2 | 4 | 0 | 1 | 0 | 0
-false | 5 | 2 | 4 | 0 | 1 | 0 | 0
-read | 6 | 5 | 8 | 0 | 1 | 0 | 0
-readln | 7 | 5 | 8 | 0 | 1 | 0 | 0
-write | 8 | 5 | 8 | 0 | 1 | 0 | 0
-writeln | 9 | 5 | 8 | 0 | 1 | 0 | 0
-TipeKompleks | 10 | 0 | 0 | 0 | 1 | 0 | 0
-MAX | 11 | 2 | 1 | 0 | 1 | 0 | 0
-PI | 12 | 2 | 2 | 0 | 1 | 0 | 0
-x | 0 | 7 | 2 | 0 | 1 | 0 | 0
-y | 14 | 7 | 2 | 0 | 1 | 0 | 1
-Titik | 13 | 3 | 7 | 1 | 1 | 0 | 0
-Daftar | 16 | 3 | 6 | 0 | 1 | 0 | 0
-p | 17 | 1 | 7 | 1 | 1 | 0 | 0
-data | 18 | 1 | 6 | 0 | 1 | 0 | 0
-i | 19 | 1 | 1 | 0 | 1 | 0 | 0
-Kuadrat | 20 | 4 | 1 | 0 | 1 | 0 | 0
-Kuadrat | 0 | 1 | 1 | 0 | 1 | 1 | 0
-n | 22 | 6 | 1 | 0 | 1 | 1 | 0
-IsiArray | 21 | 5 | 8 | 0 | 1 | 0 | 0
-arr | 0 | 6 | 6 | 0 | 1 | 1 | 0
-n | 25 | 6 | 1 | 0 | 1 | 1 | 0
-j | 26 | 1 | 1 | 0 | 1 | 1 | 0
+identifier  	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
+and         	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+array       	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+begin       	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+case        	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+const       	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+div         	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+downto      	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+do          	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+else        	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+end         	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+for         	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+function    	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+if          	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+mod         	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+not         	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+of          	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+or          	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+procedure   	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+program     	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+record      	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+repeat      	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+integer     	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
+real        	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
+boolean     	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
+char        	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
+string      	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
+then        	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+to          	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+type        	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+until       	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+var         	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+while       	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+true        	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+false       	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+read        	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+readln      	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+write       	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+writeln     	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+TipeKompleks	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+MAX         	 | 38	 | 2	 | 1	 | 0	 | 1	 | 0	 | 0
+PI          	 | 39	 | 2	 | 2	 | 0	 | 1	 | 0	 | 0
+x           	 | 0	 | 7	 | 2	 | 0	 | 1	 | 0	 | 0
+y           	 | 41	 | 7	 | 2	 | 0	 | 1	 | 0	 | 1
+Titik       	 | 40	 | 3	 | 7	 | 1	 | 1	 | 0	 | 0
+Daftar      	 | 43	 | 3	 | 6	 | 0	 | 1	 | 0	 | 0
+p           	 | 44	 | 1	 | 7	 | 1	 | 1	 | 0	 | 0
+data        	 | 45	 | 1	 | 6	 | 0	 | 1	 | 0	 | 0
+i           	 | 46	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+Kuadrat     	 | 47	 | 4	 | 1	 | 0	 | 1	 | 0	 | 0
+Kuadrat     	 | 0	 | 1	 | 1	 | 0	 | 1	 | 1	 | 0
+n           	 | 49	 | 6	 | 1	 | 0	 | 1	 | 1	 | 0
+IsiArray    	 | 48	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+arr         	 | 0	 | 6	 | 6	 | 0	 | 1	 | 1	 | 0
+n           	 | 52	 | 6	 | 1	 | 0	 | 1	 | 1	 | 0
+j           	 | 53	 | 1	 | 1	 | 0	 | 1	 | 1	 | 0
 
 === ATAB ===
-indexType | elementType | elementRef | low | high | elementSize | totalSize
-1 | 1 | 0 | 1 | 10 | 1 | 10
+indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
+1			 | 1			 | 0			 | 1	 | 10	 | 1			 | 10
 
 === BTAB ===
-last | lpar | psze | vsze
-24 | 0 | 0 | 3
-15 | 0 | 0 | 2
-23 | 23 | 1 | 1
-27 | 26 | 2 | 1
+last | lpar	 | psze	 | vsze
+51	 | 0	 | 0	 | 3
+42	 | 0	 | 0	 | 2
+50	 | 50	 | 1	 | 1
+54	 | 53	 | 2	 | 1

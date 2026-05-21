@@ -13,7 +13,8 @@ enum class SymbolKind {
     Function,
     Procedure,
     Parameter,
-    Field
+    Field,
+    Reserved
 };
 
 struct SymbolEntry {

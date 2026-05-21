@@ -4,131 +4,158 @@ Pipeline status:
 - Semantic analyzer  : OK
 
 === Decorated AST Tree ===
-ProgramNode(name: 'Perulangan') [type=program, tab=11, lev=0]
-|-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'i') [type=integer, tab=12, lev=0]
-|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'n') [type=integer, tab=13, lev=0]
-|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'total') [type=integer, tab=14, lev=0]
-|   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|-- Block [type=unknown, tab=-1, lev=-1]
+ProgramNode(name: 'Perulangan') [type=program, tab=38, lev=0]
+|-- Declarations
+|   |-- VarDecl(name: 'i') [type=integer, tab=39, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'n') [type=integer, tab=40, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'total') [type=integer, tab=41, lev=0]
+|   |   |-- Type(name: 'integer')
+|-- Block
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'n') [type=integer, tab=13, lev=0]
+|   |   |   |-- Var(name: 'n') [type=integer, tab=40, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'total') [type=integer, tab=14, lev=0]
+|   |   |   |-- Var(name: 'total') [type=integer, tab=41, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |-- For [type=integer, tab=-1, lev=0]
 |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |-- target:
-|   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |-- value:
 |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |   |-- to:
-|   |   |   |-- Var(name: 'n') [type=integer, tab=13, lev=0]
+|   |   |   |-- Var(name: 'n') [type=integer, tab=40, lev=0]
 |   |   |-- body:
-|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
+|   |   |   |-- Block
 |   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=14, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=41, lev=0]
 |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=14, lev=0]
+|   |   |   |   |   |   |   |   |-- Var(name: 'total') [type=integer, tab=41, lev=0]
 |   |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
-|   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- Var(name: 'total') [type=integer, tab=14, lev=0]
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'total') [type=integer, tab=41, lev=0]
 |   |-- For [type=integer, tab=-1, lev=0]
 |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |-- target:
-|   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |-- value:
-|   |   |   |   |-- Var(name: 'n') [type=integer, tab=13, lev=0]
+|   |   |   |   |-- Var(name: 'n') [type=integer, tab=40, lev=0]
 |   |   |-- to:
 |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |   |-- body:
-|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |-- Block
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |-- While [type=boolean, tab=-1, lev=0]
 |   |   |-- condition:
 |   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- right:
-|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=13, lev=0]
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=40, lev=0]
 |   |   |-- body:
-|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |-- Block
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |-- Repeat [type=boolean, tab=-1, lev=0]
 |   |   |-- body:
-|   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
-|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |-- Block
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |   |-- until:
 |   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- right:
-|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=13, lev=0]
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=40, lev=0]
 
 === Symbol Tables ===
 === TAB ===
-identifier | link | obj | type | ref | nrm | lev | adr
-integer | 0 | 3 | 1 | 0 | 1 | 0 | 0
-real | 0 | 3 | 2 | 0 | 1 | 0 | 0
-char | 1 | 3 | 3 | 0 | 1 | 0 | 0
-boolean | 2 | 3 | 4 | 0 | 1 | 0 | 0
-string | 3 | 3 | 5 | 0 | 1 | 0 | 0
-true | 4 | 2 | 4 | 0 | 1 | 0 | 0
-false | 5 | 2 | 4 | 0 | 1 | 0 | 0
-read | 6 | 5 | 8 | 0 | 1 | 0 | 0
-readln | 7 | 5 | 8 | 0 | 1 | 0 | 0
-write | 8 | 5 | 8 | 0 | 1 | 0 | 0
-writeln | 9 | 5 | 8 | 0 | 1 | 0 | 0
-Perulangan | 10 | 0 | 0 | 0 | 1 | 0 | 0
-i | 11 | 1 | 1 | 0 | 1 | 0 | 0
-n | 12 | 1 | 1 | 0 | 1 | 0 | 0
-total | 13 | 1 | 1 | 0 | 1 | 0 | 0
+identifier	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
+and       	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+array     	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+begin     	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+case      	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+const     	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+div       	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+downto    	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+do        	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+else      	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+end       	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+for       	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+function  	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+if        	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+mod       	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+not       	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+of        	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+or        	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+procedure 	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+program   	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+record    	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+repeat    	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+integer   	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
+real      	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
+boolean   	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
+char      	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
+string    	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
+then      	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+to        	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+type      	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+until     	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+var       	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+while     	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+true      	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+false     	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+read      	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+readln    	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+write     	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+writeln   	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+Perulangan	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+i         	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+n         	 | 39	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+total     	 | 40	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
 
 === ATAB ===
-indexType | elementType | elementRef | low | high | elementSize | totalSize
+indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
 
 === BTAB ===
-last | lpar | psze | vsze
-14 | 0 | 0 | 3
+last | lpar	 | psze	 | vsze
+41	 | 0	 | 0	 | 3
