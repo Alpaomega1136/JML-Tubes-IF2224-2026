@@ -84,6 +84,36 @@ void SemanticAnalyzer::initializeBuiltinTypes() {
     }
 }
 
+bool SemanticAnalyzer::extractOrdinalValue(ValueNode* valueNode, int& value) const {
+    if (valueNode == nullptr) {
+        return false;
+    }
+
+    if (NumberNode* number = dynamic_cast<NumberNode*>(valueNode)) {
+        if (isRealLiteral(number->num)) {
+            return false;
+        }
+
+        try {
+            value = std::stoi(number->num);
+            return true;
+        } catch (...) {
+            return false;
+        }
+    }
+
+    if (CharNode* character = dynamic_cast<CharNode*>(valueNode)) {
+        value = static_cast<int>(character->c);
+        return true;
+    }
+
+    return false;
+}
+
+int SemanticAnalyzer::typeCodeFor(const std::string& typeName) const {
+    return symbolTable.mapTypeNameToCode(resolveTypeName(typeName));
+}
+
 SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
     TypeInfo info;
 
@@ -96,8 +126,34 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
     if (RangeNode* range = dynamic_cast<RangeNode*>(typeNode)) {
         info.kind = "subrange";
         info.baseType = typeNameFromTypeNode(range->rangeType);
-        if (info.baseType == "unknown") {
-            info.baseType = "integer";
+
+        std::string firstType = typeNameFromValueNode(range->first);
+        std::string lastType = typeNameFromValueNode(range->last);
+        if (info.baseType == "unknown" || info.baseType == "subrange") {
+            info.baseType = firstType != "unknown" ? firstType : "integer";
+        }
+        if (firstType != "unknown" && lastType != "unknown" &&
+            !isComparisonCompatible(firstType, lastType)) {
+            addError(
+                "Semantic error: subrange bounds must have compatible types, got '" +
+                firstType + "' and '" + lastType + "'."
+            );
+        }
+
+        if (resolveTypeName(firstType) == "real" || resolveTypeName(lastType) == "real" ||
+            resolveTypeName(info.baseType) == "real") {
+            addError("Semantic error: subrange type cannot be real.");
+        }
+
+        int low = 0;
+        int high = 0;
+        if (extractOrdinalValue(range->first, low) && extractOrdinalValue(range->last, high)) {
+            info.hasBounds = true;
+            info.low = low;
+            info.high = high;
+            if (low > high) {
+                addError("Semantic error: subrange lower bound cannot be greater than upper bound.");
+            }
         }
         return info;
     }
@@ -107,12 +163,32 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
         info.baseType = "array";
         info.indexType = typeNameFromTypeNode(array->idxType);
         info.elementType = typeNameFromTypeNode(array->elType);
+
+        TypeInfo indexInfo = describeType(array->idxType);
+        if (indexInfo.kind == "array" || indexInfo.kind == "record" ||
+            resolveTypeName(indexInfo.baseType) == "real") {
+            addError("Semantic error: array index type must be a simple non-real type.");
+        }
+
+        if (indexInfo.hasBounds) {
+            info.hasBounds = true;
+            info.low = indexInfo.low;
+            info.high = indexInfo.high;
+        }
+
+        info.ref = symbolTable.addArrayType(
+            typeCodeFor(info.indexType),
+            typeCodeFor(info.elementType),
+            info.low,
+            info.high
+        );
         return info;
     }
 
     if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(typeNode)) {
         info.kind = "record";
         info.baseType = "record";
+        info.ref = symbolTable.addBlockEntry();
         for (FieldPartNode* field : record->fieldList) {
             if (field == nullptr) {
                 continue;
@@ -124,6 +200,11 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
 
     info.kind = "alias";
     info.baseType = normalizeName(typeNode->typeIdent);
+    if (typeRegistry.find(info.baseType) == typeRegistry.end() &&
+        symbolTable.lookup(info.baseType) == nullptr) {
+        addError("Semantic error: type '" + typeNode->typeIdent + "' is not declared.");
+        info.baseType = "unknown";
+    }
     return info;
 }
 
@@ -196,6 +277,13 @@ void SemanticAnalyzer::analyzeProgram(ProgramNode* program) {
 
     program->semanticType = "program";
     program->lexicalLevel = symbolTable.currentLevel();
+    declareOrReport({
+        program->name,
+        SymbolKind::Program,
+        "program",
+        symbolTable.currentLevel()
+    });
+    program->tabIndex = symbolTable.lookupTabIndex(program->name);
 
     for (ASTNode* child : program->getChildren()) {
         ProcCallNode* container = dynamic_cast<ProcCallNode*>(child);
@@ -257,12 +345,32 @@ void SemanticAnalyzer::analyzeDeclaration(ASTNode* node) {
 
     if (VarDeclNode* varDecl = dynamic_cast<VarDeclNode*>(node)) {
         std::string declaredType = typeNameFromTypeNode(varDecl->type);
-        declareOrReport({
+        TypeInfo declaredInfo = describeType(varDecl->type);
+        int ref = declaredInfo.ref;
+        int typeCode = typeCodeFor(declaredType);
+        if (declaredInfo.kind == "alias") {
+            auto foundType = typeRegistry.find(normalizeName(declaredInfo.baseType));
+            if (foundType != typeRegistry.end()) {
+                ref = foundType->second.ref;
+                if (foundType->second.kind == "array" || foundType->second.kind == "record") {
+                    typeCode = symbolTable.mapTypeNameToCode(foundType->second.kind);
+                } else {
+                    typeCode = typeCodeFor(foundType->second.baseType);
+                }
+            }
+        } else if (declaredInfo.kind == "array" || declaredInfo.kind == "record") {
+            typeCode = symbolTable.mapTypeNameToCode(declaredInfo.kind);
+        }
+
+        SymbolEntry entry{
             varDecl->name,
             SymbolKind::Variable,
             declaredType,
             symbolTable.currentLevel()
-        });
+        };
+        entry.ref = ref;
+        entry.typeCode = typeCode;
+        declareOrReport(entry);
         varDecl->semanticType = declaredType;
         varDecl->tabIndex = symbolTable.lookupTabIndex(varDecl->name);
         varDecl->lexicalLevel = symbolTable.currentLevel();
@@ -286,12 +394,20 @@ void SemanticAnalyzer::analyzeDeclaration(ASTNode* node) {
     if (TypeDeclNode* typeDecl = dynamic_cast<TypeDeclNode*>(node)) {
         registerTypeDeclaration(typeDecl);
         std::string typeName = typeNameFromTypeNode(typeDecl->simpleType);
-        declareOrReport({
+        int ref = 0;
+        auto foundType = typeRegistry.find(normalizeName(typeDecl->name));
+        if (foundType != typeRegistry.end()) {
+            ref = foundType->second.ref;
+        }
+
+        SymbolEntry entry{
             typeDecl->name,
             SymbolKind::Type,
             typeName,
             symbolTable.currentLevel()
-        });
+        };
+        entry.ref = ref;
+        declareOrReport(entry);
         typeDecl->semanticType = typeName;
         typeDecl->tabIndex = symbolTable.lookupTabIndex(typeDecl->name);
         typeDecl->lexicalLevel = symbolTable.currentLevel();
@@ -398,12 +514,32 @@ void SemanticAnalyzer::declareParameters(const std::vector<ParameterNode*>& para
         }
 
         std::string parameterType = typeNameFromTypeNode(parameter->type);
-        declareOrReport({
+        TypeInfo parameterInfo = describeType(parameter->type);
+        int ref = parameterInfo.ref;
+        int typeCode = typeCodeFor(parameterType);
+        if (parameterInfo.kind == "alias") {
+            auto foundType = typeRegistry.find(normalizeName(parameterInfo.baseType));
+            if (foundType != typeRegistry.end()) {
+                ref = foundType->second.ref;
+                if (foundType->second.kind == "array" || foundType->second.kind == "record") {
+                    typeCode = symbolTable.mapTypeNameToCode(foundType->second.kind);
+                } else {
+                    typeCode = typeCodeFor(foundType->second.baseType);
+                }
+            }
+        } else if (parameterInfo.kind == "array" || parameterInfo.kind == "record") {
+            typeCode = symbolTable.mapTypeNameToCode(parameterInfo.kind);
+        }
+
+        SymbolEntry entry{
             parameter->name,
             SymbolKind::Parameter,
             parameterType,
             symbolTable.currentLevel()
-        });
+        };
+        entry.ref = ref;
+        entry.typeCode = typeCode;
+        declareOrReport(entry);
         parameter->semanticType = parameterType;
         parameter->tabIndex = symbolTable.lookupTabIndex(parameter->name);
         parameter->lexicalLevel = symbolTable.currentLevel();
@@ -450,6 +586,12 @@ void SemanticAnalyzer::analyzeStatement(ASTNode* node) {
                 "Semantic error: cannot assign value of type '" + valueType +
                 "' to variable '" + targetName +
                 "' of type '" + targetType + "'."
+            );
+        }
+        if (!isValueWithinType(targetType, assign->value)) {
+            addError(
+                "Semantic error: value assigned to '" + targetDisplayName(assign->target) +
+                "' is outside the range of type '" + targetType + "'."
             );
         }
 
@@ -714,6 +856,37 @@ bool SemanticAnalyzer::isComparisonCompatible(const std::string& leftType, const
     }
 
     return isNumericType(resolvedLeft) && isNumericType(resolvedRight);
+}
+
+bool SemanticAnalyzer::isValueWithinType(const std::string& targetType, ValueNode* valueNode) const {
+    std::string currentType = normalizeName(targetType);
+    std::vector<std::string> visitedTypes;
+
+    while (!currentType.empty() &&
+           std::find(visitedTypes.begin(), visitedTypes.end(), currentType) == visitedTypes.end()) {
+        visitedTypes.push_back(currentType);
+        auto foundType = typeRegistry.find(currentType);
+        if (foundType == typeRegistry.end()) {
+            return true;
+        }
+
+        const TypeInfo& info = foundType->second;
+        if (info.hasBounds) {
+            int value = 0;
+            if (!extractOrdinalValue(valueNode, value)) {
+                return true;
+            }
+            return value >= info.low && value <= info.high;
+        }
+
+        if (info.kind != "alias" && info.kind != "subrange") {
+            return true;
+        }
+
+        currentType = normalizeName(info.baseType);
+    }
+
+    return true;
 }
 
 void SemanticAnalyzer::checkCallArguments(const std::string& callName, const std::vector<ValueNode*>& args, SymbolEntry* entry) {
@@ -996,12 +1169,23 @@ std::string SemanticAnalyzer::inferExpressionType(ValueNode* expr) {
             return "unknown";
         }
 
-        if (!isAssignmentCompatible(typeInfo->second.indexType, indexType)) {
+        bool indexCompatible = isAssignmentCompatible(typeInfo->second.indexType, indexType);
+        if (!indexCompatible) {
             addError(
                 "Semantic error: array index for '" + arrayAccess->name +
                 "' expects '" + typeInfo->second.indexType +
                 "', got '" + indexType + "'."
             );
+        }
+        if (indexCompatible && typeInfo->second.hasBounds) {
+            int indexValue = 0;
+            if (extractOrdinalValue(arrayAccess->idx, indexValue) &&
+                (indexValue < typeInfo->second.low || indexValue > typeInfo->second.high)) {
+                addError(
+                    "Semantic error: array index for '" + arrayAccess->name +
+                    "' is outside declared bounds."
+                );
+            }
         }
 
         arrayAccess->semanticType = typeInfo->second.elementType;
@@ -1065,7 +1249,12 @@ std::string SemanticAnalyzer::typeNameFromTypeNode(TypeNode* typeNode) const {
     }
 
     if (RangeNode* range = dynamic_cast<RangeNode*>(typeNode)) {
-        return typeNameFromTypeNode(range->rangeType);
+        std::string rangeType = typeNameFromTypeNode(range->rangeType);
+        if (rangeType == "unknown" || rangeType == "subrange") {
+            std::string firstType = typeNameFromValueNode(range->first);
+            return firstType == "unknown" ? "integer" : firstType;
+        }
+        return rangeType;
     }
 
     if (dynamic_cast<ArrayTypeNode*>(typeNode) != nullptr) {

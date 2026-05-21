@@ -6,6 +6,7 @@
 #include <vector>
 
 enum class SymbolKind {
+    Program,
     Variable,
     Constant,
     Type,
@@ -22,6 +23,11 @@ struct SymbolEntry {
     int tabIndex = -1;
     std::vector<std::string> parameterTypes;
     std::vector<std::string> parameterNames;
+    int ref = 0;
+    int nrm = 1;
+    int adr = 0;
+    int link = 0;
+    int typeCode = -1;
 };
 
 struct TabEntry {
@@ -71,6 +77,8 @@ public:
     SymbolEntry* lookup(const std::string& name);
     SymbolEntry* lookupCurrentScope(const std::string& name);
     int lookupTabIndex(const std::string& name) const;
+    int addArrayType(int indexType, int elementType, int low, int high, int elementSize = 1);
+    int addBlockEntry();
 
     int currentLevel() const;
     int mapKindToObj(SymbolKind kind) const;

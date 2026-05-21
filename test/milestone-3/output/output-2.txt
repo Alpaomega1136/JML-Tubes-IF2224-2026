@@ -4,28 +4,28 @@ Pipeline status:
 - Semantic analyzer  : OK
 
 === Decorated AST Tree ===
-ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
+ProgramNode(name: 'CekNilai') [type=program, tab=11, lev=0]
 |-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |-- VarDecl(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'lulus') [type=integer, tab=12, lev=0]
+|   |-- VarDecl(name: 'lulus') [type=integer, tab=13, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
 |-- Block [type=unknown, tab=-1, lev=-1]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'lulus') [type=integer, tab=12, lev=0]
+|   |   |   |-- Var(name: 'lulus') [type=integer, tab=13, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |-- If [type=boolean, tab=-1, lev=0]
 |   |   |-- condition:
 |   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 90) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
@@ -36,7 +36,7 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |   |-- condition:
 |   |   |   |   |   |-- BinOp(op: geq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- then:
@@ -47,7 +47,7 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |   |   |   |-- condition:
 |   |   |   |   |   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |   |   |-- Number(value: 50) [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |   |-- then:
@@ -58,7 +58,7 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |   |   |   |   |   |-- condition:
 |   |   |   |   |   |   |   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |   |   |   |   |-- Number(value: 59) [type=integer, tab=-1, lev=0]
 |   |   |   |   |   |   |   |   |-- then:
@@ -71,7 +71,7 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |-- condition:
 |   |   |   |-- BinOp(op: neq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
@@ -82,13 +82,13 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |-- UnaryOp(op: not) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
 |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- target:
-|   |   |   |   |   |-- Var(name: 'lulus') [type=integer, tab=12, lev=0]
+|   |   |   |   |   |-- Var(name: 'lulus') [type=integer, tab=13, lev=0]
 |   |   |   |   |-- value:
 |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |-- If [type=boolean, tab=-1, lev=0]
@@ -97,13 +97,13 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |   |-- left:
 |   |   |   |   |   |-- BinOp(op: geq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |-- Number(value: 100) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
@@ -115,13 +115,13 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |   |   |-- left:
 |   |   |   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |   |   |-- right:
 |   |   |   |   |   |   |   |-- Number(value: 100) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
@@ -131,7 +131,7 @@ ProgramNode(name: 'CekNilai') [type=program, tab=-1, lev=0]
 |   |   |-- condition:
 |   |   |   |-- BinOp(op: eql) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=12, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
@@ -152,6 +152,7 @@ read | 5 | 8 | 0 | 0 | 0
 readln | 5 | 8 | 0 | 0 | 0
 write | 5 | 8 | 0 | 0 | 0
 writeln | 5 | 8 | 0 | 0 | 0
+CekNilai | 0 | 0 | 0 | 0 | 0
 nilai | 1 | 1 | 0 | 0 | 0
 lulus | 1 | 1 | 0 | 0 | 0
 
@@ -160,4 +161,4 @@ indexType | elementType | low | high | elementSize | totalSize
 
 === BTAB ===
 last | lpar | psze | vsze
-0 | 0 | 0 | 0
+13 | 0 | 0 | 2

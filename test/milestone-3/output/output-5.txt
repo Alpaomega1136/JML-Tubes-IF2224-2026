@@ -4,47 +4,47 @@ Pipeline status:
 - Semantic analyzer  : OK
 
 === Decorated AST Tree ===
-ProgramNode(name: 'KasusLengkap') [type=program, tab=-1, lev=0]
+ProgramNode(name: 'KasusLengkap') [type=program, tab=11, lev=0]
 |-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'angka') [type=integer, tab=11, lev=0]
+|   |-- VarDecl(name: 'angka') [type=integer, tab=12, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |-- VarDecl(name: 'bagi') [type=integer, tab=13, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |-- VarDecl(name: 'sisa') [type=integer, tab=14, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'harakat') [type=char, tab=14, lev=0]
+|   |-- VarDecl(name: 'harakat') [type=char, tab=15, lev=0]
 |   |   |-- Type(name: 'char') [type=unknown, tab=-1, lev=-1]
 |-- Block [type=unknown, tab=-1, lev=-1]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=12, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 17) [type=integer, tab=-1, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |   |   |-- Var(name: 'bagi') [type=integer, tab=13, lev=0]
 |   |   |-- value:
 |   |   |   |-- BinOp(op: idiv) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=12, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=14, lev=0]
 |   |   |-- value:
 |   |   |   |-- BinOp(op: imod) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=11, lev=0]
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=12, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- Var(name: 'bagi') [type=integer, tab=12, lev=0]
+|   |   |-- Var(name: 'bagi') [type=integer, tab=13, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |-- Var(name: 'sisa') [type=integer, tab=14, lev=0]
 |   |-- Case [type=integer, tab=-1, lev=0]
 |   |   |-- selector:
-|   |   |   |-- Var(name: 'sisa') [type=integer, tab=13, lev=0]
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=14, lev=0]
 |   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
 |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
@@ -67,11 +67,11 @@ ProgramNode(name: 'KasusLengkap') [type=program, tab=-1, lev=0]
 |   |   |   |   |-- String(value: 'Sisa 4') [type=string, tab=-1, lev=0]
 |   |-- Assign [type=char, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'harakat') [type=char, tab=14, lev=0]
+|   |   |   |-- Var(name: 'harakat') [type=char, tab=15, lev=0]
 |   |   |-- value:
 |   |   |   |-- Char(value: 'Z') [type=char, tab=-1, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- Var(name: 'harakat') [type=char, tab=14, lev=0]
+|   |   |-- Var(name: 'harakat') [type=char, tab=15, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -87,6 +87,7 @@ read | 5 | 8 | 0 | 0 | 0
 readln | 5 | 8 | 0 | 0 | 0
 write | 5 | 8 | 0 | 0 | 0
 writeln | 5 | 8 | 0 | 0 | 0
+KasusLengkap | 0 | 0 | 0 | 0 | 0
 angka | 1 | 1 | 0 | 0 | 0
 bagi | 1 | 1 | 0 | 0 | 0
 sisa | 1 | 1 | 0 | 0 | 0
@@ -97,4 +98,4 @@ indexType | elementType | low | high | elementSize | totalSize
 
 === BTAB ===
 last | lpar | psze | vsze
-0 | 0 | 0 | 0
+15 | 0 | 0 | 4

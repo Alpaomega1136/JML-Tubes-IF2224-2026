@@ -14,6 +14,10 @@ private:
         std::string baseType = "unknown";
         std::string indexType = "unknown";
         std::string elementType = "unknown";
+        bool hasBounds = false;
+        int low = 0;
+        int high = 0;
+        int ref = 0;
         std::unordered_map<std::string, std::string> fields;
     };
 
@@ -44,9 +48,12 @@ private:
     bool isBooleanType(const std::string& typeName) const;
     bool isAssignmentCompatible(const std::string& targetType, const std::string& valueType) const;
     bool isComparisonCompatible(const std::string& leftType, const std::string& rightType) const;
+    bool isValueWithinType(const std::string& targetType, ValueNode* valueNode) const;
     void checkCallArguments(const std::string& callName, const std::vector<ValueNode*>& args, SymbolEntry* entry);
     void registerTypeDeclaration(TypeDeclNode* typeDecl);
     TypeInfo describeType(TypeNode* typeNode);
+    bool extractOrdinalValue(ValueNode* valueNode, int& value) const;
+    int typeCodeFor(const std::string& typeName) const;
     std::string resolveTypeName(const std::string& typeName) const;
     std::string normalizeName(const std::string& text) const;
     std::string targetDisplayName(ValueNode* value) const;

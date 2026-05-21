@@ -39,9 +39,21 @@ bool SymbolTable::declareSymbol(const SymbolEntry& entry) {
 
     SymbolEntry storedEntry = entry;
     storedEntry.lexicalLevel = currentLevel();
+    storedEntry.link = btab.empty() ? 0 : btab.back().last;
     appendTabEntry(storedEntry);
     storedEntry.tabIndex = static_cast<int>(tab.size()) - 1;
     currentScope[normalizedName] = storedEntry;
+
+    if (!btab.empty()) {
+        btab.back().last = storedEntry.tabIndex;
+        if (storedEntry.kind == SymbolKind::Parameter) {
+            btab.back().lpar = storedEntry.tabIndex;
+            btab.back().psze += 1;
+        } else if (storedEntry.kind == SymbolKind::Variable) {
+            btab.back().vsze += 1;
+        }
+    }
+
     return true;
 }
 
@@ -93,6 +105,8 @@ int SymbolTable::currentLevel() const {
 
 int SymbolTable::mapKindToObj(SymbolKind kind) const {
     switch (kind) {
+        case SymbolKind::Program:
+            return 0;
         case SymbolKind::Variable:
             return 1;
         case SymbolKind::Constant:
@@ -139,6 +153,29 @@ int SymbolTable::mapTypeNameToCode(const std::string& typeName) const {
     }
 
     return 0;
+}
+
+int SymbolTable::addArrayType(int indexType, int elementType, int low, int high, int elementSize) {
+    int totalSize = 0;
+    if (high >= low) {
+        totalSize = (high - low + 1) * elementSize;
+    }
+
+    atab.push_back({
+        indexType,
+        elementType,
+        low,
+        high,
+        elementSize,
+        totalSize
+    });
+
+    return static_cast<int>(atab.size()) - 1;
+}
+
+int SymbolTable::addBlockEntry() {
+    btab.push_back({0, 0, 0, 0});
+    return static_cast<int>(btab.size()) - 1;
 }
 
 const std::vector<TabEntry>& SymbolTable::getTab() const {
@@ -195,13 +232,13 @@ void SymbolTable::printSpecTables(std::ostream& output) const {
 void SymbolTable::appendTabEntry(const SymbolEntry& entry) {
     tab.push_back({
         entry.name,
-        0,
+        entry.link,
         mapKindToObj(entry.kind),
-        mapTypeNameToCode(entry.typeName),
-        0,
-        0,
+        entry.typeCode >= 0 ? entry.typeCode : mapTypeNameToCode(entry.typeName),
+        entry.ref,
+        entry.nrm,
         entry.lexicalLevel,
-        0
+        entry.adr
     });
 }
 
