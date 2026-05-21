@@ -224,39 +224,45 @@ void SymbolTable::printSpecTables() const {
 }
 
 void SymbolTable::printSpecTables(std::ostream& output) const {
-    output << "=== TAB ===" << std::endl;
-    output << "identifier | link | obj | type | ref | nrm | lev | adr" << std::endl;
+    int maxLength = 10;
     for (const TabEntry& entry : tab) {
-        output << entry.identifier << " | "
-               << entry.link << " | "
-               << entry.obj << " | "
-               << entry.type << " | "
-               << entry.ref << " | "
-               << entry.nrm << " | "
-               << entry.lev << " | "
+        if (entry.identifier.length() > maxLength) {
+            maxLength = entry.identifier.length(); 
+        }
+    }
+    output << "=== TAB ===" << std::endl;
+    output << "identifier" + std::string(maxLength - 10, ' ') + "\t | link\t | obj\t | type\t | ref\t | nrm\t | lev\t | adr" << std::endl;
+    for (const TabEntry& entry : tab) {
+        output << entry.identifier + std::string(maxLength - entry.identifier.length(), ' ') << "\t | "
+               << entry.link << "\t | "
+               << entry.obj << "\t | "
+               << entry.type << "\t | "
+               << entry.ref << "\t | "
+               << entry.nrm << "\t | "
+               << entry.lev << "\t | "
                << entry.adr << std::endl;
     }
 
     output << std::endl;
     output << "=== ATAB ===" << std::endl;
-    output << "indexType | elementType | elementRef | low | high | elementSize | totalSize" << std::endl;
+    output << "indexType\t | elementType\t | elementRef\t | low\t | high\t | elementSize\t | totalSize" << std::endl;
     for (const ATabEntry& entry : atab) {
-        output << entry.indexType << " | "
-               << entry.elementType << " | "
-               << entry.elementRef << " | "
-               << entry.low << " | "
-               << entry.high << " | "
-               << entry.elementSize << " | "
+        output << entry.indexType << "\t\t\t | "
+               << entry.elementType << "\t\t\t | "
+               << entry.elementRef << "\t\t\t | "
+               << entry.low << "\t | "
+               << entry.high << "\t | "
+               << entry.elementSize << "\t\t\t | "
                << entry.totalSize << std::endl;
     }
 
     output << std::endl;
     output << "=== BTAB ===" << std::endl;
-    output << "last | lpar | psze | vsze" << std::endl;
+    output << "last | lpar\t | psze\t | vsze" << std::endl;
     for (const BTabEntry& entry : btab) {
-        output << entry.last << " | "
-               << entry.lpar << " | "
-               << entry.psze << " | "
+        output << entry.last << "\t | "
+               << entry.lpar << "\t | "
+               << entry.psze << "\t | "
                << entry.vsze << std::endl;
     }
 }

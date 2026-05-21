@@ -19,10 +19,11 @@ void ASTPrinter::writeAnnotation(ASTNode* node, std::ostream& out) const {
     if (node == nullptr) {
         return;
     }
-
-    out << " [type=" << node->semanticType
-        << ", tab=" << node->tabIndex
-        << ", lev=" << node->lexicalLevel << "]";
+    if (node->semanticType != "unknown") {
+        out << " [type=" << node->semanticType
+            << ", tab=" << node->tabIndex
+            << ", lev=" << node->lexicalLevel << "]";
+    }
 }
 
 std::string ASTPrinter::containerName(const ProcCallNode* node) const {
