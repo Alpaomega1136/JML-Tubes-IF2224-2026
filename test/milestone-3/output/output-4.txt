@@ -10,13 +10,13 @@ ProgramNode(name: 'TipeKompleks') [type=program, tab=11, lev=0]
 |   |   |-- Number(value: 10) [type=integer, tab=-1, lev=0]
 |   |-- ConstDecl(name: 'PI') [type=real, tab=13, lev=0]
 |   |   |-- Number(value: 3.14159) [type=real, tab=-1, lev=0]
-|   |-- TypeDecl(name: 'Titik') [type=record, tab=14, lev=0]
+|   |-- TypeDecl(name: 'Titik') [type=record, tab=16, lev=0]
 |   |   |-- RecordType [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- Field(name: 'x') [type=unknown, tab=-1, lev=-1]
 |   |   |   |   |-- Type(name: 'real') [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- Field(name: 'y') [type=unknown, tab=-1, lev=-1]
 |   |   |   |   |-- Type(name: 'real') [type=unknown, tab=-1, lev=-1]
-|   |-- TypeDecl(name: 'Daftar') [type=array, tab=15, lev=0]
+|   |-- TypeDecl(name: 'Daftar') [type=array, tab=17, lev=0]
 |   |   |-- ArrayType [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- index:
 |   |   |   |   |-- RangeType [type=unknown, tab=-1, lev=-1]
@@ -28,75 +28,75 @@ ProgramNode(name: 'TipeKompleks') [type=program, tab=11, lev=0]
 |   |   |   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- element:
 |   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'p') [type=titik, tab=16, lev=0]
+|   |-- VarDecl(name: 'p') [type=titik, tab=18, lev=0]
 |   |   |-- Type(name: 'Titik') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'data') [type=daftar, tab=17, lev=0]
+|   |-- VarDecl(name: 'data') [type=daftar, tab=19, lev=0]
 |   |   |-- Type(name: 'Daftar') [type=unknown, tab=-1, lev=-1]
-|   |-- VarDecl(name: 'i') [type=integer, tab=18, lev=0]
+|   |-- VarDecl(name: 'i') [type=integer, tab=20, lev=0]
 |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |-- FunctionDecl(name: 'Kuadrat') [type=integer, tab=19, lev=0]
+|   |-- FunctionDecl(name: 'Kuadrat') [type=integer, tab=21, lev=0]
 |   |   |-- returnType:
 |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Parameter(name: 'n') [type=integer, tab=21, lev=1]
+|   |   |-- Parameter(name: 'n') [type=integer, tab=23, lev=1]
 |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
 |   |   |-- Declarations [type=unknown, tab=-1, lev=-1]
 |   |   |-- Block [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- target:
-|   |   |   |   |   |-- Var(name: 'Kuadrat') [type=integer, tab=20, lev=1]
+|   |   |   |   |   |-- Var(name: 'Kuadrat') [type=integer, tab=22, lev=1]
 |   |   |   |   |-- value:
 |   |   |   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=21, lev=1]
+|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=23, lev=1]
 |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=21, lev=1]
-|   |-- ProcedureDecl(name: 'IsiArray') [type=procedure, tab=22, lev=0]
-|   |   |-- Parameter(name: 'arr') [type=daftar, tab=23, lev=1]
+|   |   |   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=23, lev=1]
+|   |-- ProcedureDecl(name: 'IsiArray') [type=procedure, tab=24, lev=0]
+|   |   |-- Parameter(name: 'arr') [type=daftar, tab=25, lev=1]
 |   |   |   |-- Type(name: 'Daftar') [type=unknown, tab=-1, lev=-1]
-|   |   |-- Parameter(name: 'n') [type=integer, tab=24, lev=1]
+|   |   |-- Parameter(name: 'n') [type=integer, tab=26, lev=1]
 |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
 |   |   |-- Declarations [type=unknown, tab=-1, lev=-1]
-|   |   |   |-- VarDecl(name: 'j') [type=integer, tab=25, lev=1]
+|   |   |   |-- VarDecl(name: 'j') [type=integer, tab=27, lev=1]
 |   |   |   |   |-- Type(name: 'integer') [type=unknown, tab=-1, lev=-1]
 |   |   |-- Block [type=unknown, tab=-1, lev=-1]
 |   |   |   |-- For [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=25, lev=1]
+|   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
 |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=1]
 |   |   |   |   |-- to:
-|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=24, lev=1]
+|   |   |   |   |   |-- Var(name: 'n') [type=integer, tab=26, lev=1]
 |   |   |   |   |-- body:
 |   |   |   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
 |   |   |   |   |   |   |-- Assign [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |   |-- target:
-|   |   |   |   |   |   |   |   |-- ArrayAccess(name: 'arr') [type=integer, tab=23, lev=1]
-|   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=25, lev=1]
+|   |   |   |   |   |   |   |   |-- ArrayAccess(name: 'arr') [type=integer, tab=25, lev=1]
+|   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
 |   |   |   |   |   |   |   |-- value:
 |   |   |   |   |   |   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=1]
 |   |   |   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=25, lev=1]
+|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
 |   |   |   |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=25, lev=1]
+|   |   |   |   |   |   |   |   |   |   |-- Var(name: 'j') [type=integer, tab=27, lev=1]
 |-- Block [type=unknown, tab=-1, lev=-1]
 |   |-- Assign [type=real, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- RecordAccess(name: 'p', field: 'x') [type=real, tab=16, lev=0]
+|   |   |   |-- RecordAccess(name: 'p', field: 'x') [type=real, tab=18, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 3.0) [type=real, tab=-1, lev=0]
 |   |-- Assign [type=real, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- RecordAccess(name: 'p', field: 'y') [type=real, tab=16, lev=0]
+|   |   |   |-- RecordAccess(name: 'p', field: 'y') [type=real, tab=18, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 4.0) [type=real, tab=-1, lev=0]
-|   |-- ProcCall(name: 'IsiArray') [type=procedure, tab=22, lev=0]
-|   |   |-- Var(name: 'data') [type=daftar, tab=17, lev=0]
+|   |-- ProcCall(name: 'IsiArray') [type=procedure, tab=24, lev=0]
+|   |   |-- Var(name: 'data') [type=daftar, tab=19, lev=0]
 |   |   |-- Var(name: 'MAX') [type=integer, tab=12, lev=0]
 |   |-- For [type=integer, tab=-1, lev=0]
 |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |-- target:
-|   |   |   |   |-- Var(name: 'i') [type=integer, tab=18, lev=0]
+|   |   |   |   |-- Var(name: 'i') [type=integer, tab=20, lev=0]
 |   |   |   |-- value:
 |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
 |   |   |-- to:
@@ -104,49 +104,51 @@ ProgramNode(name: 'TipeKompleks') [type=program, tab=11, lev=0]
 |   |   |-- body:
 |   |   |   |-- Block [type=unknown, tab=-1, lev=-1]
 |   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=17, lev=0]
-|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=18, lev=0]
+|   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=19, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=20, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=10, lev=0]
-|   |   |-- FuncCall(name: 'Kuadrat') [type=integer, tab=19, lev=0]
+|   |   |-- FuncCall(name: 'Kuadrat') [type=integer, tab=21, lev=0]
 |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 
 === Symbol Tables ===
 === TAB ===
-identifier | obj | type | lev | ref | adr
-integer | 3 | 1 | 0 | 0 | 0
-real | 3 | 2 | 0 | 0 | 0
-char | 3 | 3 | 0 | 0 | 0
-boolean | 3 | 4 | 0 | 0 | 0
-string | 3 | 5 | 0 | 0 | 0
-true | 2 | 4 | 0 | 0 | 0
-false | 2 | 4 | 0 | 0 | 0
-read | 5 | 8 | 0 | 0 | 0
-readln | 5 | 8 | 0 | 0 | 0
-write | 5 | 8 | 0 | 0 | 0
-writeln | 5 | 8 | 0 | 0 | 0
-TipeKompleks | 0 | 0 | 0 | 0 | 0
-MAX | 2 | 1 | 0 | 0 | 0
-PI | 2 | 2 | 0 | 0 | 0
-Titik | 3 | 7 | 0 | 1 | 0
-Daftar | 3 | 6 | 0 | 0 | 0
-p | 1 | 7 | 0 | 1 | 0
-data | 1 | 6 | 0 | 0 | 0
-i | 1 | 1 | 0 | 0 | 0
-Kuadrat | 4 | 1 | 0 | 0 | 0
-Kuadrat | 1 | 1 | 1 | 0 | 0
-n | 6 | 1 | 1 | 0 | 0
-IsiArray | 5 | 8 | 0 | 0 | 0
-arr | 6 | 6 | 1 | 0 | 0
-n | 6 | 1 | 1 | 0 | 0
-j | 1 | 1 | 1 | 0 | 0
+identifier | link | obj | type | ref | nrm | lev | adr
+integer | 0 | 3 | 1 | 0 | 1 | 0 | 0
+real | 0 | 3 | 2 | 0 | 1 | 0 | 0
+char | 1 | 3 | 3 | 0 | 1 | 0 | 0
+boolean | 2 | 3 | 4 | 0 | 1 | 0 | 0
+string | 3 | 3 | 5 | 0 | 1 | 0 | 0
+true | 4 | 2 | 4 | 0 | 1 | 0 | 0
+false | 5 | 2 | 4 | 0 | 1 | 0 | 0
+read | 6 | 5 | 8 | 0 | 1 | 0 | 0
+readln | 7 | 5 | 8 | 0 | 1 | 0 | 0
+write | 8 | 5 | 8 | 0 | 1 | 0 | 0
+writeln | 9 | 5 | 8 | 0 | 1 | 0 | 0
+TipeKompleks | 10 | 0 | 0 | 0 | 1 | 0 | 0
+MAX | 11 | 2 | 1 | 0 | 1 | 0 | 0
+PI | 12 | 2 | 2 | 0 | 1 | 0 | 0
+x | 0 | 7 | 2 | 0 | 1 | 0 | 0
+y | 14 | 7 | 2 | 0 | 1 | 0 | 1
+Titik | 13 | 3 | 7 | 1 | 1 | 0 | 0
+Daftar | 16 | 3 | 6 | 0 | 1 | 0 | 0
+p | 17 | 1 | 7 | 1 | 1 | 0 | 0
+data | 18 | 1 | 6 | 0 | 1 | 0 | 0
+i | 19 | 1 | 1 | 0 | 1 | 0 | 0
+Kuadrat | 20 | 4 | 1 | 0 | 1 | 0 | 0
+Kuadrat | 0 | 1 | 1 | 0 | 1 | 1 | 0
+n | 22 | 6 | 1 | 0 | 1 | 1 | 0
+IsiArray | 21 | 5 | 8 | 0 | 1 | 0 | 0
+arr | 0 | 6 | 6 | 0 | 1 | 1 | 0
+n | 25 | 6 | 1 | 0 | 1 | 1 | 0
+j | 26 | 1 | 1 | 0 | 1 | 1 | 0
 
 === ATAB ===
-indexType | elementType | low | high | elementSize | totalSize
-1 | 1 | 1 | 10 | 1 | 10
+indexType | elementType | elementRef | low | high | elementSize | totalSize
+1 | 1 | 0 | 1 | 10 | 1 | 10
 
 === BTAB ===
 last | lpar | psze | vsze
-13 | 0 | 0 | 0
-19 | 0 | 0 | 3
-22 | 21 | 1 | 1
-25 | 24 | 2 | 1
+24 | 0 | 0 | 3
+15 | 0 | 0 | 2
+23 | 23 | 1 | 1
+27 | 26 | 2 | 1

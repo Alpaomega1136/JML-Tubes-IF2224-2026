@@ -12,7 +12,8 @@ enum class SymbolKind {
     Type,
     Function,
     Procedure,
-    Parameter
+    Parameter,
+    Field
 };
 
 struct SymbolEntry {
@@ -44,6 +45,7 @@ struct TabEntry {
 struct ATabEntry {
     int indexType;
     int elementType;
+    int elementRef;
     int low;
     int high;
     int elementSize;
@@ -63,6 +65,7 @@ private:
     std::vector<TabEntry> tab;
     std::vector<ATabEntry> atab;
     std::vector<BTabEntry> btab;
+    std::vector<int> activeBlockStack;
 
     void addPredefinedSymbols();
     void appendTabEntry(const SymbolEntry& entry);
@@ -77,8 +80,9 @@ public:
     SymbolEntry* lookup(const std::string& name);
     SymbolEntry* lookupCurrentScope(const std::string& name);
     int lookupTabIndex(const std::string& name) const;
-    int addArrayType(int indexType, int elementType, int low, int high, int elementSize = 1);
+    int addArrayType(int indexType, int elementType, int elementRef, int low, int high, int elementSize = 1);
     int addBlockEntry();
+    int addRecordField(int blockIndex, const std::string& name, const std::string& typeName, int typeCode, int ref, int adr);
 
     int currentLevel() const;
     int mapKindToObj(SymbolKind kind) const;

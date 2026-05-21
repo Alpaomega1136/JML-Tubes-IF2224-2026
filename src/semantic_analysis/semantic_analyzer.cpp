@@ -176,9 +176,16 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
             info.high = indexInfo.high;
         }
 
+        int elementRef = 0;
+        auto elementInfo = typeRegistry.find(normalizeName(info.elementType));
+        if (elementInfo != typeRegistry.end()) {
+            elementRef = elementInfo->second.ref;
+        }
+
         info.ref = symbolTable.addArrayType(
             typeCodeFor(info.indexType),
             typeCodeFor(info.elementType),
+            elementRef,
             info.low,
             info.high
         );
@@ -189,11 +196,39 @@ SemanticAnalyzer::TypeInfo SemanticAnalyzer::describeType(TypeNode* typeNode) {
         info.kind = "record";
         info.baseType = "record";
         info.ref = symbolTable.addBlockEntry();
+        int fieldOffset = 0;
         for (FieldPartNode* field : record->fieldList) {
             if (field == nullptr) {
                 continue;
             }
-            info.fields[normalizeName(field->fieldIdent)] = typeNameFromTypeNode(field->fieldType);
+
+            std::string fieldName = normalizeName(field->fieldIdent);
+            if (info.fields.find(fieldName) != info.fields.end()) {
+                addError("Semantic error: record field '" + field->fieldIdent + "' is already declared.");
+                continue;
+            }
+
+            std::string fieldType = typeNameFromTypeNode(field->fieldType);
+            TypeInfo fieldInfo = describeType(field->fieldType);
+            int fieldRef = fieldInfo.ref;
+            int fieldTypeCode = typeCodeFor(fieldType);
+            if (fieldInfo.kind == "alias") {
+                auto foundType = typeRegistry.find(normalizeName(fieldInfo.baseType));
+                if (foundType != typeRegistry.end()) {
+                    fieldRef = foundType->second.ref;
+                    if (foundType->second.kind == "array" || foundType->second.kind == "record") {
+                        fieldTypeCode = symbolTable.mapTypeNameToCode(foundType->second.kind);
+                    } else {
+                        fieldTypeCode = typeCodeFor(foundType->second.baseType);
+                    }
+                }
+            } else if (fieldInfo.kind == "array" || fieldInfo.kind == "record") {
+                fieldTypeCode = symbolTable.mapTypeNameToCode(fieldInfo.kind);
+            }
+
+            info.fields[fieldName] = fieldType;
+            symbolTable.addRecordField(info.ref, field->fieldIdent, fieldType, fieldTypeCode, fieldRef, fieldOffset);
+            fieldOffset += 1;
         }
         return info;
     }

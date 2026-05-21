@@ -18,11 +18,13 @@ SymbolTable::SymbolTable() {
 void SymbolTable::enterScope() {
     scopes.emplace_back();
     btab.push_back({0, 0, 0, 0});
+    activeBlockStack.push_back(static_cast<int>(btab.size()) - 1);
 }
 
 void SymbolTable::exitScope() {
     if (scopes.size() > 1) {
         scopes.pop_back();
+        activeBlockStack.pop_back();
     }
 }
 
@@ -39,18 +41,19 @@ bool SymbolTable::declareSymbol(const SymbolEntry& entry) {
 
     SymbolEntry storedEntry = entry;
     storedEntry.lexicalLevel = currentLevel();
-    storedEntry.link = btab.empty() ? 0 : btab.back().last;
+    int activeBlock = activeBlockStack.empty() ? -1 : activeBlockStack.back();
+    storedEntry.link = activeBlock < 0 ? 0 : btab[activeBlock].last;
     appendTabEntry(storedEntry);
     storedEntry.tabIndex = static_cast<int>(tab.size()) - 1;
     currentScope[normalizedName] = storedEntry;
 
-    if (!btab.empty()) {
-        btab.back().last = storedEntry.tabIndex;
+    if (activeBlock >= 0) {
+        btab[activeBlock].last = storedEntry.tabIndex;
         if (storedEntry.kind == SymbolKind::Parameter) {
-            btab.back().lpar = storedEntry.tabIndex;
-            btab.back().psze += 1;
+            btab[activeBlock].lpar = storedEntry.tabIndex;
+            btab[activeBlock].psze += 1;
         } else if (storedEntry.kind == SymbolKind::Variable) {
-            btab.back().vsze += 1;
+            btab[activeBlock].vsze += 1;
         }
     }
 
@@ -119,6 +122,8 @@ int SymbolTable::mapKindToObj(SymbolKind kind) const {
             return 5;
         case SymbolKind::Parameter:
             return 6;
+        case SymbolKind::Field:
+            return 7;
         default:
             return 0;
     }
@@ -155,7 +160,7 @@ int SymbolTable::mapTypeNameToCode(const std::string& typeName) const {
     return 0;
 }
 
-int SymbolTable::addArrayType(int indexType, int elementType, int low, int high, int elementSize) {
+int SymbolTable::addArrayType(int indexType, int elementType, int elementRef, int low, int high, int elementSize) {
     int totalSize = 0;
     if (high >= low) {
         totalSize = (high - low + 1) * elementSize;
@@ -164,6 +169,7 @@ int SymbolTable::addArrayType(int indexType, int elementType, int low, int high,
     atab.push_back({
         indexType,
         elementType,
+        elementRef,
         low,
         high,
         elementSize,
@@ -176,6 +182,29 @@ int SymbolTable::addArrayType(int indexType, int elementType, int low, int high,
 int SymbolTable::addBlockEntry() {
     btab.push_back({0, 0, 0, 0});
     return static_cast<int>(btab.size()) - 1;
+}
+
+int SymbolTable::addRecordField(int blockIndex, const std::string& name, const std::string& typeName, int typeCode, int ref, int adr) {
+    if (blockIndex < 0 || blockIndex >= static_cast<int>(btab.size())) {
+        return -1;
+    }
+
+    SymbolEntry entry{
+        name,
+        SymbolKind::Field,
+        typeName,
+        currentLevel()
+    };
+    entry.link = btab[blockIndex].last;
+    entry.typeCode = typeCode;
+    entry.ref = ref;
+    entry.adr = adr;
+    appendTabEntry(entry);
+
+    int tabIndex = static_cast<int>(tab.size()) - 1;
+    btab[blockIndex].last = tabIndex;
+    btab[blockIndex].vsze += 1;
+    return tabIndex;
 }
 
 const std::vector<TabEntry>& SymbolTable::getTab() const {
@@ -196,22 +225,25 @@ void SymbolTable::printSpecTables() const {
 
 void SymbolTable::printSpecTables(std::ostream& output) const {
     output << "=== TAB ===" << std::endl;
-    output << "identifier | obj | type | lev | ref | adr" << std::endl;
+    output << "identifier | link | obj | type | ref | nrm | lev | adr" << std::endl;
     for (const TabEntry& entry : tab) {
         output << entry.identifier << " | "
+               << entry.link << " | "
                << entry.obj << " | "
                << entry.type << " | "
-               << entry.lev << " | "
                << entry.ref << " | "
+               << entry.nrm << " | "
+               << entry.lev << " | "
                << entry.adr << std::endl;
     }
 
     output << std::endl;
     output << "=== ATAB ===" << std::endl;
-    output << "indexType | elementType | low | high | elementSize | totalSize" << std::endl;
+    output << "indexType | elementType | elementRef | low | high | elementSize | totalSize" << std::endl;
     for (const ATabEntry& entry : atab) {
         output << entry.indexType << " | "
                << entry.elementType << " | "
+               << entry.elementRef << " | "
                << entry.low << " | "
                << entry.high << " | "
                << entry.elementSize << " | "
