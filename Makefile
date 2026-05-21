@@ -1,7 +1,7 @@
 CC     = g++
 CFLAGS = -Wall -std=c++17 -I src
 TARGET = lexer
-SRCS   = src/main.cpp src/lexer/lexer.cpp src/lexer/token.cpp src/parser/parser.cpp src/semantic_analysis/ast.cpp src/semantic_analysis/symbol_table.cpp src/semantic_analysis/semantic_analyzer.cpp
+SRCS   = src/main.cpp src/lexer/lexer.cpp src/lexer/token.cpp src/parser/parser.cpp src/semantic_analysis/ast.cpp src/semantic_analysis/ast_printer.cpp src/semantic_analysis/symbol_table.cpp src/semantic_analysis/semantic_analyzer.cpp
 
 all: $(TARGET)
 

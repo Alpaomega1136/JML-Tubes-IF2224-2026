@@ -1,0 +1,34 @@
+{pengujian 5 - bagian case, operator div dan mod, serta variasi komentar}
+
+program KasusLengkap;
+var
+    angka   : integer;
+    bagi    : integer;
+    sisa    : integer;
+    harakat : char;
+begin
+    angka := 17;
+
+    { bagi integer: 17 dibagi 5 hasilnya 3, bukan 3.4 }
+    bagi := angka div 5;
+
+    (* sisa bagi: 17 mod 5 hasilnya 2 karena 5 masuk 3 kali dengan sisa 2 *)
+    sisa := angka MOD 5;
+
+    writeln(bagi);
+    writeln(sisa);
+
+    { gunakan case of untuk memeriksa nilai sisa pembagian satu per satu }
+    case sisa of
+        0 : writeln('Habis dibagi 5');
+        1 : writeln('Sisa 1');
+        2 : writeln('Sisa 2');
+        3 : writeln('Sisa 3');
+        4 : writeln('Sisa 4');
+    end;
+
+    (* simpan satu karakter huruf ke dalam variabel bertipe char *)
+    harakat := 'Z';
+
+    writeln(harakat);
+end.

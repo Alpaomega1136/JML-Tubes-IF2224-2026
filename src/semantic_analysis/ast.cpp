@@ -12,6 +12,7 @@ void BinOpNode::visit()       {}
 void TypeNode::visit()        {}
 void RangeNode::visit()       {}
 void ArrayTypeNode::visit()   {}
+void EnumeratedTypeNode::visit() {}
 void RecordTypeNode::visit()  {}
 void FieldPartNode::visit()   {}
 void VarDeclNode::visit()     {}
@@ -31,63 +32,6 @@ void ProcCallNode::visit()    {}
 void FuncCallNode::visit()    {}
 void ArrayAccessNode::visit() {}
 void RecordAccessNode::visit(){}
-
-// Implementasi print() ast.hpp (tanya nanti)
-void IfNode::print() const {
-    cout << "If(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void CaseBlockNode::print() const {
-    cout << "CaseBlock(condition: ";
-    caseCondition->print();
-    cout << ")";
-}
-
-void CaseNode::print() const {
-    cout << "Case(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void WhileNode::print() const {
-    cout << "While(condition: ";
-    condition->print();
-    cout << ")";
-}
-
-void RepeatNode::print() const {
-    cout << "Repeat(until: ";
-    untilCondition->print();
-    cout << ")";
-}
-
-void ForNode::print() const {
-    cout << "For(assign: ";
-    traversalAssign->print();
-    cout << ", to: ";
-    to->print();
-    cout << ")";
-}
-
-void ProcCallNode::print() const {
-    cout << "ProcCall(name: '" << name << "')";
-}
-
-void FuncCallNode::print() const {
-    cout << "FuncCall(name: '" << name << "')";
-}
-
-void ArrayAccessNode::print() const {
-    cout << "ArrayAccess(name: '" << name << "', idx: ";
-    idx->print();
-    cout << ")";
-}
-
-void RecordAccessNode::print() const {
-    cout << "RecordAccess(name: '" << name << "', field: '" << fieldName << "')";
-}
 
 static string extractIdent(const string& s) {
     size_t lp = s.find('(');
@@ -275,8 +219,15 @@ static TypeNode* buildType(TreeParser* node) {
         return recNode;
     }
 
-    if (inner->data == "<enumerated>")
-        return new TypeNode("enumerated");
+    if (inner->data == "<enumerated>") {
+        EnumeratedTypeNode* enumNode = new EnumeratedTypeNode();
+        for (TreeParser* child : inner->children) {
+            if (child->data.size() >= 5 && child->data.substr(0, 5) == "ident") {
+                enumNode->members.push_back(extractIdent(child->data));
+            }
+        }
+        return enumNode;
+    }
 
     if (inner->data == "<range>") {
         ValueNode* first = buildExpression(inner->children[0]);
@@ -349,9 +300,9 @@ static ASTNode* buildStatement(TreeParser* node) {
     TreeParser* inner = node->children[0];
 
     if (inner->data == "<assignment-statement>") {
-        string varName = extractIdent(inner->children[0]->children[0]->data);
+        ValueNode* target = buildVariable(inner->children[0]);
         ValueNode* val = buildExpression(inner->children[2]);
-        return new AssignNode(new VarNode(varName), val);
+        return new AssignNode(target, val);
     }
 
     if (inner->data == "<procedure/function-call>") {
@@ -375,7 +326,7 @@ static ASTNode* buildStatement(TreeParser* node) {
 
     if (inner->data == "<while-statement>") {
         ValueNode* cond = buildExpression(inner->children[1]);
-        ASTNode*   stmt = buildStatement(inner->children[3]);
+        ASTNode*   stmt = buildStatementList(inner->children[3]->children[1]);
         return new WhileNode(cond, stmt);
     }
 
@@ -391,7 +342,7 @@ static ASTNode* buildStatement(TreeParser* node) {
         ValueNode* from    = buildExpression(ch[3]);
         AssignNode* assign = new AssignNode(new VarNode(varName), from);
         ValueNode* toVal   = buildExpression(ch[5]);
-        ASTNode*   stmt    = buildStatement(ch[7]);
+        ASTNode*   stmt    = buildStatementList(ch[7]->children[1]);
         return new ForNode(assign, toVal, stmt);
     }
 
@@ -546,9 +497,4 @@ ASTNode* buildAST(TreeParser* root) {
     program->addChild(buildStatementList(root->children[2]->children[1]));
 
     return program;
-}
-
-// printAST stub
-void printAST(ASTNode* tree) {
-    
 }

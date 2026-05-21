@@ -144,6 +144,15 @@ static bool startsWith(const std::string& text, const std::string& prefix) {
     return text.rfind(prefix, 0) == 0;
 }
 
+static bool isTerminatedLoopStatement(TreeParser* statement) {
+    if (statement == nullptr || statement->children.empty()) {
+        return false;
+    }
+
+    const std::string& statementType = statement->children[0]->data;
+    return statementType == "<while-statement>" || statementType == "<for-statement>";
+}
+
 Parser::Parser(const std::vector<Token>& tokens) : tokens(Parser::cleanCommentTokens(tokens)), pos(0) {}
 
 // Helper functions
@@ -625,10 +634,20 @@ TreeParser* Parser::CompoundStatement() {
 TreeParser* Parser::StatementList() {
     TreeParser* node = new TreeParser("<statement-list>");
     try {
-        node->addChild(Statement());
-        while (check(semicolon)) {
+        TreeParser* statement = Statement();
+        node->addChild(statement);
+        while (check(semicolon) ||
+               (isTerminatedLoopStatement(statement) &&
+                (check(ident) || check(ifsy) || check(casesy) || check(whilesy) ||
+                 check(repeatsy) || check(forsy) || check(beginsy)))) {
+            if (!check(semicolon)) {
+                statement = Statement();
+                node->addChild(statement);
+                continue;
+            }
             node->addChild(match(semicolon));
-            node->addChild(Statement());
+            statement = Statement();
+            node->addChild(statement);
         }
         return node;
     } catch (const std::runtime_error& e) {
@@ -742,14 +761,15 @@ TreeParser* Parser::CaseBlock() {
     }
 }
  
-// <while-statement> -> whilesy expression dosy statement
+// <while-statement> -> whilesy expression dosy compound-statement semicolon
 TreeParser* Parser::WhileStatement() {
     TreeParser* node = new TreeParser("<while-statement>");
     try {
         node->addChild(match(whilesy));
         node->addChild(Expression());
         node->addChild(match(dosy));
-        node->addChild(Statement());
+        node->addChild(CompoundStatement());
+        node->addChild(match(semicolon));
         return node;
     } catch (const std::runtime_error& e) {
         throw std::runtime_error(std::string("Syntax error in <while-statement>: ") + e.what());
@@ -771,7 +791,7 @@ TreeParser* Parser::RepeatStatement() {
 }
  
 // <for-statement> -> forsy ident becomes expression (tosy|downtosy)
-//                    expression dosy statement
+//                    expression dosy compound-statement semicolon
 TreeParser* Parser::ForStatement() {
     TreeParser* node = new TreeParser("<for-statement>");
     try {
@@ -784,7 +804,8 @@ TreeParser* Parser::ForStatement() {
         else throw std::runtime_error("expected to or downto keyword in <for-statement>");
         node->addChild(Expression());
         node->addChild(match(dosy));
-        node->addChild(Statement());
+        node->addChild(CompoundStatement());
+        node->addChild(match(semicolon));
         return node;
     } catch (const std::runtime_error& e) {
         throw std::runtime_error(std::string("Syntax error in <for-statement>: ") + e.what());

@@ -1,0 +1,31 @@
+{pengujian 1 - bagian tipe data primitif dan operator aritmatika}
+
+program Kalkulator;
+var
+    x, y    : integer;
+    phi     : real;
+    inisial : char;
+    pesan   : string;
+    hasil   : integer;
+begin
+    (* isi nilai awal untuk setiap variabel *)
+    x       := 20;
+    y       := 7;
+    phi     := 3.14;
+    inisial := 'A';
+    pesan   := 'Halo Arion';
+
+    { hitung hasil penjumlahan, pengurangan, dan perkalian }
+    hasil := x + y;
+    hasil := x - y;
+    hasil := x * y;
+
+    (* pembagian real: 22 dibagi 7 mendekati nilai phi *)
+    phi := 22 / 7;
+
+    { tampilkan semua hasil ke layar }
+    writeln(hasil);
+    writeln(phi);
+    writeln(inisial);
+    writeln(pesan);
+end.

@@ -18,11 +18,13 @@ SymbolTable::SymbolTable() {
 void SymbolTable::enterScope() {
     scopes.emplace_back();
     btab.push_back({0, 0, 0, 0});
+    activeBlockStack.push_back(static_cast<int>(btab.size()) - 1);
 }
 
 void SymbolTable::exitScope() {
     if (scopes.size() > 1) {
         scopes.pop_back();
+        activeBlockStack.pop_back();
     }
 }
 
@@ -32,20 +34,36 @@ bool SymbolTable::declareSymbol(const SymbolEntry& entry) {
     }
 
     auto& currentScope = scopes.back();
-    if (currentScope.find(entry.name) != currentScope.end()) {
+    std::string normalizedName = toLowerString(entry.name);
+    if (currentScope.find(normalizedName) != currentScope.end()) {
         return false;
     }
 
     SymbolEntry storedEntry = entry;
     storedEntry.lexicalLevel = currentLevel();
-    currentScope[storedEntry.name] = storedEntry;
+    int activeBlock = activeBlockStack.empty() ? -1 : activeBlockStack.back();
+    storedEntry.link = activeBlock < 0 ? 0 : btab[activeBlock].last;
     appendTabEntry(storedEntry);
+    storedEntry.tabIndex = static_cast<int>(tab.size()) - 1;
+    currentScope[normalizedName] = storedEntry;
+
+    if (activeBlock >= 0) {
+        btab[activeBlock].last = storedEntry.tabIndex;
+        if (storedEntry.kind == SymbolKind::Parameter) {
+            btab[activeBlock].lpar = storedEntry.tabIndex;
+            btab[activeBlock].psze += 1;
+        } else if (storedEntry.kind == SymbolKind::Variable) {
+            btab[activeBlock].vsze += 1;
+        }
+    }
+
     return true;
 }
 
 SymbolEntry* SymbolTable::lookup(const std::string& name) {
+    std::string normalizedName = toLowerString(name);
     for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
-        auto found = it->find(name);
+        auto found = it->find(normalizedName);
         if (found != it->end()) {
             return &found->second;
         }
@@ -60,12 +78,24 @@ SymbolEntry* SymbolTable::lookupCurrentScope(const std::string& name) {
     }
 
     auto& currentScope = scopes.back();
-    auto found = currentScope.find(name);
+    auto found = currentScope.find(toLowerString(name));
     if (found != currentScope.end()) {
         return &found->second;
     }
 
     return nullptr;
+}
+
+int SymbolTable::lookupTabIndex(const std::string& name) const {
+    std::string normalizedName = toLowerString(name);
+    for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
+        auto found = it->find(normalizedName);
+        if (found != it->end()) {
+            return found->second.tabIndex;
+        }
+    }
+
+    return -1;
 }
 
 int SymbolTable::currentLevel() const {
@@ -78,6 +108,8 @@ int SymbolTable::currentLevel() const {
 
 int SymbolTable::mapKindToObj(SymbolKind kind) const {
     switch (kind) {
+        case SymbolKind::Program:
+            return 0;
         case SymbolKind::Variable:
             return 1;
         case SymbolKind::Constant:
@@ -90,6 +122,8 @@ int SymbolTable::mapKindToObj(SymbolKind kind) const {
             return 5;
         case SymbolKind::Parameter:
             return 6;
+        case SymbolKind::Field:
+            return 7;
         default:
             return 0;
     }
@@ -122,8 +156,58 @@ int SymbolTable::mapTypeNameToCode(const std::string& typeName) const {
     if (normalizedType == "procedure") {
         return 8;
     }
+    if (normalizedType == "enumerated") {
+        return 9;
+    }
 
     return 0;
+}
+
+int SymbolTable::addArrayType(int indexType, int elementType, int elementRef, int low, int high, int elementSize) {
+    int totalSize = 0;
+    if (high >= low) {
+        totalSize = (high - low + 1) * elementSize;
+    }
+
+    atab.push_back({
+        indexType,
+        elementType,
+        elementRef,
+        low,
+        high,
+        elementSize,
+        totalSize
+    });
+
+    return static_cast<int>(atab.size()) - 1;
+}
+
+int SymbolTable::addBlockEntry() {
+    btab.push_back({0, 0, 0, 0});
+    return static_cast<int>(btab.size()) - 1;
+}
+
+int SymbolTable::addRecordField(int blockIndex, const std::string& name, const std::string& typeName, int typeCode, int ref, int adr) {
+    if (blockIndex < 0 || blockIndex >= static_cast<int>(btab.size())) {
+        return -1;
+    }
+
+    SymbolEntry entry{
+        name,
+        SymbolKind::Field,
+        typeName,
+        currentLevel()
+    };
+    entry.link = btab[blockIndex].last;
+    entry.typeCode = typeCode;
+    entry.ref = ref;
+    entry.adr = adr;
+    appendTabEntry(entry);
+
+    int tabIndex = static_cast<int>(tab.size()) - 1;
+    btab[blockIndex].last = tabIndex;
+    btab[blockIndex].vsze += 1;
+    return tabIndex;
 }
 
 const std::vector<TabEntry>& SymbolTable::getTab() const {
@@ -139,50 +223,63 @@ const std::vector<BTabEntry>& SymbolTable::getBTab() const {
 }
 
 void SymbolTable::printSpecTables() const {
-    std::cout << "=== TAB ===" << std::endl;
-    std::cout << "identifier | obj | type | lev | ref | adr" << std::endl;
+    printSpecTables(std::cout);
+}
+
+void SymbolTable::printSpecTables(std::ostream& output) const {
+    int maxLength = 10;
     for (const TabEntry& entry : tab) {
-        std::cout << entry.identifier << " | "
-                  << entry.obj << " | "
-                  << entry.type << " | "
-                  << entry.lev << " | "
-                  << entry.ref << " | "
-                  << entry.adr << std::endl;
+        if (entry.identifier.length() > maxLength) {
+            maxLength = entry.identifier.length(); 
+        }
+    }
+    output << "=== TAB ===" << std::endl;
+    output << "identifier" + std::string(maxLength - 10, ' ') + "\t | link\t | obj\t | type\t | ref\t | nrm\t | lev\t | adr" << std::endl;
+    for (const TabEntry& entry : tab) {
+        output << entry.identifier + std::string(maxLength - entry.identifier.length(), ' ') << "\t | "
+               << entry.link << "\t | "
+               << entry.obj << "\t | "
+               << entry.type << "\t | "
+               << entry.ref << "\t | "
+               << entry.nrm << "\t | "
+               << entry.lev << "\t | "
+               << entry.adr << std::endl;
     }
 
-    std::cout << std::endl;
-    std::cout << "=== ATAB ===" << std::endl;
-    std::cout << "indexType | elementType | low | high | elementSize | totalSize" << std::endl;
+    output << std::endl;
+    output << "=== ATAB ===" << std::endl;
+    output << "indexType\t | elementType\t | elementRef\t | low\t | high\t | elementSize\t | totalSize" << std::endl;
     for (const ATabEntry& entry : atab) {
-        std::cout << entry.indexType << " | "
-                  << entry.elementType << " | "
-                  << entry.low << " | "
-                  << entry.high << " | "
-                  << entry.elementSize << " | "
-                  << entry.totalSize << std::endl;
+        output << entry.indexType << "\t\t\t | "
+               << entry.elementType << "\t\t\t | "
+               << entry.elementRef << "\t\t\t | "
+               << entry.low << "\t | "
+               << entry.high << "\t | "
+               << entry.elementSize << "\t\t\t | "
+               << entry.totalSize << std::endl;
     }
 
-    std::cout << std::endl;
-    std::cout << "=== BTAB ===" << std::endl;
-    std::cout << "last | lpar | psze | vsze" << std::endl;
+    output << std::endl;
+    output << "=== BTAB ===" << std::endl;
+    output << "last | lpar\t | psze\t | vsze" << std::endl;
     for (const BTabEntry& entry : btab) {
-        std::cout << entry.last << " | "
-                  << entry.lpar << " | "
-                  << entry.psze << " | "
-                  << entry.vsze << std::endl;
+        output << entry.last << "\t | "
+               << entry.lpar << "\t | "
+               << entry.psze << "\t | "
+               << entry.vsze << std::endl;
     }
 }
 
 void SymbolTable::appendTabEntry(const SymbolEntry& entry) {
     tab.push_back({
         entry.name,
-        0,
+        entry.link,
         mapKindToObj(entry.kind),
-        mapTypeNameToCode(entry.typeName),
-        0,
-        0,
+        entry.typeCode >= 0 ? entry.typeCode : mapTypeNameToCode(entry.typeName),
+        entry.ref,
+        entry.nrm,
         entry.lexicalLevel,
-        0
+        entry.adr
     });
 }
 
@@ -194,6 +291,8 @@ void SymbolTable::addPredefinedSymbols() {
     declareSymbol({"string", SymbolKind::Type, "string", currentLevel()});
     declareSymbol({"true", SymbolKind::Constant, "boolean", currentLevel()});
     declareSymbol({"false", SymbolKind::Constant, "boolean", currentLevel()});
+    declareSymbol({"read", SymbolKind::Procedure, "procedure", currentLevel()});
     declareSymbol({"readln", SymbolKind::Procedure, "procedure", currentLevel()});
+    declareSymbol({"write", SymbolKind::Procedure, "procedure", currentLevel()});
     declareSymbol({"writeln", SymbolKind::Procedure, "procedure", currentLevel()});
 }
