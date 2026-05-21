@@ -59,18 +59,18 @@ cd JML-Tubes-IF2224-2026
 make
 ```
 
-Perintah ini akan mengompilasi seluruh source code dan menghasilkan executable bernama `lexer`. Walaupun nama executable masih `lexer`, program menjalankan tahap lexer terlebih dahulu lalu parser.
+Perintah ini akan mengompilasi seluruh source code, menyimpan file object (`.o`) di folder `bin/`, dan menghasilkan executable bernama `bin/arion`.
 
 ### Menjalankan Program
 
 ```bash
-./lexer <input_file> <output_file>
+./bin/arion <input_file> <output_file>
 ```
 
 Contoh:
 
 ```bash
-./lexer test/milestone-2/input/input-1.txt test/milestone-2/output/output-1.txt
+./bin/arion test/milestone-2/input/input-1.txt test/milestone-2/output/output-1.txt
 ```
 
 Keterangan:

@@ -17,6 +17,10 @@ bool isDigit(char c) {
     return c >= '0' && c <= '9';
 }
 
+bool isIdentifierContinuation(char c) {
+    return isLetter(c) || isDigit(c);
+}
+
 bool isWhitespace(char c) {
     switch(c) {
         case ' ': 
@@ -313,7 +317,7 @@ vector<Token> tokenize(const std::string& filename) {
 
             //Identifier
             case IDENT_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_value += curr_char;
                     continue; 
                 } else {
@@ -332,7 +336,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = AR_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -346,7 +350,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = AND_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -356,7 +360,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case AND_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -370,7 +374,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = ARR_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -384,7 +388,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = ARRA_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -398,7 +402,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = ARRAY_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char) ) {
+                } else if (isIdentifierContinuation(curr_char) ) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char; 
                     continue;
@@ -408,7 +412,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case ARRAY_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -423,7 +427,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = BE_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -436,7 +440,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = BEG_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -450,7 +454,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = BEGI_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -464,7 +468,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = BEGIN_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -474,7 +478,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case BEGIN_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -493,7 +497,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CO_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -508,7 +512,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CAS_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -522,7 +526,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CASE_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -532,7 +536,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case CASE_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -547,7 +551,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CON_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -561,7 +565,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CONS_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -575,7 +579,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = CONST_STATE; 
                     curr_value += curr_char; 
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -585,7 +589,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case CONST_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE; 
                     curr_value += curr_char; 
                     continue;
@@ -603,7 +607,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -618,7 +622,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DIV_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -628,7 +632,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case DIV_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -643,7 +647,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DOW_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -657,7 +661,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DOWN_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -671,7 +675,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DOWNT_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -685,7 +689,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = DOWNTO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -695,7 +699,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case DOWNTO_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -714,7 +718,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = EN_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -729,7 +733,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = ELS_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -743,7 +747,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = ELSE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -753,7 +757,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case ELSE_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -768,7 +772,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = END_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -778,7 +782,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case END_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -797,7 +801,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FU_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -812,7 +816,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FOR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -822,7 +826,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case FOR_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -837,7 +841,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUN_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -851,7 +855,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUNC_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -865,7 +869,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUNCT_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -879,7 +883,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUNCTI_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -893,7 +897,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUNCTIO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -907,7 +911,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = FUNCTION_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -917,7 +921,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case FUNCTION_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -933,7 +937,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = IF_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -943,7 +947,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case IF_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -959,7 +963,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = MO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -973,7 +977,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = MOD_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -983,7 +987,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case MOD_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -999,7 +1003,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = NO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1013,7 +1017,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = NOT_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1023,7 +1027,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case NOT_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1043,7 +1047,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = OR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1053,7 +1057,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case OF_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1063,7 +1067,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case OR_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1078,7 +1082,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1092,7 +1096,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PRO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1110,7 +1114,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROG_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1125,7 +1129,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROCE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1139,7 +1143,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROCED_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1153,7 +1157,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROCEDU_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1167,7 +1171,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROCEDUR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1181,7 +1185,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROCEDURE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1191,7 +1195,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case PROCEDURE_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1206,7 +1210,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROGR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1220,7 +1224,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROGRA_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1234,7 +1238,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = PROGRAM_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1244,7 +1248,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case PROGRAM_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1259,7 +1263,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = RE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1277,7 +1281,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = REP_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1292,7 +1296,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = RECO_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1306,7 +1310,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = RECOR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1320,7 +1324,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = RECORD_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1330,7 +1334,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case RECORD_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1345,7 +1349,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = REPE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1359,7 +1363,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = REPEA_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1373,7 +1377,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = REPEAT_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1383,7 +1387,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case REPEAT_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1406,7 +1410,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = TY_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1421,7 +1425,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = THE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1435,7 +1439,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = THEN_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1445,7 +1449,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case THEN_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1456,7 +1460,7 @@ vector<Token> tokenize(const std::string& filename) {
 
             // Jalur to
             case TO_STATE: 
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1471,7 +1475,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = TYP_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1485,7 +1489,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = TYPE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1495,7 +1499,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case TYPE_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1511,7 +1515,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = UN_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1525,7 +1529,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = UNT_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1539,7 +1543,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = UNTI_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1553,7 +1557,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = UNTIL_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1563,7 +1567,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case UNTIL_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1579,7 +1583,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = VA_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1593,7 +1597,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = VAR_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1603,7 +1607,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case VAR_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1619,7 +1623,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = WH_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1633,7 +1637,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = WHI_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1647,7 +1651,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = WHIL_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1661,7 +1665,7 @@ vector<Token> tokenize(const std::string& filename) {
                     curr_state = WHILE_STATE;
                     curr_value += curr_char;
                     continue;
-                } else if (isalpha(curr_char)) {
+                } else if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1671,7 +1675,7 @@ vector<Token> tokenize(const std::string& filename) {
                 }
 
             case WHILE_STATE:
-                if (isalpha(curr_char)) {
+                if (isIdentifierContinuation(curr_char)) {
                     curr_state = IDENT_STATE;
                     curr_value += curr_char;
                     continue;
@@ -1715,7 +1719,7 @@ vector<Token> tokenize(const std::string& filename) {
                         curr_value += curr_char;
                         break;
                     }
-                    if (isalpha(curr_char)) {
+                    if (isIdentifierContinuation(curr_char)) {
                         curr_value += curr_char;
                         switch (tolower(curr_char)) {
                             case 'a': curr_state = A_STATE; break;
