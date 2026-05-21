@@ -19,6 +19,7 @@ private:
         int high = 0;
         int ref = 0;
         std::unordered_map<std::string, std::string> fields;
+        std::vector<std::string> members;
     };
 
     SymbolTable symbolTable;

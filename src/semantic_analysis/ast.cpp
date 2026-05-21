@@ -12,6 +12,7 @@ void BinOpNode::visit()       {}
 void TypeNode::visit()        {}
 void RangeNode::visit()       {}
 void ArrayTypeNode::visit()   {}
+void EnumeratedTypeNode::visit() {}
 void RecordTypeNode::visit()  {}
 void FieldPartNode::visit()   {}
 void VarDeclNode::visit()     {}
@@ -218,8 +219,15 @@ static TypeNode* buildType(TreeParser* node) {
         return recNode;
     }
 
-    if (inner->data == "<enumerated>")
-        return new TypeNode("enumerated");
+    if (inner->data == "<enumerated>") {
+        EnumeratedTypeNode* enumNode = new EnumeratedTypeNode();
+        for (TreeParser* child : inner->children) {
+            if (child->data.size() >= 5 && child->data.substr(0, 5) == "ident") {
+                enumNode->members.push_back(extractIdent(child->data));
+            }
+        }
+        return enumNode;
+    }
 
     if (inner->data == "<range>") {
         ValueNode* first = buildExpression(inner->children[0]);

@@ -89,6 +89,18 @@ void ASTPrinter::printType(TypeNode* node, std::ostream& out, int indentLevel) c
         return;
     }
 
+    if (EnumeratedTypeNode* enumerated = dynamic_cast<EnumeratedTypeNode*>(node)) {
+        writeIndent(out, indentLevel);
+        out << "EnumeratedType";
+        writeAnnotation(enumerated, out);
+        out << '\n';
+        for (const std::string& member : enumerated->members) {
+            writeIndent(out, indentLevel + 1);
+            out << "Member(name: '" << member << "')" << '\n';
+        }
+        return;
+    }
+
     if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(node)) {
         writeIndent(out, indentLevel);
         out << "RecordType";
