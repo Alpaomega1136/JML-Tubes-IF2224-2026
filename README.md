@@ -26,12 +26,16 @@ Pada **Milestone 1**, program mengimplementasikan **lexical analyzer (lexer)**. 
 
 Pada **Milestone 2**, program menambahkan **syntax analyzer (parser)**. Parser menerima token dari lexer, memeriksa kesesuaian urutan token terhadap grammar Arion menggunakan **Recursive Descent Parser**, lalu menghasilkan **Parse Tree**. Parser juga menangani syntax error dengan pesan error yang informatif.
 
+Pada **Milestone 3**, program menambahkan **semantic analyzer**. Tahap ini membangun AST dari parse tree, melakukan pengecekan semantic seperti deklarasi identifier, scope, type checking, validasi structured type, dan menghasilkan **Decorated AST** beserta **Symbol Table** (`TAB`, `ATAB`, dan `BTAB`).
+
 Fitur utama program:
 - Tokenisasi source code Arion.
 - Pengenalan keyword, identifier, konstanta, operator, delimiter, dan komentar.
-- Parsing program Arion sesuai grammar Milestone 2.
-- Pembuatan parse tree terformat ke terminal dan file output.
-- Error handling untuk input yang tidak sesuai grammar.
+- Parsing program Arion sesuai grammar Milestone 2 dan revisi Milestone 3.
+- Pembangunan AST yang lebih ringkas dari parse tree.
+- Analisis semantic untuk deklarasi, scope, type checking, array, record, subrange, dan enumerated type.
+- Pembuatan Decorated AST dan Symbol Table terformat ke terminal dan file output.
+- Error handling untuk lexical, syntax, dan semantic error.
 
 ---
 
@@ -70,30 +74,46 @@ Perintah ini akan mengompilasi seluruh source code, menyimpan file object (`.o`)
 Contoh:
 
 ```bash
-./bin/arion test/milestone-2/input/input-1.txt test/milestone-2/output/output-1.txt
+./bin/arion test/milestone-3/input/input-1.txt test/milestone-3/output/output-1.txt
 ```
 
 Keterangan:
 - `<input_file>`: file teks berisi source code Arion.
-- `<output_file>`: file teks hasil parse tree atau pesan syntax error.
+- `<output_file>`: file teks hasil semantic analysis atau pesan error.
 
-### Format Output Milestone 2
+### Format Output Milestone 3
 
-Jika input valid, output berupa parse tree:
+Jika input valid, output berupa semantic report:
 
 ```text
-<program>
-├── <program-header>
-│   ├── programsy
-│   ├── ident(Kalkulator)
-│   └── semicolon
+=== Arion Milestone 3 Semantic Report ===
+Pipeline status:
+- AST builder        : OK
+- Semantic analyzer  : OK
+
+=== Decorated AST Tree ===
+ProgramNode(name: 'Kalkulator') [type=program, tab=37, lev=0]
+|-- Declarations
 ...
+
+=== Symbol Tables ===
+=== TAB ===
+identifier | link | obj | type | ref | nrm | lev | adr
 ```
 
 Jika input tidak valid, output berupa pesan error:
 
 ```text
-Syntax error in ProgramHeader: expected semicolon (;), found varsy (var)
+Semantic error: identifier 'x' is not declared.
+```
+
+### Menjalankan Semua Test Milestone 3
+
+```bash
+for input in test/milestone-3/input/input-*.txt; do \
+  base=$(basename "$input" .txt); \
+  ./bin/arion "$input" "test/milestone-3/output/${base/input/output}.txt"; \
+done
 ```
 
 ### Membersihkan Build
@@ -108,6 +128,9 @@ make clean
 
 ```text
 JML-Tubes-IF2224-2026/
+├── bin/
+│   ├── arion
+│   └── ... file object .o
 ├── src/
 │   ├── main.cpp
 │   ├── lexer/
@@ -115,17 +138,31 @@ JML-Tubes-IF2224-2026/
 │   │   ├── lexer.cpp
 │   │   ├── token.hpp
 │   │   └── token.cpp
-│   └── parser/
-│       ├── parser.hpp
-│       └── parser.cpp
+│   ├── parser/
+│   │   ├── parser.hpp
+│   │   └── parser.cpp
+│   └── semantic_analysis/
+│       ├── ast.hpp
+│       ├── ast.cpp
+│       ├── ast_printer.hpp
+│       ├── ast_printer.cpp
+│       ├── semantic_analyzer.hpp
+│       ├── semantic_analyzer.cpp
+│       ├── symbol_table.hpp
+│       ├── symbol_table.cpp
+│       └── type.hpp
 ├── doc/
 │   ├── milestone-1/
-│   └── milestone-2/
+│   ├── milestone-2/
+│   └── milestone-3/
 ├── test/
 │   ├── milestone-1/
 │   │   ├── input/
 │   │   └── output/
-│   └── milestone-2/
+│   ├── milestone-2/
+│   │   ├── input/
+│   │   └── output/
+│   └── milestone-3/
 │       ├── input/
 │       └── output/
 ├── Makefile
@@ -136,9 +173,9 @@ JML-Tubes-IF2224-2026/
 
 ## Pembagian Tugas
 
-| NIM | Nama Lengkap | Milestone 1 | Milestone 2 |
-|---|---|---|---|
-| 13524015 | Mahatma Brahmana | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer |
-| 13524057 | Benedict Darrel Setiawan | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer |
-| 13524059 | Raymond Jonathan Dwi Putra J | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |
-| 13524111 | Reynard Anderson Wijaya | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |
+| NIM | Nama Lengkap | Milestone 1 | Milestone 2 | Milestone 3 |
+|---|---|---|---|---|
+| 13524015 | Mahatma Brahmana | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer | Semantic analyzer, type checking, scope, dan validasi symbol |
+| 13524057 | Benedict Darrel Setiawan | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer | Foundation struktur data AST dan symbol table |
+| 13524059 | Raymond Jonathan Dwi Putra J | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser | Output integration, AST printer, test case, dokumentasi, dan beberapa revisi |
+| 13524111 | Reynard Anderson Wijaya | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |  AST builder dari parse tree ke AST |
