@@ -1,8 +1,3 @@
-=== Arion Milestone 3 Semantic Report ===
-Pipeline status:
-- AST builder        : OK
-- Semantic analyzer  : OK
-
 === Decorated AST Tree ===
 ProgramNode(name: 'KasusLengkap') [type=program, tab=38, lev=0]
 |-- Declarations

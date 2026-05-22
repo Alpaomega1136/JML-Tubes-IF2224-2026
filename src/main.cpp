@@ -39,24 +39,12 @@ int main(int argc, char* argv[]){
 
         ASTPrinter printer;
         auto writeSemanticOutput = [&](std::ostream& out) {
-            out << "=== Arion Milestone 3 Semantic Report ===" << endl;
-            out << "Pipeline status:" << endl;
-            if (ast != nullptr) {
-                out << "- AST builder        : OK" << endl;
-            } else {
-                out << "- AST builder        : FAILED (nullptr)" << endl;
-            }
-
             if (analyzer.hasErrors()) {
-                out << "- Semantic analyzer  : FAILED" << endl;
-                out << endl;
                 out << "=== Semantic Errors ===" << endl;
                 analyzer.printErrors(out);
-            } else {
-                out << "- Semantic analyzer  : OK" << endl;
+                out << endl;
             }
 
-            out << endl;
             out << "=== Decorated AST Tree ===" << endl;
             printer.print(ast, out);
 

@@ -86,11 +86,6 @@ Keterangan:
 Jika input valid, output berupa semantic report:
 
 ```text
-=== Arion Milestone 3 Semantic Report ===
-Pipeline status:
-- AST builder        : OK
-- Semantic analyzer  : OK
-
 === Decorated AST Tree ===
 ProgramNode(name: 'Kalkulator') [type=program, tab=37, lev=0]
 |-- Declarations
