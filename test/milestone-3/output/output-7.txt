@@ -1,0 +1,91 @@
+=== Semantic Errors ===
+Semantic error: cannot assign value of type 'string' to variable 'angka' of type 'integer'.
+Semantic error: cannot assign value of type 'integer' to variable 'teks' of type 'string'.
+Semantic error: cannot assign value of type 'integer' to variable 'status' of type 'boolean'.
+Semantic error: if condition must be boolean, got 'integer'.
+
+=== Decorated AST Tree ===
+ProgramNode(name: 'KesalahanTipe') [type=program, tab=38, lev=0]
+|-- Declarations
+|   |-- VarDecl(name: 'angka') [type=integer, tab=39, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'teks') [type=string, tab=40, lev=0]
+|   |   |-- Type(name: 'string')
+|   |-- VarDecl(name: 'status') [type=boolean, tab=41, lev=0]
+|   |   |-- Type(name: 'boolean')
+|-- Block
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
+|   |   |-- value:
+|   |   |   |-- String(value: 'Halo') [type=string, tab=-1, lev=0]
+|   |-- Assign [type=string, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'teks') [type=string, tab=40, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 123) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=boolean, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'status') [type=boolean, tab=41, lev=0]
+|   |   |-- value:
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
+|   |   |-- then:
+|   |   |   |-- Block
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
+
+=== Symbol Tables ===
+=== TAB ===
+identifier   	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
+and          	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+array        	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+begin        	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+case         	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+const        	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+div          	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+downto       	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+do           	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+else         	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+end          	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+for          	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+function     	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+if           	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+mod          	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+not          	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+of           	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+or           	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+procedure    	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+program      	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+record       	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+repeat       	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+integer      	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
+real         	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
+boolean      	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
+char         	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
+string       	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
+then         	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+to           	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+type         	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+until        	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+var          	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+while        	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+true         	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+false        	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+read         	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+readln       	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+write        	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+writeln      	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+KesalahanTipe	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+angka        	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+teks         	 | 39	 | 1	 | 5	 | 0	 | 1	 | 0	 | 0
+status       	 | 40	 | 1	 | 4	 | 0	 | 1	 | 0	 | 0
+
+=== ATAB ===
+indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
+
+=== BTAB ===
+last | lpar	 | psze	 | vsze
+41	 | 0	 | 0	 | 3

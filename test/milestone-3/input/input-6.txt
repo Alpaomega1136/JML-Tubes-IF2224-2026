@@ -1,0 +1,7 @@
+{pengujian 6 - identifier digunakan sebelum dideklarasikan}
+
+program IdentifierBelumDeklarasi;
+begin
+    nilai := 10;
+    writeln(nilai);
+end.

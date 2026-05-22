@@ -1,0 +1,17 @@
+{pengujian 7 - type mismatch pada assignment dan kondisi non-boolean}
+
+program KesalahanTipe;
+var
+    angka  : integer;
+    teks   : string;
+    status : boolean;
+begin
+    angka := 'Halo';
+    teks := 123;
+    status := angka;
+
+    if angka then
+    begin
+        writeln(angka);
+    end;
+end.
