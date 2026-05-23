@@ -26,14 +26,14 @@ Pada **Milestone 1**, program mengimplementasikan **lexical analyzer (lexer)**. 
 
 Pada **Milestone 2**, program menambahkan **syntax analyzer (parser)**. Parser menerima token dari lexer, memeriksa kesesuaian urutan token terhadap grammar Arion menggunakan **Recursive Descent Parser**, lalu menghasilkan **Parse Tree**. Parser juga menangani syntax error dengan pesan error yang informatif.
 
-Pada **Milestone 3**, program menambahkan **semantic analyzer**. Tahap ini membangun AST dari parse tree, melakukan pengecekan semantic seperti deklarasi identifier, scope, type checking, validasi structured type, dan menghasilkan **Decorated AST** beserta **Symbol Table** (`TAB`, `ATAB`, dan `BTAB`).
+Pada **Milestone 3**, program menambahkan **semantic analyzer**. Tahap ini membangun AST dari parse tree, melakukan pengecekan semantic seperti deklarasi identifier, scope, type checking, validasi structured type, dan menghasilkan **Decorated AST** beserta **Symbol Table** (`TAB`, `ATAB`, dan `BTAB`). Proses semantic analysis dijalankan melalui fungsi `visit()` pada node AST yang meneruskan proses ke `SemanticAnalyzer` sebagai visitor terpusat.
 
 Fitur utama program:
 - Tokenisasi source code Arion.
 - Pengenalan keyword, identifier, konstanta, operator, delimiter, dan komentar.
 - Parsing program Arion sesuai grammar Milestone 2 dan revisi Milestone 3.
 - Pembangunan AST yang lebih ringkas dari parse tree.
-- Analisis semantic untuk deklarasi, scope, type checking, array, record, subrange, dan enumerated type.
+- Analisis semantic untuk deklarasi, scope, type checking, assignment, procedure/function call, array, record, subrange, dan enumerated type.
 - Pembuatan Decorated AST dan Symbol Table terformat ke terminal dan file output.
 - Error handling untuk lexical, syntax, dan semantic error.
 
@@ -64,7 +64,6 @@ make
 ```
 
 Perintah ini akan mengompilasi seluruh source code, menyimpan file object (`.o`) di folder `bin/`, dan menghasilkan executable bernama `bin/arion`.
-
 ### Menjalankan Program
 
 ```bash
@@ -96,10 +95,14 @@ ProgramNode(name: 'Kalkulator') [type=program, tab=37, lev=0]
 identifier | link | obj | type | ref | nrm | lev | adr
 ```
 
-Jika input tidak valid, output berupa pesan error:
+Jika input tidak valid secara semantic, output diawali daftar semantic error, lalu tetap menampilkan decorated AST dan symbol table yang berhasil dibentuk:
 
 ```text
-Semantic error: identifier 'x' is not declared.
+=== Semantic Errors ===
+- Identifier 'nilai' is not declared.
+
+=== Decorated AST Tree ===
+...
 ```
 
 ### Menjalankan Semua Test Milestone 3
@@ -109,6 +112,14 @@ for input in test/milestone-3/input/input-*.txt; do \
   base=$(basename "$input" .txt); \
   ./bin/arion "$input" "test/milestone-3/output/${base/input/output}.txt"; \
 done
+```
+
+### Smoke Test Milestone 2
+
+Program masih dapat dijalankan menggunakan input Milestone 2:
+
+```bash
+./bin/arion test/milestone-2/input/input-1.txt /tmp/milestone-2-smoke-output.txt
 ```
 
 ### Membersihkan Build
@@ -163,14 +174,13 @@ JML-Tubes-IF2224-2026/
 ├── Makefile
 └── README.md
 ```
-
 ---
 
 ## Pembagian Tugas
 
 | NIM | Nama Lengkap | Milestone 1 | Milestone 2 | Milestone 3 |
 |---|---|---|---|---|
-| 13524015 | Mahatma Brahmana | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer | Semantic analyzer, type checking, scope, dan validasi symbol |
-| 13524057 | Benedict Darrel Setiawan | Membuat diagram DFA & membuat kode lexer | Membuat laporan milestone 2 & merevisi kode lexer | Foundation struktur data AST dan symbol table |
-| 13524059 | Raymond Jonathan Dwi Putra J | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser | Output integration, AST printer, test case, dokumentasi, dan beberapa revisi |
-| 13524111 | Reynard Anderson Wijaya | Membuat diagram DFA & membuat laporan | Membuat laporan milestone 2 & membuat kode parser |  AST builder dari parse tree ke AST |
+| 13524015 | Mahatma Brahmana | Membuat diagram DFA dan membuat kode lexer | Membuat laporan milestone 2 dan merevisi kode lexer | Semantic analyzer, type checking, scope, dan validasi symbol |
+| 13524057 | Benedict Darrel Setiawan | Membuat diagram DFA dan membuat kode lexer | Membuat laporan milestone 2 dan merevisi kode lexer | Foundation struktur data AST dan symbol table |
+| 13524059 | Raymond Jonathan Dwi Putra J | Membuat diagram DFA dan membuat laporan | Membuat laporan milestone 2 dan membuat kode parser | Output integration, AST printer, test case, dokumentasi, dan beberapa revisi |
+| 13524111 | Reynard Anderson Wijaya | Membuat diagram DFA dan membuat laporan | Membuat laporan milestone 2 dan membuat kode parser | AST builder dari parse tree ke AST |
