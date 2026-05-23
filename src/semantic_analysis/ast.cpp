@@ -1,37 +1,37 @@
 #include "ast.hpp"
+#include "semantic_analyzer.hpp"
 #include <functional>
 
-// Stub visit()
-void ProgramNode::visit()     {}
-void NumberNode::visit()      {}
-void CharNode::visit()        {}
-void StringNode::visit()      {}
-void VarNode::visit()         {}
-void UnaryOpNode::visit()     {}
-void BinOpNode::visit()       {}
-void TypeNode::visit()        {}
-void RangeNode::visit()       {}
-void ArrayTypeNode::visit()   {}
-void EnumeratedTypeNode::visit() {}
-void RecordTypeNode::visit()  {}
-void FieldPartNode::visit()   {}
-void VarDeclNode::visit()     {}
-void TypeDeclNode::visit()    {}
-void ConstDeclNode::visit()   {}
-void ParameterNode::visit()   {}
-void FuncDeclNode::visit()    {}
-void ProcDeclNode::visit()    {}
-void AssignNode::visit()      {}
-void IfNode::visit()          {}
-void CaseBlockNode::visit()   {}
-void CaseNode::visit()        {}
-void WhileNode::visit()       {}
-void RepeatNode::visit()      {}
-void ForNode::visit()         {}
-void ProcCallNode::visit()    {}
-void FuncCallNode::visit()    {}
-void ArrayAccessNode::visit() {}
-void RecordAccessNode::visit(){}
+void ProgramNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitProgram(this); }
+void NumberNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitNumber(this); }
+void CharNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitChar(this); }
+void StringNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitString(this); }
+void VarNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitVar(this); }
+void UnaryOpNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitUnaryOp(this); }
+void BinOpNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitBinOp(this); }
+void TypeNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitType(this); }
+void RangeNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitRange(this); }
+void ArrayTypeNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitArrayType(this); }
+void EnumeratedTypeNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitEnumeratedType(this); }
+void RecordTypeNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitRecordType(this); }
+void FieldPartNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitFieldPart(this); }
+void VarDeclNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitVarDecl(this); }
+void TypeDeclNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitTypeDecl(this); }
+void ConstDeclNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitConstDecl(this); }
+void ParameterNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitParameter(this); }
+void FuncDeclNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitFuncDecl(this); }
+void ProcDeclNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitProcDecl(this); }
+void AssignNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitAssign(this); }
+void IfNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitIf(this); }
+void CaseBlockNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitCaseBlock(this); }
+void CaseNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitCase(this); }
+void WhileNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitWhile(this); }
+void RepeatNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitRepeat(this); }
+void ForNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitFor(this); }
+void ProcCallNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitProcCall(this); }
+void FuncCallNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitFuncCall(this); }
+void ArrayAccessNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitArrayAccess(this); }
+void RecordAccessNode::visit(SemanticAnalyzer& analyzer) { analyzer.visitRecordAccess(this); }
 
 static string extractIdent(const string& s) {
     size_t lp = s.find('(');

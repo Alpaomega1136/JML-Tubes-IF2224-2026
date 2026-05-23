@@ -64,6 +64,36 @@ private:
 
 public:
     void analyze(ASTNode* root);
+    void visitProgram(ProgramNode* node);
+    void visitNumber(NumberNode* node);
+    void visitChar(CharNode* node);
+    void visitString(StringNode* node);
+    void visitVar(VarNode* node);
+    void visitUnaryOp(UnaryOpNode* node);
+    void visitBinOp(BinOpNode* node);
+    void visitType(TypeNode* node);
+    void visitRange(RangeNode* node);
+    void visitArrayType(ArrayTypeNode* node);
+    void visitEnumeratedType(EnumeratedTypeNode* node);
+    void visitRecordType(RecordTypeNode* node);
+    void visitFieldPart(FieldPartNode* node);
+    void visitVarDecl(VarDeclNode* node);
+    void visitTypeDecl(TypeDeclNode* node);
+    void visitConstDecl(ConstDeclNode* node);
+    void visitParameter(ParameterNode* node);
+    void visitFuncDecl(FuncDeclNode* node);
+    void visitProcDecl(ProcDeclNode* node);
+    void visitAssign(AssignNode* node);
+    void visitIf(IfNode* node);
+    void visitCaseBlock(CaseBlockNode* node);
+    void visitCase(CaseNode* node);
+    void visitWhile(WhileNode* node);
+    void visitRepeat(RepeatNode* node);
+    void visitFor(ForNode* node);
+    void visitProcCall(ProcCallNode* node);
+    void visitFuncCall(FuncCallNode* node);
+    void visitArrayAccess(ArrayAccessNode* node);
+    void visitRecordAccess(RecordAccessNode* node);
     bool hasErrors() const;
     void printErrors() const;
     void printErrors(std::ostream& output) const;

@@ -32,7 +32,134 @@ void SemanticAnalyzer::analyze(ASTNode* root) {
         return;
     }
 
-    analyzeProgram(program);
+    program->visit(*this);
+}
+
+void SemanticAnalyzer::visitProgram(ProgramNode* node) {
+    analyzeProgram(node);
+}
+
+void SemanticAnalyzer::visitNumber(NumberNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitChar(CharNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitString(StringNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitVar(VarNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitUnaryOp(UnaryOpNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitBinOp(BinOpNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitType(TypeNode* node) {
+    describeType(node);
+}
+
+void SemanticAnalyzer::visitRange(RangeNode* node) {
+    describeType(node);
+}
+
+void SemanticAnalyzer::visitArrayType(ArrayTypeNode* node) {
+    describeType(node);
+}
+
+void SemanticAnalyzer::visitEnumeratedType(EnumeratedTypeNode* node) {
+    describeType(node);
+}
+
+void SemanticAnalyzer::visitRecordType(RecordTypeNode* node) {
+    describeType(node);
+}
+
+void SemanticAnalyzer::visitFieldPart(FieldPartNode* node) {
+    if (node == nullptr) {
+        return;
+    }
+    node->semanticType = typeNameFromTypeNode(node->fieldType);
+    node->lexicalLevel = symbolTable.currentLevel();
+}
+
+void SemanticAnalyzer::visitVarDecl(VarDeclNode* node) {
+    analyzeDeclaration(node);
+}
+
+void SemanticAnalyzer::visitTypeDecl(TypeDeclNode* node) {
+    analyzeDeclaration(node);
+}
+
+void SemanticAnalyzer::visitConstDecl(ConstDeclNode* node) {
+    analyzeDeclaration(node);
+}
+
+void SemanticAnalyzer::visitParameter(ParameterNode* node) {
+    if (node == nullptr) {
+        return;
+    }
+    declareParameters({node});
+}
+
+void SemanticAnalyzer::visitFuncDecl(FuncDeclNode* node) {
+    analyzeDeclaration(node);
+}
+
+void SemanticAnalyzer::visitProcDecl(ProcDeclNode* node) {
+    analyzeDeclaration(node);
+}
+
+void SemanticAnalyzer::visitAssign(AssignNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitIf(IfNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitCaseBlock(CaseBlockNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitCase(CaseNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitWhile(WhileNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitRepeat(RepeatNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitFor(ForNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitProcCall(ProcCallNode* node) {
+    analyzeStatement(node);
+}
+
+void SemanticAnalyzer::visitFuncCall(FuncCallNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitArrayAccess(ArrayAccessNode* node) {
+    inferExpressionType(node);
+}
+
+void SemanticAnalyzer::visitRecordAccess(RecordAccessNode* node) {
+    inferExpressionType(node);
 }
 
 bool SemanticAnalyzer::hasErrors() const {
@@ -371,7 +498,7 @@ void SemanticAnalyzer::analyzeProgram(ProgramNode* program) {
         ProcCallNode* container = dynamic_cast<ProcCallNode*>(child);
         if (container != nullptr && container->name == "__declarations__") {
             for (ASTNode* declaration : container->getChildren()) {
-                analyzeDeclaration(declaration);
+                analyzeNode(declaration);
             }
         }
     }
@@ -391,33 +518,7 @@ void SemanticAnalyzer::analyzeNode(ASTNode* node) {
         return;
     }
 
-    if (ProgramNode* program = dynamic_cast<ProgramNode*>(node)) {
-        analyzeProgram(program);
-        return;
-    }
-
-    if (ProcCallNode* procCall = dynamic_cast<ProcCallNode*>(node)) {
-        if (procCall->name == "__declarations__") {
-            for (ASTNode* child : procCall->getChildren()) {
-                analyzeDeclaration(child);
-            }
-            return;
-        }
-
-        analyzeStatement(node);
-        return;
-    }
-
-    if (dynamic_cast<VarDeclNode*>(node) != nullptr ||
-        dynamic_cast<ConstDeclNode*>(node) != nullptr ||
-        dynamic_cast<TypeDeclNode*>(node) != nullptr ||
-        dynamic_cast<FuncDeclNode*>(node) != nullptr ||
-        dynamic_cast<ProcDeclNode*>(node) != nullptr) {
-        analyzeDeclaration(node);
-        return;
-    }
-
-    analyzeStatement(node);
+    node->visit(*this);
 }
 
 void SemanticAnalyzer::analyzeDeclaration(ASTNode* node) {

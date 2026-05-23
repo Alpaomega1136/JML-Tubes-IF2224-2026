@@ -4,6 +4,8 @@
 #include <iostream>
 using namespace std;
 
+class SemanticAnalyzer;
+
 enum ASTNodeType {
     PROGRAM_NODE,
     DECLARATIONS,
@@ -48,7 +50,7 @@ class ASTNode {
         ASTNode(ASTNodeType nodeType) : nodeType(nodeType) {}
         vector<ASTNode*> getChildren() { return children; }
         void addChild(ASTNode* node) { children.push_back(node); }
-        virtual void visit() = 0;
+        virtual void visit(SemanticAnalyzer& analyzer) = 0;
 };
 
 class ProgramNode : public ASTNode {
@@ -57,7 +59,7 @@ class ProgramNode : public ASTNode {
         
     
         ProgramNode(string name) : ASTNode(PROGRAM_NODE), name(name) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 
@@ -72,7 +74,7 @@ class NumberNode : public ValueNode {
         string num;
     
         NumberNode(string num) : ValueNode(NUMBER_NODE), num(num) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class CharNode : public ValueNode {
@@ -80,7 +82,7 @@ class CharNode : public ValueNode {
         char c;
     
         CharNode(char c) : ValueNode(CHAR_NODE), c(c) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class StringNode : public ValueNode {
@@ -88,7 +90,7 @@ class StringNode : public ValueNode {
         string str;
     
         StringNode(string str) : ValueNode(STRING_NODE), str(str) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class VarNode : public ValueNode {
@@ -96,7 +98,7 @@ class VarNode : public ValueNode {
         string name;
     
         VarNode(string name) : ValueNode(VAR_NODE), name(name) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class UnaryOpNode : public ValueNode {
@@ -105,7 +107,7 @@ class UnaryOpNode : public ValueNode {
         ValueNode* value;
     
         UnaryOpNode(string op, ValueNode* value) : ValueNode(UNOP_NODE), op(op), value(value) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class BinOpNode : public ValueNode {
@@ -115,7 +117,7 @@ class BinOpNode : public ValueNode {
         ValueNode* right;
     
         BinOpNode(string op, ValueNode* left, ValueNode* right) : ValueNode(BINOP_NODE), op(op), left(left), right(right) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class TypeNode : public ASTNode {
@@ -123,7 +125,7 @@ class TypeNode : public ASTNode {
         string typeIdent;
     
         TypeNode(string typeIdent) : ASTNode(TYPE_NODE), typeIdent(typeIdent) {}
-        virtual void visit() override;
+        virtual void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class RangeNode : public TypeNode {
@@ -133,7 +135,7 @@ class RangeNode : public TypeNode {
         TypeNode* rangeType;
     
         RangeNode(ValueNode* first, ValueNode* last, TypeNode* type) : TypeNode("subrange"), first(first), last(last), rangeType(type) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ArrayTypeNode : public TypeNode {
@@ -142,7 +144,7 @@ class ArrayTypeNode : public TypeNode {
         TypeNode* elType;
     
         ArrayTypeNode(TypeNode* idxType, TypeNode* elType) : TypeNode("array"), idxType(idxType), elType(elType) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class EnumeratedTypeNode : public TypeNode {
@@ -152,7 +154,7 @@ class EnumeratedTypeNode : public TypeNode {
         EnumeratedTypeNode() : TypeNode("enumerated") {
             nodeType = ENUMERATED_TYPE_NODE;
         }
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class FieldPartNode : public ASTNode {
@@ -161,7 +163,7 @@ class FieldPartNode : public ASTNode {
         TypeNode* fieldType;
     
         FieldPartNode(string fieldIdent, TypeNode* fieldType) : ASTNode(FIELD_PART_NODE), fieldIdent(fieldIdent), fieldType(fieldType) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class RecordTypeNode : public TypeNode {
@@ -169,7 +171,7 @@ class RecordTypeNode : public TypeNode {
         vector<FieldPartNode*> fieldList;
     
         RecordTypeNode() : TypeNode("record") {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 
@@ -179,7 +181,7 @@ class VarDeclNode : public ASTNode {
         TypeNode* type;
     
         VarDeclNode(string name, TypeNode* type) : ASTNode(VAR_DECL_NODE), name(name), type(type) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class TypeDeclNode : public ASTNode {
@@ -188,7 +190,7 @@ class TypeDeclNode : public ASTNode {
         TypeNode* simpleType;
     
         TypeDeclNode(string name, TypeNode* simpleType) : ASTNode(TYPE_DECL_NODE), name(name), simpleType(simpleType) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ConstDeclNode : public ASTNode {
@@ -197,7 +199,7 @@ class ConstDeclNode : public ASTNode {
         ValueNode* value;
     
         ConstDeclNode(string name, ValueNode* value) : ASTNode(CONST_DECL_NODE), name(name), value(value) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ParameterNode : public ASTNode {
@@ -206,7 +208,7 @@ class ParameterNode : public ASTNode {
         TypeNode* type;
     
         ParameterNode(string name, TypeNode* type) : ASTNode(PARAMETER_NODE), name(name), type(type) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class FuncDeclNode : public ASTNode {
@@ -216,7 +218,7 @@ class FuncDeclNode : public ASTNode {
         TypeNode* returnType;
     
         FuncDeclNode(string name, TypeNode* returnType) : ASTNode(FUNC_DECL_NODE), name(name), returnType(returnType) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ProcDeclNode : public ASTNode {
@@ -225,7 +227,7 @@ class ProcDeclNode : public ASTNode {
         vector<ParameterNode*> parameterList;
     
         ProcDeclNode(string name, TypeNode* returnType) : ASTNode(PROC_DECL_NODE), name(name){}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 
@@ -235,7 +237,7 @@ class AssignNode : public ASTNode {
         ValueNode* value;
     
         AssignNode(ValueNode* target, ValueNode* value) : ASTNode(ASSIGN_NODE), target(target), value(value) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class IfNode : public ASTNode {
@@ -245,7 +247,7 @@ class IfNode : public ASTNode {
         ASTNode* elseThen;
     
         IfNode(ValueNode* condition, ASTNode* then, ASTNode* elseThen) : ASTNode(IF_NODE), condition(condition), then(then), elseThen(elseThen) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class CaseBlockNode : public ASTNode {
@@ -254,7 +256,7 @@ class CaseBlockNode : public ASTNode {
         ASTNode* statement;
     
         CaseBlockNode(ValueNode* caseCondition, ASTNode* statement) : ASTNode(CASE_BLOCK_NODE), caseCondition(caseCondition), statement(statement) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class CaseNode : public ASTNode {
@@ -263,7 +265,7 @@ class CaseNode : public ASTNode {
         vector<CaseBlockNode*> caseBlocks;
     
         CaseNode(ValueNode* condition) : ASTNode(CASE_NODE), condition(condition) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class WhileNode : public ASTNode {
@@ -272,7 +274,7 @@ class WhileNode : public ASTNode {
         ASTNode* statement;
     
         WhileNode(ValueNode* condition, ASTNode* statement) : ASTNode(WHILE_NODE), condition(condition), statement(statement) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class RepeatNode : public ASTNode {
@@ -281,7 +283,7 @@ class RepeatNode : public ASTNode {
         ASTNode* statement;
     
         RepeatNode(ValueNode* condition, ASTNode* statement) : ASTNode(REPEAT_NODE), untilCondition(condition), statement(statement) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ForNode : public ASTNode {
@@ -291,7 +293,7 @@ class ForNode : public ASTNode {
         ASTNode* statement;
     
         ForNode(AssignNode* traversalAssign, ValueNode* to, ASTNode* statement) : ASTNode(FOR_NODE), traversalAssign(traversalAssign), to(to), statement(statement) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ProcCallNode : public ASTNode {
@@ -300,7 +302,7 @@ class ProcCallNode : public ASTNode {
         vector<ValueNode*> args;
 
         ProcCallNode(string name) : ASTNode(PROC_CALL_NODE), name(name) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class FuncCallNode : public ValueNode {
@@ -309,7 +311,7 @@ class FuncCallNode : public ValueNode {
         vector<ValueNode*> args;
 
         FuncCallNode(string name) : ValueNode(FUNC_CALL_NODE), name(name) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class ArrayAccessNode : public ValueNode {
@@ -318,7 +320,7 @@ class ArrayAccessNode : public ValueNode {
         ValueNode* idx;
 
         ArrayAccessNode(string name, ValueNode* idx) : ValueNode(ARRAY_ACCESS_NODE), name(name), idx(idx) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 class RecordAccessNode : public ValueNode {
@@ -327,7 +329,7 @@ class RecordAccessNode : public ValueNode {
         string fieldName;
     
         RecordAccessNode(string name, string fieldName) : ValueNode(RECORD_ACCESS_NODE), name(name), fieldName(fieldName) {}
-        void visit() override;
+        void visit(SemanticAnalyzer& analyzer) override;
 };
 
 
