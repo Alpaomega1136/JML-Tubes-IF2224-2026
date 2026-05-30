@@ -47,6 +47,9 @@ void Interpreter::executeInstruction(
         case Opcode::STO:
             writeMemory(instruction.operand, popValue());
             break;
+        case Opcode::RET:
+            halted = true;
+            break;
         default:
             break;
     }
