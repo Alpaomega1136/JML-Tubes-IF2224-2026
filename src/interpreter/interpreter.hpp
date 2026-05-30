@@ -45,6 +45,10 @@ private:
                             const std::vector<Instruction>& instructions,
                             std::ostream& out);
     void executeOpr(int operation, std::ostream& out);
+    void validateInstructionTarget(
+        const Instruction& instruction,
+        const std::vector<Instruction>& instructions
+    ) const;
     std::int32_t checkedInt32(std::int64_t result,
                               const std::string& operation) const;
     void initializeMemory(int size);

@@ -56,8 +56,20 @@ void Interpreter::executeInstruction(
         case Opcode::RET:
             halted = true;
             break;
+        case Opcode::JMP:
+        case Opcode::JPC:
+        case Opcode::CAL:
+            validateInstructionTarget(instruction, instructions);
+            throw RuntimeError(
+                "Runtime Error: instruction " +
+                CodeGenerator::opcodeToString(instruction.opcode) +
+                " is not supported in Orang 2 interpreter core"
+            );
         default:
-            break;
+            throw RuntimeError(
+                "Runtime Error: invalid opcode at line " +
+                std::to_string(instruction.line)
+            );
     }
 }
 
@@ -147,7 +159,24 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
             break;
         }
         default:
-            break;
+            throw RuntimeError(
+                "Runtime Error: invalid OPR code " +
+                std::to_string(operation)
+            );
+    }
+}
+
+void Interpreter::validateInstructionTarget(
+    const Instruction& instruction,
+    const std::vector<Instruction>& instructions
+) const {
+    if (instruction.operand < 0 ||
+        static_cast<std::size_t>(instruction.operand) >= instructions.size()) {
+        throw RuntimeError(
+            "Runtime Error: Label not found for " +
+            CodeGenerator::opcodeToString(instruction.opcode) +
+            " target " + std::to_string(instruction.operand)
+        );
     }
 }
 
