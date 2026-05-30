@@ -6,6 +6,8 @@ SRCS     = src/main.cpp \
            src/lexer/lexer.cpp \
            src/lexer/token.cpp \
            src/parser/parser.cpp \
+           src/codegen/codegen.cpp \
+           src/interpreter/interpreter.cpp \
            src/semantic_analysis/ast.cpp \
            src/semantic_analysis/ast_printer.cpp \
            src/semantic_analysis/symbol_table.cpp \

@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <sstream>
+#include "codegen/codegen.hpp"
+#include "interpreter/interpreter.hpp"
 #include "lexer/lexer.hpp"
 #include "lexer/token.hpp"
 #include "parser/parser.hpp"
@@ -27,6 +30,29 @@ int main(int argc, char* argv[]){
         SemanticAnalyzer analyzer;
         analyzer.analyze(ast);
 
+        string intermediateCode;
+        string programOutput;
+        string runtimeError;
+
+        if (!analyzer.hasErrors()) {
+            CodeGenerator generator;
+            generator.generate(ast);
+
+            std::ostringstream icStream;
+            generator.print(icStream);
+            intermediateCode = icStream.str();
+
+            std::ostringstream runtimeStream;
+            try {
+                Interpreter interpreter;
+                interpreter.execute(generator.getInstructions(), runtimeStream);
+                programOutput = runtimeStream.str();
+            } catch (const RuntimeError& e) {
+                programOutput = runtimeStream.str();
+                runtimeError = e.what();
+            }
+        }
+
         std::filesystem::path path(outputFile);
         if (path.has_parent_path()) {
             std::filesystem::create_directories(path.parent_path());
@@ -51,6 +77,25 @@ int main(int argc, char* argv[]){
             out << endl;
             out << "=== Symbol Tables ===" << endl;
             analyzer.printSymbolTables(out);
+
+            if (!analyzer.hasErrors()) {
+                out << endl;
+                out << "=== Intermediate Code ===" << endl;
+                out << intermediateCode;
+
+                out << endl;
+                out << "=== Program Output ===" << endl;
+                out << programOutput;
+                if (!programOutput.empty() && programOutput.back() != '\n') {
+                    out << endl;
+                }
+
+                if (!runtimeError.empty()) {
+                    out << endl;
+                    out << "=== Runtime Error ===" << endl;
+                    out << runtimeError << endl;
+                }
+            }
         };
 
         writeSemanticOutput(cout);
