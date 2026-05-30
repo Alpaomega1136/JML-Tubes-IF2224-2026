@@ -37,6 +37,7 @@ private:
     std::size_t memorySize = 0;
 
     void reset();
+    void initializeMemory(int size);
     void pushValue(RuntimeValue value);
     RuntimeValue popValue();
 };

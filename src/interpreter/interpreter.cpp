@@ -14,6 +14,22 @@ void Interpreter::reset() {
     memorySize = 0;
 }
 
+void Interpreter::initializeMemory(int size) {
+    if (size < 0) {
+        throw RuntimeError("Runtime Error: negative memory size");
+    }
+
+    if (static_cast<std::size_t>(size) > config.maxStackSize) {
+        throw RuntimeError(
+            "Runtime Error: Stack Overflow (initial memory exceeds limit " +
+            std::to_string(config.maxStackSize) + ")"
+        );
+    }
+
+    stack.assign(static_cast<std::size_t>(size), RuntimeValue());
+    memorySize = static_cast<std::size_t>(size);
+}
+
 void Interpreter::pushValue(RuntimeValue value) {
     if (stack.size() >= config.maxStackSize) {
         throw RuntimeError(
