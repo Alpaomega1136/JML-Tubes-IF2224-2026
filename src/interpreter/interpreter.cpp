@@ -31,9 +31,16 @@ void Interpreter::executeInstruction(
     const std::vector<Instruction>& instructions,
     std::ostream& out
 ) {
-    (void)instruction;
     (void)instructions;
     (void)out;
+
+    switch (instruction.opcode) {
+        case Opcode::INT:
+            initializeMemory(instruction.operand);
+            break;
+        default:
+            break;
+    }
 }
 
 void Interpreter::initializeMemory(int size) {
