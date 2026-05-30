@@ -25,6 +25,9 @@ void Interpreter::pushValue(RuntimeValue value) {
 }
 
 RuntimeValue Interpreter::popValue() {
+    if (stack.size() <= memorySize) {
+        throw RuntimeError("Runtime Error: Stack Underflow");
+    }
     RuntimeValue value = stack.back();
     stack.pop_back();
     return value;
