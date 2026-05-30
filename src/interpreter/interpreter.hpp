@@ -2,8 +2,10 @@
 
 #include "../codegen/codegen.hpp"
 #include <cstddef>
+#include <cstdint>
 #include <iosfwd>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 class RuntimeError : public std::runtime_error {
@@ -14,6 +16,13 @@ public:
 struct RuntimeConfig {
     std::size_t maxStackSize = 4096;
     std::size_t maxSteps = 1000000;
+};
+
+struct RuntimeValue {
+    std::int32_t integer = 0;
+
+    RuntimeValue() = default;
+    explicit RuntimeValue(std::int32_t value);
 };
 
 class Interpreter {
