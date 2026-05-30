@@ -1,5 +1,7 @@
 #include "interpreter.hpp"
 
+#include <limits>
+
 RuntimeError::RuntimeError(const std::string& message)
     : std::runtime_error(message) {}
 
@@ -64,30 +66,68 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
     switch (static_cast<OprCode>(operation)) {
         case OprCode::NEG: {
             RuntimeValue value = popValue();
-            pushValue(RuntimeValue(-value.integer));
+            pushValue(RuntimeValue(checkedInt32(
+                -static_cast<std::int64_t>(value.integer),
+                "NEG"
+            )));
             break;
         }
         case OprCode::ADD:
         case OprCode::SUB:
-        case OprCode::MUL: {
+        case OprCode::MUL:
+        case OprCode::DIV:
+        case OprCode::MOD: {
             RuntimeValue right = popValue();
             RuntimeValue left = popValue();
             std::int64_t result = 0;
+            std::string operationName;
 
             if (static_cast<OprCode>(operation) == OprCode::ADD) {
                 result = static_cast<std::int64_t>(left.integer) + right.integer;
+                operationName = "ADD";
             } else if (static_cast<OprCode>(operation) == OprCode::SUB) {
                 result = static_cast<std::int64_t>(left.integer) - right.integer;
-            } else {
+                operationName = "SUB";
+            } else if (static_cast<OprCode>(operation) == OprCode::MUL) {
                 result = static_cast<std::int64_t>(left.integer) * right.integer;
+                operationName = "MUL";
+            } else if (static_cast<OprCode>(operation) == OprCode::DIV) {
+                if (right.integer == 0) {
+                    throw RuntimeError("Runtime Error: Division by zero");
+                }
+                result = static_cast<std::int64_t>(left.integer) / right.integer;
+                operationName = "DIV";
+            } else {
+                if (right.integer == 0) {
+                    throw RuntimeError("Runtime Error: Modulo by zero");
+                }
+                result = static_cast<std::int64_t>(left.integer) % right.integer;
+                operationName = "MOD";
             }
 
-            pushValue(RuntimeValue(static_cast<std::int32_t>(result)));
+            pushValue(RuntimeValue(checkedInt32(result, operationName)));
             break;
         }
         default:
             break;
     }
+}
+
+std::int32_t Interpreter::checkedInt32(
+    std::int64_t result,
+    const std::string& operation
+) const {
+    if (result > std::numeric_limits<std::int32_t>::max()) {
+        throw RuntimeError(
+            "Runtime Error: Overflow during " + operation
+        );
+    }
+    if (result < std::numeric_limits<std::int32_t>::min()) {
+        throw RuntimeError(
+            "Runtime Error: Underflow during " + operation
+        );
+    }
+    return static_cast<std::int32_t>(result);
 }
 
 void Interpreter::initializeMemory(int size) {
