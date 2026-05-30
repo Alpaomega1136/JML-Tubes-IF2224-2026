@@ -38,6 +38,9 @@ private:
 
     void reset();
     void initializeMemory(int size);
+    void validateAddress(int address) const;
+    RuntimeValue readMemory(int address) const;
+    void writeMemory(int address, RuntimeValue value);
     void pushValue(RuntimeValue value);
     RuntimeValue popValue();
 };

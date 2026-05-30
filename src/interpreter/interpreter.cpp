@@ -30,6 +30,25 @@ void Interpreter::initializeMemory(int size) {
     memorySize = static_cast<std::size_t>(size);
 }
 
+void Interpreter::validateAddress(int address) const {
+    if (address < 0 || static_cast<std::size_t>(address) >= memorySize) {
+        throw RuntimeError(
+            "Runtime Error: Memory Access Out of Bounds at address " +
+            std::to_string(address)
+        );
+    }
+}
+
+RuntimeValue Interpreter::readMemory(int address) const {
+    validateAddress(address);
+    return stack[static_cast<std::size_t>(address)];
+}
+
+void Interpreter::writeMemory(int address, RuntimeValue value) {
+    validateAddress(address);
+    stack[static_cast<std::size_t>(address)] = value;
+}
+
 void Interpreter::pushValue(RuntimeValue value) {
     if (stack.size() >= config.maxStackSize) {
         throw RuntimeError(
