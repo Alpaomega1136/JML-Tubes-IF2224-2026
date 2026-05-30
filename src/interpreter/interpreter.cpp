@@ -15,6 +15,12 @@ void Interpreter::reset() {
 }
 
 void Interpreter::pushValue(RuntimeValue value) {
+    if (stack.size() >= config.maxStackSize) {
+        throw RuntimeError(
+            "Runtime Error: Stack Overflow (limit " +
+            std::to_string(config.maxStackSize) + ")"
+        );
+    }
     stack.push_back(value);
 }
 
