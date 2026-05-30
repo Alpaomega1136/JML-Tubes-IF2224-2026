@@ -38,6 +38,9 @@ void Interpreter::executeInstruction(
         case Opcode::INT:
             initializeMemory(instruction.operand);
             break;
+        case Opcode::LIT:
+            pushValue(RuntimeValue(instruction.operand));
+            break;
         default:
             break;
     }
