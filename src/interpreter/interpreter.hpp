@@ -33,4 +33,10 @@ public:
 
 private:
     RuntimeConfig config;
+    std::vector<RuntimeValue> stack;
+    std::size_t memorySize = 0;
+
+    void reset();
+    void pushValue(RuntimeValue value);
+    RuntimeValue popValue();
 };
