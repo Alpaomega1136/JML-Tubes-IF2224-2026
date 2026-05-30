@@ -108,6 +108,33 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
             pushValue(RuntimeValue(checkedInt32(result, operationName)));
             break;
         }
+        case OprCode::EQL:
+        case OprCode::NEQ:
+        case OprCode::LSS:
+        case OprCode::GEQ:
+        case OprCode::GTR:
+        case OprCode::LEQ: {
+            RuntimeValue right = popValue();
+            RuntimeValue left = popValue();
+            bool result = false;
+
+            if (static_cast<OprCode>(operation) == OprCode::EQL) {
+                result = left.integer == right.integer;
+            } else if (static_cast<OprCode>(operation) == OprCode::NEQ) {
+                result = left.integer != right.integer;
+            } else if (static_cast<OprCode>(operation) == OprCode::LSS) {
+                result = left.integer < right.integer;
+            } else if (static_cast<OprCode>(operation) == OprCode::GEQ) {
+                result = left.integer >= right.integer;
+            } else if (static_cast<OprCode>(operation) == OprCode::GTR) {
+                result = left.integer > right.integer;
+            } else {
+                result = left.integer <= right.integer;
+            }
+
+            pushValue(RuntimeValue(result ? 1 : 0));
+            break;
+        }
         default:
             break;
     }
