@@ -1,6 +1,7 @@
 #include "interpreter.hpp"
 
 #include <limits>
+#include <ostream>
 
 RuntimeError::RuntimeError(const std::string& message)
     : std::runtime_error(message) {}
@@ -133,6 +134,16 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
             }
 
             pushValue(RuntimeValue(result ? 1 : 0));
+            break;
+        }
+        case OprCode::WRT: {
+            RuntimeValue value = popValue();
+            out << value.integer;
+            break;
+        }
+        case OprCode::WRTLN: {
+            RuntimeValue value = popValue();
+            out << value.integer << '\n';
             break;
         }
         default:
