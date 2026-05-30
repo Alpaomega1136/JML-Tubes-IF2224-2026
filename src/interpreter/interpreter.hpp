@@ -44,6 +44,7 @@ private:
     void executeInstruction(const Instruction& instruction,
                             const std::vector<Instruction>& instructions,
                             std::ostream& out);
+    void executeOpr(int operation, std::ostream& out);
     void initializeMemory(int size);
     void validateAddress(int address) const;
     RuntimeValue readMemory(int address) const;

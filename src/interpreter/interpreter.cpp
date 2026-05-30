@@ -47,9 +47,44 @@ void Interpreter::executeInstruction(
         case Opcode::STO:
             writeMemory(instruction.operand, popValue());
             break;
+        case Opcode::OPR:
+            executeOpr(instruction.operand, out);
+            break;
         case Opcode::RET:
             halted = true;
             break;
+        default:
+            break;
+    }
+}
+
+void Interpreter::executeOpr(int operation, std::ostream& out) {
+    (void)out;
+
+    switch (static_cast<OprCode>(operation)) {
+        case OprCode::NEG: {
+            RuntimeValue value = popValue();
+            pushValue(RuntimeValue(-value.integer));
+            break;
+        }
+        case OprCode::ADD:
+        case OprCode::SUB:
+        case OprCode::MUL: {
+            RuntimeValue right = popValue();
+            RuntimeValue left = popValue();
+            std::int64_t result = 0;
+
+            if (static_cast<OprCode>(operation) == OprCode::ADD) {
+                result = static_cast<std::int64_t>(left.integer) + right.integer;
+            } else if (static_cast<OprCode>(operation) == OprCode::SUB) {
+                result = static_cast<std::int64_t>(left.integer) - right.integer;
+            } else {
+                result = static_cast<std::int64_t>(left.integer) * right.integer;
+            }
+
+            pushValue(RuntimeValue(static_cast<std::int32_t>(result)));
+            break;
+        }
         default:
             break;
     }
