@@ -35,8 +35,15 @@ private:
     RuntimeConfig config;
     std::vector<RuntimeValue> stack;
     std::size_t memorySize = 0;
+    std::size_t pc = 0;
+    std::size_t steps = 0;
+    bool halted = false;
 
     void reset();
+    const Instruction& fetch(const std::vector<Instruction>& instructions) const;
+    void executeInstruction(const Instruction& instruction,
+                            const std::vector<Instruction>& instructions,
+                            std::ostream& out);
     void initializeMemory(int size);
     void validateAddress(int address) const;
     RuntimeValue readMemory(int address) const;

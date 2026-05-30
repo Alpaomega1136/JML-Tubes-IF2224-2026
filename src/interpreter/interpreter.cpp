@@ -12,6 +12,28 @@ RuntimeValue::RuntimeValue(std::int32_t value)
 void Interpreter::reset() {
     stack.clear();
     memorySize = 0;
+    pc = 0;
+    steps = 0;
+    halted = false;
+}
+
+const Instruction& Interpreter::fetch(
+    const std::vector<Instruction>& instructions
+) const {
+    if (pc >= instructions.size()) {
+        throw RuntimeError("Runtime Error: instruction pointer out of bounds");
+    }
+    return instructions[pc];
+}
+
+void Interpreter::executeInstruction(
+    const Instruction& instruction,
+    const std::vector<Instruction>& instructions,
+    std::ostream& out
+) {
+    (void)instruction;
+    (void)instructions;
+    (void)out;
 }
 
 void Interpreter::initializeMemory(int size) {
@@ -71,6 +93,17 @@ RuntimeValue Interpreter::popValue() {
 void Interpreter::execute(const std::vector<Instruction>& instructions,
                           std::ostream& out) {
     reset();
-    (void)instructions;
-    (void)out;
+
+    while (!halted && pc < instructions.size()) {
+        if (steps >= config.maxSteps) {
+            throw RuntimeError(
+                "Runtime Error: maximum execution step limit exceeded"
+            );
+        }
+
+        const Instruction& instruction = fetch(instructions);
+        pc++;
+        steps++;
+        executeInstruction(instruction, instructions, out);
+    }
 }
