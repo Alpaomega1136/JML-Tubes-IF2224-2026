@@ -1,0 +1,8 @@
+program A3IfTrue;
+var x : integer;
+begin
+    x := 0;
+    if 0 < 1 then
+        x := 10;
+    writeln(x);
+end.

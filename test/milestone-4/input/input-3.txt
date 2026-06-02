@@ -1,0 +1,9 @@
+program A3IfElse;
+var x : integer;
+begin
+    if 2 < 1 then
+        x := 10
+    else
+        x := 20;
+    writeln(x);
+end.

@@ -1,0 +1,10 @@
+program A3WhileZero;
+var i : integer;
+begin
+    i := 5;
+    while i < 3 do
+    begin
+        i := i + 1;
+    end;
+    writeln(i);
+end.

@@ -57,7 +57,17 @@ void Interpreter::executeInstruction(
             halted = true;
             break;
         case Opcode::JMP:
-        case Opcode::JPC:
+            validateInstructionTarget(instruction, instructions);
+            pc = static_cast<std::size_t>(instruction.operand);
+            break;
+        case Opcode::JPC: {
+            validateInstructionTarget(instruction, instructions);
+            RuntimeValue condition = popValue();
+            if (condition.integer == 0) {
+                pc = static_cast<std::size_t>(instruction.operand);
+            }
+            break;
+        }
         case Opcode::CAL:
             validateInstructionTarget(instruction, instructions);
             throw RuntimeError(
