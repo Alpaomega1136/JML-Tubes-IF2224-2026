@@ -4,9 +4,10 @@
 #include <cctype>
 #include <iostream>
 
-CodeGenerator::CodeGenerator()
+CodeGenerator::CodeGenerator(SymbolTable* table)
     : nextAddress(3),  // 0=static link, 1=dynamic link, 2=return address
-      labelCounter(0)
+      labelCounter(0),
+      table(table)
 {}
 
 int CodeGenerator::emit(Opcode op, int level, int operand) {
@@ -53,7 +54,18 @@ int CodeGenerator::resolveAddress(const std::string& name) {
     std::string key = lower(name);
     auto it = varAddress.find(key);
     if (it != varAddress.end()) return it->second;
+    if (table->getTab().at(table->lookupTabIndex(name)).type == 6) return allocateArrayAddress(name);
     int addr = nextAddress++;
+    varAddress[key] = addr;
+    return addr;
+}
+
+int CodeGenerator::allocateArrayAddress(const std::string& name) {
+    std::string key = lower(name);
+    
+    int addr = nextAddress++;
+    int size = table->getATab().at(table->lookup(name)->ref).totalSize;
+    nextAddress += size - 1;
     varAddress[key] = addr;
     return addr;
 }
@@ -62,7 +74,13 @@ int CodeGenerator::countVars(ProcCallNode* decls) const {
     if (!decls) return 0;
     int count = 0;
     for (ASTNode* child : decls->getChildren()) {
-        if (dynamic_cast<VarDeclNode*>(child)) count++;
+        if (VarDeclNode* decl = dynamic_cast<VarDeclNode*>(child)) {
+            if (table->getTab().at(table->lookupTabIndex(decl->name)).type == 6) {
+                count += table->getATab().at(table->lookup(decl->name)->ref).totalSize;
+            } else {
+                count ++;
+            }
+        };
     }
     return count;
 }
@@ -82,6 +100,8 @@ std::string CodeGenerator::opcodeToString(Opcode op) {
         case Opcode::LIT: return "LIT";
         case Opcode::LOD: return "LOD";
         case Opcode::STO: return "STO";
+        case Opcode::PLO: return "PLO";
+        case Opcode::PST: return "PST";
         case Opcode::CAL: return "CAL";
         case Opcode::INT: return "INT";
         case Opcode::JMP: return "JMP";
@@ -264,8 +284,22 @@ void CodeGenerator::genAssign(AssignNode* node) {
     if (targetVar) {
         int addr = resolveAddress(targetVar->name);
         emit(Opcode::STO, 0, addr);
+    } else if (ArrayAccessNode* targetVar = dynamic_cast<ArrayAccessNode*>(node->target)) {
+        int addr = resolveAddress(targetVar->name);
+        genExpression(targetVar->idx);
+
+        int inset = table->getATab().at(table->lookup(targetVar->name)->ref).low;
+
+        emit(Opcode::LIT, 0, inset);
+
+        emit(Opcode::OPR, 0, static_cast<int>(OprCode::SUB));
+
+        emit(Opcode::LIT, 0, addr);
+
+        emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
+
+        emit(Opcode::PST, 0, 0);
     }
-    // TODO: array access target bisa ditambahkan di sini
 }
 
 void CodeGenerator::genIf(IfNode* node) {
@@ -408,13 +442,14 @@ void CodeGenerator::genProcCall(ProcCallNode* node) {
 void CodeGenerator::genExpression(ValueNode* node) {
     if (!node) return;
 
-    if (NumberNode*   n = dynamic_cast<NumberNode*>(node))   { genNumber(n);   return; }
-    if (CharNode*     n = dynamic_cast<CharNode*>(node))     { genChar(n);     return; }
-    if (StringNode*   n = dynamic_cast<StringNode*>(node))   { genString(n);   return; }
-    if (VarNode*      n = dynamic_cast<VarNode*>(node))      { genVar(n);      return; }
-    if (BinOpNode*    n = dynamic_cast<BinOpNode*>(node))    { genBinOp(n);    return; }
-    if (UnaryOpNode*  n = dynamic_cast<UnaryOpNode*>(node))  { genUnaryOp(n);  return; }
-    if (FuncCallNode* n = dynamic_cast<FuncCallNode*>(node)) { genFuncCall(n); return; }
+    if (NumberNode*       n = dynamic_cast<NumberNode*>(node))      { genNumber(n);   return; }
+    if (CharNode*         n = dynamic_cast<CharNode*>(node))        { genChar(n);     return; }
+    if (StringNode*       n = dynamic_cast<StringNode*>(node))      { genString(n);   return; }
+    if (VarNode*          n = dynamic_cast<VarNode*>(node))         { genVar(n);      return; }
+    if (ArrayAccessNode*  n = dynamic_cast<ArrayAccessNode*>(node)) { genArrayAccess(n);      return; }
+    if (BinOpNode*        n = dynamic_cast<BinOpNode*>(node))       { genBinOp(n);    return; }
+    if (UnaryOpNode*      n = dynamic_cast<UnaryOpNode*>(node))     { genUnaryOp(n);  return; }
+    if (FuncCallNode*     n = dynamic_cast<FuncCallNode*>(node))    { genFuncCall(n); return; }
 
     std::cerr << "[CodeGen] Warning: tipe ekspresi tidak dikenal\n";
 }
@@ -445,8 +480,26 @@ void CodeGenerator::genString(StringNode* node) {
 }
 
 void CodeGenerator::genVar(VarNode* node) {
-    int addr = resolveAddress(node->name);
+    int addr = resolveAddress(node->name);  
     emit(Opcode::LOD, 0, addr);
+}
+
+void CodeGenerator::genArrayAccess(ArrayAccessNode* node) {
+    int addr = resolveAddress(node->name);
+
+    genExpression(node->idx);
+
+    int inset = table->getATab().at(table->lookup(node->name)->ref).low;
+
+    emit(Opcode::LIT, 0, inset);
+
+    emit(Opcode::OPR, 0, static_cast<int>(OprCode::SUB));
+
+    emit(Opcode::LIT, 0, addr);
+
+    emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
+
+    emit(Opcode::PLO, 0, 0);
 }
 
 void CodeGenerator::genBinOp(BinOpNode* node) {

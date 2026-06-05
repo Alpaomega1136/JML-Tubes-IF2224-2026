@@ -1,0 +1,153 @@
+=== Decorated AST Tree ===
+ProgramNode(name: 'KesalahanArrayRecord') [type=program, tab=38, lev=0]
+|-- Declarations
+|   |-- TypeDecl(name: 'Daftar') [type=array, tab=39, lev=0]
+|   |   |-- ArrayType
+|   |   |   |-- index:
+|   |   |   |   |-- RangeType
+|   |   |   |   |   |-- first:
+|   |   |   |   |   |   |-- Number(value: 1)
+|   |   |   |   |   |-- last:
+|   |   |   |   |   |   |-- Number(value: 10)
+|   |   |   |   |   |-- base:
+|   |   |   |   |   |   |-- Type(name: 'integer')
+|   |   |   |-- element:
+|   |   |   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'data') [type=daftar, tab=40, lev=0]
+|   |   |-- Type(name: 'Daftar')
+|   |-- VarDecl(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |-- Type(name: 'integer')
+|-- Block
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |-- While [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 10) [type=integer, tab=-1, lev=0]
+|   |   |-- body:
+|   |   |   |-- Block
+|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- target:
+|   |   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=40, lev=0]
+|   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |   |-- value:
+|   |   |   |   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |-- ArrayAccess(name: 'data') [type=integer, tab=40, lev=0]
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- target:
+|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |   |-- value:
+|   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=41, lev=0]
+|   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+
+=== Symbol Tables ===
+=== TAB ===
+identifier          	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
+and                 	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+array               	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+begin               	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+case                	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+const               	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+div                 	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+downto              	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+do                  	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+else                	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+end                 	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+for                 	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+function            	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+if                  	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+mod                 	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+not                 	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+of                  	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+or                  	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+procedure           	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+program             	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+record              	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+repeat              	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+integer             	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
+real                	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
+boolean             	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
+char                	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
+string              	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
+then                	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+to                  	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+type                	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+until               	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+var                 	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+while               	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+true                	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+false               	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+read                	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+readln              	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+write               	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+writeln             	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+KesalahanArrayRecord	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+Daftar              	 | 38	 | 3	 | 6	 | 0	 | 1	 | 0	 | 0
+data                	 | 39	 | 1	 | 6	 | 0	 | 1	 | 0	 | 0
+i                   	 | 40	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+
+=== ATAB ===
+indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
+1			 | 1			 | 0			 | 1	 | 10	 | 1			 | 10
+
+=== BTAB ===
+last | lpar	 | psze	 | vsze
+41	 | 0	 | 0	 | 2
+
+=== Intermediate Code ===
+0 INT 0 14
+1 LIT 0 1
+2 STO 0 13
+3 LOD 0 13
+4 LIT 0 10
+5 OPR 0 12
+6 JPC 0 28
+7 LOD 0 13
+8 LOD 0 13
+9 OPR 0 4
+10 LOD 0 13
+11 LIT 0 1
+12 OPR 0 3
+13 LIT 0 3
+14 OPR 0 2
+15 PST 0 0
+16 LOD 0 13
+17 LIT 0 1
+18 OPR 0 3
+19 LIT 0 3
+20 OPR 0 2
+21 PLO 0 0
+22 OPR 0 14
+23 LOD 0 13
+24 LIT 0 1
+25 OPR 0 2
+26 STO 0 13
+27 JMP 0 3
+28 RET 0 0
+
+=== Program Output ===
+1
+4
+9
+16
+25
+36
+49
+64
+81
+100

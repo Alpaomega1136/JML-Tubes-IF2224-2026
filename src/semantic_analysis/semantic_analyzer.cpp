@@ -1495,3 +1495,7 @@ std::string SemanticAnalyzer::typeNameFromValueNode(ValueNode* valueNode) const 
 
     return "unknown";
 }
+
+SymbolTable* SemanticAnalyzer::getSymbolTable() {
+    return &symbolTable;
+}

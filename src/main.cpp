@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
         string runtimeError;
 
         if (!analyzer.hasErrors()) {
-            CodeGenerator generator;
+            CodeGenerator generator(analyzer.getSymbolTable());
             generator.generate(ast);
 
             std::ostringstream icStream;
@@ -95,6 +95,8 @@ int main(int argc, char* argv[]){
                     out << "=== Runtime Error ===" << endl;
                     out << runtimeError << endl;
                 }
+            } else {
+                analyzer.printErrors();
             }
         };
 

@@ -1,0 +1,15 @@
+program KesalahanArrayRecord;
+type 
+    Daftar == array [1..10] of integer;
+var
+    data   : Daftar;
+    i : integer;
+begin
+    i := 1;
+    while i <= 10 do
+    begin
+        data[i] := i*i;
+        writeln(data[i]);
+        i := i + 1;
+    end; 
+end.

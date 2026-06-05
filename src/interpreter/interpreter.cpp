@@ -36,7 +36,7 @@ void Interpreter::executeInstruction(
 ) {
     (void)instructions;
     (void)out;
-
+    int ptrAddr;
     switch (instruction.opcode) {
         case Opcode::INT:
             initializeMemory(instruction.operand);
@@ -49,6 +49,14 @@ void Interpreter::executeInstruction(
             break;
         case Opcode::STO:
             writeMemory(instruction.operand, popValue());
+            break;
+        case Opcode::PLO:
+            ptrAddr = popValue().integer;
+            pushValue(readMemory(ptrAddr + instruction.operand));
+            break;
+        case Opcode::PST:
+            ptrAddr = popValue().integer;
+            writeMemory(ptrAddr, popValue());
             break;
         case Opcode::OPR:
             executeOpr(instruction.operand, out);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../semantic_analysis/ast.hpp"
+#include "../semantic_analysis/symbol_table.hpp"
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -12,6 +13,8 @@ enum class Opcode {
     LIT,  // Load Literal
     LOD,  // Load Value dari address
     STO,  // Store Value ke address
+    PLO, // Store Value ke 
+    PST,
     CAL,  // Call fungsi/prosedur
     INT,  // Initiate Memory
     JMP,  // Unconditional Jump
@@ -53,6 +56,7 @@ private:
     int nextAddress;
     int labelCounter;
     std::unordered_map<std::string, int> subprogramAddress;
+    SymbolTable* table;
 
     int emit(Opcode op, int level, int operand);
     void patch(int instrIndex, int newOperand);
@@ -67,6 +71,7 @@ private:
     void genChar(CharNode* node);
     void genString(StringNode* node);
     void genVar(VarNode* node);
+    void genArrayAccess(ArrayAccessNode* node);
     void genFuncCall(FuncCallNode* node);
 
     void genStatement(ASTNode* node);
@@ -85,13 +90,14 @@ private:
 
     int countVars(ProcCallNode* decls) const;
     int resolveAddress(const std::string& name);
+    int allocateArrayAddress(const std::string& name);
 
     void pushScope();
     void popScope(const std::unordered_map<std::string, int>& saved,
                   int savedNext);
 
 public:
-    CodeGenerator();
+    CodeGenerator(SymbolTable* table);
     void generate(ASTNode* root);
     void print(std::ostream& out) const;
     const std::vector<Instruction>& getInstructions() const;
