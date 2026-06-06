@@ -25,6 +25,7 @@ bool isWhitespace(char c) {
     switch(c) {
         case ' ': 
         case '\n':
+        case '\r':
         case '\t': return true;
         default: return false;
     }
@@ -34,6 +35,7 @@ bool isDelimiter(char c) {
     switch(c) {
         case ' ':
         case '\n':
+        case '\r':
         case '\t':
         case '+': 
         case '-': 
