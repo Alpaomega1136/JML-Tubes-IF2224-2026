@@ -478,7 +478,7 @@ void CodeGenerator::genFor(ForNode* node) {
     genStatement(node->statement);
 
     emit(Opcode::LOD, 0, counterAddr);
-    emit(Opcode::LIT, 0, 1);
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, 1));
     emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
     emit(Opcode::STO, 0, counterAddr);
 
@@ -639,7 +639,7 @@ void CodeGenerator::genUnaryOp(UnaryOpNode* node) {
     if (op == "minus" || op == "-") {
         emit(Opcode::OPR, 0, static_cast<int>(OprCode::NEG));
     } else if (op == "not") {
-        emit(Opcode::LIT, 0, 1);
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::BOOLEAN, 1));
         emit(Opcode::OPR, 0, static_cast<int>(OprCode::EQL));
     }
 }
