@@ -3,6 +3,32 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <cmath>
+
+std::unordered_map<int, std::string> CodeGenerator::hashedStrings;
+
+uint64_t wrapRuntimeType(RuntimeType type, int value) {
+    u_int64_t wrapped = static_cast<uint64_t>(value & 0xFFFFFFFF) | (static_cast<uint64_t>(type) << 32);
+    return wrapped;
+}
+
+pair<RuntimeType, int> unwrapRuntimeType(uint64_t value) {
+    RuntimeType type = static_cast<RuntimeType>(value >> 32);
+    int val = value & 0xFFFFFFFF;
+    return {type, val};
+}
+
+string runtimeTypeToString(RuntimeType type) {
+    switch(type) {
+        case RuntimeType::NONE : return "NONE";
+        case RuntimeType::INT : return "INT";
+        case RuntimeType::REAL : return "REAL";
+        case RuntimeType::CHAR : return "CHAR";
+        case RuntimeType::STRING : return "STRING";
+        case RuntimeType::ERROR : return "ERROR";
+        default: return "";
+    }
+}
 
 CodeGenerator::CodeGenerator(SymbolTable* table)
     : nextAddress(3),  // 0=static link, 1=dynamic link, 2=return address
@@ -10,7 +36,7 @@ CodeGenerator::CodeGenerator(SymbolTable* table)
       table(table)
 {}
 
-int CodeGenerator::emit(Opcode op, int level, int operand) {
+int CodeGenerator::emit(Opcode op, int level, uint64_t operand) {
     int line = static_cast<int>(instructions.size());
     instructions.push_back({line, op, level, operand});
     return line;
@@ -68,6 +94,10 @@ int CodeGenerator::allocateArrayAddress(const std::string& name) {
     nextAddress += size - 1;
     varAddress[key] = addr;
     return addr;
+}
+
+int memSize(VarDeclNode*) {
+
 }
 
 int CodeGenerator::countVars(ProcCallNode* decls) const {
@@ -290,11 +320,11 @@ void CodeGenerator::genAssign(AssignNode* node) {
 
         int inset = table->getATab().at(table->lookup(targetVar->name)->ref).low;
 
-        emit(Opcode::LIT, 0, inset);
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, inset));
 
         emit(Opcode::OPR, 0, static_cast<int>(OprCode::SUB));
 
-        emit(Opcode::LIT, 0, addr);
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
 
         emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
 
@@ -456,27 +486,33 @@ void CodeGenerator::genExpression(ValueNode* node) {
 
 void CodeGenerator::genNumber(NumberNode* node) {
     try {
-        int val = std::stoi(node->num);
-        emit(Opcode::LIT, 0, val);
-    } catch (...) {
-        try {
+        
+        if (node->num.find('.') == std::string::npos) {
+            int val = std::stoi(node->num);
+            emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, val));
+        } else {
             double val = std::stod(node->num);
-            emit(Opcode::LIT, 0, static_cast<int>(val));
-        } catch (...) {
-            emit(Opcode::LIT, 0, 0);
+            float f = static_cast<float>(val);
+            uint64_t bits;
+            std::memcpy(&bits, &f, sizeof(f));
+            emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::REAL, static_cast<int>(bits)));
         }
+    } catch (...) {
+        emit(Opcode::LIT, 0, 0);
     }
 }
 
 void CodeGenerator::genChar(CharNode* node) {
-    emit(Opcode::LIT, 0, static_cast<int>(node->c));
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::CHAR, static_cast<int>(node->c)));
 }
 
 void CodeGenerator::genString(StringNode* node) {
     // TODO: Encode string sebagai literal khusus
     // Interpreter perlu tabel string terpisah
     // Emit LIT dengan nilai hash sederhana sama interpreter
-    emit(Opcode::LIT, 0, static_cast<int>(std::hash<std::string>{}(node->str) & 0x7FFFFFFF));
+    int hashValue = static_cast<int>(std::hash<std::string>{}(node->str) & 0x7FFFFFFF);
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::STRING, hashValue));
+    hashedStrings[hashValue] = node->str;
 }
 
 void CodeGenerator::genVar(VarNode* node) {
@@ -491,11 +527,11 @@ void CodeGenerator::genArrayAccess(ArrayAccessNode* node) {
 
     int inset = table->getATab().at(table->lookup(node->name)->ref).low;
 
-    emit(Opcode::LIT, 0, inset);
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, inset));
 
     emit(Opcode::OPR, 0, static_cast<int>(OprCode::SUB));
 
-    emit(Opcode::LIT, 0, addr);
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
 
     emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
 
@@ -540,7 +576,7 @@ void CodeGenerator::print(std::ostream& out) const {
         out << instr.line << " "
             << opcodeToString(instr.opcode) << " "
             << instr.level << " "
-            << instr.operand << "\n";
+            << unwrapRuntimeType(instr.operand).second << "\n";
     }
 }
 

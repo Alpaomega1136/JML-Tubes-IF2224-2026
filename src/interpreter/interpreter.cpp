@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <ostream>
+#include <cstdint>
 
 RuntimeError::RuntimeError(const std::string& message)
     : std::runtime_error(message) {}
@@ -10,7 +11,10 @@ Interpreter::Interpreter(RuntimeConfig config)
     : config(config) {}
 
 RuntimeValue::RuntimeValue(std::int32_t value)
-    : integer(value) {}
+    : integer(value){}
+
+RuntimeValue::RuntimeValue(pair<RuntimeType, std::int32_t> pair)
+    : type(pair.first), integer(pair.second)  {}
 
 void Interpreter::reset() {
     stack.clear();
@@ -42,7 +46,7 @@ void Interpreter::executeInstruction(
             initializeMemory(instruction.operand);
             break;
         case Opcode::LIT:
-            pushValue(RuntimeValue(instruction.operand));
+            pushValue(RuntimeValue(unwrapRuntimeType(instruction.operand)));
             break;
         case Opcode::LOD:
             pushValue(readMemory(instruction.operand));
@@ -97,10 +101,10 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
     switch (static_cast<OprCode>(operation)) {
         case OprCode::NEG: {
             RuntimeValue value = popValue();
-            pushValue(RuntimeValue(checkedInt32(
+            pushValue(RuntimeValue({value.type, checkedInt32(
                 -static_cast<std::int64_t>(value.integer),
                 "NEG"
-            )));
+            )}));
             break;
         }
         case OprCode::ADD:
@@ -111,32 +115,60 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
             RuntimeValue right = popValue();
             RuntimeValue left = popValue();
             std::int64_t result = 0;
+            RuntimeType resultType = resolveRuntimeType(left, right);
+            if (resultType == RuntimeType::ERROR) {
+                throw RuntimeError("Runtime Error: Unable to do operation with Runtime Type " +
+                                    runtimeTypeToString(left.type) + " and " + runtimeTypeToString(right.type)
+                                    );
+            }
             std::string operationName;
 
             if (static_cast<OprCode>(operation) == OprCode::ADD) {
-                result = static_cast<std::int64_t>(left.integer) + right.integer;
+                if (resultType == RuntimeType::REAL) {
+                    result = handleFloatingPointOperation(left, right, OprCode::ADD);
+                } else {
+                    result = static_cast<std::int64_t>(left.integer) + right.integer;
+                }
                 operationName = "ADD";
             } else if (static_cast<OprCode>(operation) == OprCode::SUB) {
-                result = static_cast<std::int64_t>(left.integer) - right.integer;
+                if (resultType == RuntimeType::REAL) {
+                    result = handleFloatingPointOperation(left, right, OprCode::SUB);
+                } else {
+                    result = static_cast<std::int64_t>(left.integer) - right.integer;   
+                }
                 operationName = "SUB";
             } else if (static_cast<OprCode>(operation) == OprCode::MUL) {
-                result = static_cast<std::int64_t>(left.integer) * right.integer;
+                if (resultType == RuntimeType::REAL) {
+                    result = handleFloatingPointOperation(left, right, OprCode::MUL);
+                } else {
+                    result = static_cast<std::int64_t>(left.integer) * right.integer;
+                }
                 operationName = "MUL";
             } else if (static_cast<OprCode>(operation) == OprCode::DIV) {
                 if (right.integer == 0) {
                     throw RuntimeError("Runtime Error: Division by zero");
                 }
-                result = static_cast<std::int64_t>(left.integer) / right.integer;
+                if (resultType == RuntimeType::REAL) {
+                    result = handleFloatingPointOperation(left, right, OprCode::DIV);
+                } else {
+                    result = static_cast<std::int64_t>(left.integer) / right.integer;
+                }
                 operationName = "DIV";
             } else {
                 if (right.integer == 0) {
                     throw RuntimeError("Runtime Error: Modulo by zero");
                 }
-                result = static_cast<std::int64_t>(left.integer) % right.integer;
+                if (resultType == RuntimeType::REAL) {
+                    throw RuntimeError(
+                        "Runtime Error: Unsupported operation for Floating Point type"
+                    );
+                } else {
+                    result = static_cast<std::int64_t>(left.integer) % right.integer;
+                }
                 operationName = "MOD";
             }
 
-            pushValue(RuntimeValue(checkedInt32(result, operationName)));
+            pushValue(RuntimeValue({resultType, checkedInt32(result, operationName)}));
             break;
         }
         case OprCode::EQL:
@@ -148,6 +180,12 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
             RuntimeValue right = popValue();
             RuntimeValue left = popValue();
             bool result = false;
+            RuntimeType resultType = resolveRuntimeType(left, right);
+            if (resultType == RuntimeType::ERROR) {
+                throw RuntimeError("Runtime Error: Unable to do operation with Runtime Type " +
+                                    runtimeTypeToString(left.type) + " and " + runtimeTypeToString(right.type)
+                                    );
+            }
 
             if (static_cast<OprCode>(operation) == OprCode::EQL) {
                 result = left.integer == right.integer;
@@ -163,17 +201,17 @@ void Interpreter::executeOpr(int operation, std::ostream& out) {
                 result = left.integer <= right.integer;
             }
 
-            pushValue(RuntimeValue(result ? 1 : 0));
+            pushValue(RuntimeValue({RuntimeType::BOOLEAN, result ? 1 : 0}));
             break;
         }
         case OprCode::WRT: {
             RuntimeValue value = popValue();
-            out << value.integer;
+            out << resolveWriteValue(value);
             break;
         }
         case OprCode::WRTLN: {
             RuntimeValue value = popValue();
-            out << value.integer << '\n';
+            out << resolveWriteValue(value) << '\n';
             break;
         }
         default:
@@ -285,4 +323,71 @@ void Interpreter::execute(const std::vector<Instruction>& instructions,
         steps++;
         executeInstruction(instruction, instructions, out);
     }
+}
+
+std::string Interpreter::resolveWriteValue(RuntimeValue val) {
+    cout<<runtimeTypeToString(val.type)<<endl;
+    switch(val.type) {
+        case RuntimeType::INT :
+            return to_string(val.integer);
+        case RuntimeType::REAL : {
+            uint32_t bit_pattern;
+            float f;
+            bit_pattern = static_cast<uint32_t>(val.integer);
+            memcpy(&f, &bit_pattern, sizeof(float));
+            return to_string(f);
+        }
+        case RuntimeType::BOOLEAN :
+            return val.integer == 1 ? "true" : "false";
+        case RuntimeType::CHAR :
+            return string(1, (char)val.integer);
+        case RuntimeType::STRING : {
+            auto it = CodeGenerator::hashedStrings.find(val.integer);
+            if (it == CodeGenerator::hashedStrings.end()) {
+                return "";
+            } else {
+                return it->second;
+            }
+        }
+        default :
+            return "";
+    }
+    
+}
+
+RuntimeType Interpreter::resolveRuntimeType(RuntimeValue val1, RuntimeValue val2) {
+    if (val1.type == val2.type) {
+        return val1.type;
+    } else {
+        return RuntimeType::ERROR;
+    }
+}
+
+int64_t Interpreter::handleFloatingPointOperation(RuntimeValue val1, RuntimeValue val2, OprCode oprCode) {
+    uint32_t bit_pattern;
+    float f1, f2, result;
+    bit_pattern = static_cast<uint32_t>(val1.integer);
+    memcpy(&f1, &bit_pattern, sizeof(float));
+    bit_pattern = static_cast<uint32_t>(val2.integer);
+    memcpy(&f2, &bit_pattern, sizeof(float));
+    switch(oprCode) {
+        case OprCode::ADD :
+            result = f1 + f2;
+            break;
+        case OprCode::SUB : 
+            result = f1 - f2;
+            break;
+        case OprCode::MUL : 
+            result = f1 * f2;
+            break;
+        case OprCode::DIV : 
+            result = f1 / f2;
+            break;
+        default:
+            throw RuntimeError(
+                "Runtime Error: Unsupported operation for Floating Point type"
+            );
+    }
+    std::memcpy(&bit_pattern, &result, sizeof(result));
+    return static_cast<int64_t>(bit_pattern);
 }

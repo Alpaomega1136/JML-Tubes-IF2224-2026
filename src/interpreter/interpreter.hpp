@@ -19,9 +19,11 @@ struct RuntimeConfig {
 };
 
 struct RuntimeValue {
+    RuntimeType type = RuntimeType::NONE;
     std::int32_t integer = 0;
 
     RuntimeValue() = default;
+    explicit RuntimeValue(pair<RuntimeType, std::int32_t> pair);
     explicit RuntimeValue(std::int32_t value);
 };
 
@@ -57,4 +59,7 @@ private:
     void writeMemory(int address, RuntimeValue value);
     void pushValue(RuntimeValue value);
     RuntimeValue popValue();
+    std::string resolveWriteValue(RuntimeValue val);
+    RuntimeType resolveRuntimeType(RuntimeValue val1, RuntimeValue val2);
+    int64_t handleFloatingPointOperation(RuntimeValue val1, RuntimeValue val2, OprCode oprCode);
 };

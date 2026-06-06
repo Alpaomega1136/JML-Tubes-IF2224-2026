@@ -6,6 +6,9 @@
 #include <vector>
 #include <unordered_map>
 #include <ostream>
+#include <cstring>
+#include <bitset>
+#include <cstdint>
 
 // Instruksi TAC
 // Format: [line] [opcode] [level] [operand]
@@ -13,8 +16,8 @@ enum class Opcode {
     LIT,  // Load Literal
     LOD,  // Load Value dari address
     STO,  // Store Value ke address
-    PLO, // Store Value ke 
-    PST,
+    PLO,  // Load Value ke address yang di pop dari stack
+    PST,  // Store Value ke address yang di pop dari stack
     CAL,  // Call fungsi/prosedur
     INT,  // Initiate Memory
     JMP,  // Unconditional Jump
@@ -41,24 +44,41 @@ enum class OprCode {
     WRTLN = 14   // Writeln
 };
 
+enum class RuntimeType {
+    NONE = 0,
+    INT = 1,
+    CHAR = 2,
+    STRING = 3,
+    REAL = 4,
+    BOOLEAN = 5,
+    ERROR = 6
+};
+
+uint64_t wrapRuntimeType(RuntimeType type, int value);
+
+pair<RuntimeType, int> unwrapRuntimeType(uint64_t value);
+
+string runtimeTypeToString(RuntimeType type);
+
 // Satu baris instruksi TAC
 struct Instruction {
     int     line;    // nomor baris
     Opcode  opcode;  // jenis instruksi
     int     level;   // lexical level (biasanya 0)
-    int     operand; // nilai operand
+    uint64_t operand; // nilai operand
 };
 
 class CodeGenerator {
 private:
     std::vector<Instruction> instructions;
+    std::unordered_map<std::string, int> typeSize;
     std::unordered_map<std::string, int> varAddress;
     int nextAddress;
     int labelCounter;
     std::unordered_map<std::string, int> subprogramAddress;
     SymbolTable* table;
 
-    int emit(Opcode op, int level, int operand);
+    int emit(Opcode op, int level, uint64_t operand);
     void patch(int instrIndex, int newOperand);
     int nextLine() const;
 
@@ -90,6 +110,7 @@ private:
 
     int countVars(ProcCallNode* decls) const;
     int resolveAddress(const std::string& name);
+    int resolveTypeSize(const std::string& name, TypeNode* type);
     int allocateArrayAddress(const std::string& name);
 
     void pushScope();
@@ -97,6 +118,7 @@ private:
                   int savedNext);
 
 public:
+    static std::unordered_map<int, std::string> hashedStrings;
     CodeGenerator(SymbolTable* table);
     void generate(ASTNode* root);
     void print(std::ostream& out) const;
