@@ -81,6 +81,7 @@ int CodeGenerator::resolveAddress(const std::string& name) {
     auto it = varAddress.find(key);
     if (it != varAddress.end()) return it->second;
     if (table->getTab().at(table->lookupTabIndex(name)).type == 6) return allocateArrayAddress(name);
+    if (table->getTab().at(table->lookupTabIndex(name)).type == 7) return allocateRecordAddress(name);
     int addr = nextAddress++;
     varAddress[key] = addr;
     return addr;
@@ -96,20 +97,42 @@ int CodeGenerator::allocateArrayAddress(const std::string& name) {
     return addr;
 }
 
-int memSize(VarDeclNode*) {
+int CodeGenerator::allocateRecordAddress(const std::string& name) {
+    std::string key = lower(name);
 
+    int addr = nextAddress++;
+    int size = typeSize[recordRecord[key]];
+    nextAddress += size - 1;
+    varAddress[key] = addr;
+    return addr;
 }
 
-int CodeGenerator::countVars(ProcCallNode* decls) const {
+int CodeGenerator::resolveTypeSize(const std::string& name, TypeNode* type) {
+    std::string key = lower(name);
+    auto it = typeSize.find(key);
+    if (it != typeSize.end()) return it->second;
+    int size = 0;
+    if (table->mapTypeNameToCode(name) <= 5 && table->mapTypeNameToCode(name) > 0) {
+        size = 1;
+    } else if (table->mapTypeNameToCode(name) == 6) {
+        size = table->getATab().at(table->lookup(name)->ref).totalSize;
+    } else if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(type)) {
+        for (FieldPartNode* field : record->fieldList) {
+            size += resolveTypeSize(field->fieldType->typeIdent, field->fieldType);
+        }
+    }
+    typeSize[key] = size;
+    cout<<key<<" : "<<size<<endl;
+    return size;
+} 
+
+
+int CodeGenerator::countVars(ProcCallNode* decls) {
     if (!decls) return 0;
     int count = 0;
     for (ASTNode* child : decls->getChildren()) {
         if (VarDeclNode* decl = dynamic_cast<VarDeclNode*>(child)) {
-            if (table->getTab().at(table->lookupTabIndex(decl->name)).type == 6) {
-                count += table->getATab().at(table->lookup(decl->name)->ref).totalSize;
-            } else {
-                count ++;
-            }
+            count += resolveTypeSize(decl->type->typeIdent, decl->type);
         };
     }
     return count;
@@ -160,6 +183,21 @@ void CodeGenerator::generate(ASTNode* root) {
     ProcCallNode* decls = dynamic_cast<ProcCallNode*>(ch[0]);
     ProcCallNode* block = dynamic_cast<ProcCallNode*>(ch[1]);
 
+    if (decls) {
+        for (ASTNode* child : decls->getChildren()) {
+            if (TypeDeclNode* var = dynamic_cast<TypeDeclNode*>(child)) {
+                resolveTypeSize(var->name, var->simpleType);
+                if (RecordTypeNode* rec = dynamic_cast<RecordTypeNode*>(var->simpleType)) {
+                    int offset = 0;
+                    for (FieldPartNode* field : rec->fieldList) {
+                        fieldOffset[lower(var->name)][lower(field->fieldIdent)] = offset;
+                        offset += resolveTypeSize(field->fieldType->typeIdent, field->fieldType);
+                    }
+                }
+            }
+        }
+    }
+
     int varCount = decls ? countVars(decls) : 0;
     int memSize  = 3 + varCount;
 
@@ -167,6 +205,9 @@ void CodeGenerator::generate(ASTNode* root) {
         for (ASTNode* child : decls->getChildren()) {
             if (VarDeclNode* var = dynamic_cast<VarDeclNode*>(child)) {
                 resolveAddress(var->name);
+                if (table->getTab().at(table->lookupTabIndex(var->name)).type == 7) {
+                    recordRecord[lower(var->name)] = lower(var->type->typeIdent);
+                }
             }
         }
     }
@@ -329,6 +370,16 @@ void CodeGenerator::genAssign(AssignNode* node) {
         emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
 
         emit(Opcode::PST, 0, 0);
+    } else if (RecordAccessNode* targetVar = dynamic_cast<RecordAccessNode*>(node->target)) {
+        int addr = resolveAddress(targetVar->name);
+        
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, fieldOffset[recordRecord[lower(targetVar->name)]][targetVar->fieldName]));
+
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
+
+        emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
+
+        emit(Opcode::PST, 0, 0);
     }
 }
 
@@ -477,6 +528,7 @@ void CodeGenerator::genExpression(ValueNode* node) {
     if (StringNode*       n = dynamic_cast<StringNode*>(node))      { genString(n);   return; }
     if (VarNode*          n = dynamic_cast<VarNode*>(node))         { genVar(n);      return; }
     if (ArrayAccessNode*  n = dynamic_cast<ArrayAccessNode*>(node)) { genArrayAccess(n);      return; }
+    if (RecordAccessNode* n = dynamic_cast<RecordAccessNode*>(node)){ genRecordAccess(n);      return; }
     if (BinOpNode*        n = dynamic_cast<BinOpNode*>(node))       { genBinOp(n);    return; }
     if (UnaryOpNode*      n = dynamic_cast<UnaryOpNode*>(node))     { genUnaryOp(n);  return; }
     if (FuncCallNode*     n = dynamic_cast<FuncCallNode*>(node))    { genFuncCall(n); return; }
@@ -530,6 +582,18 @@ void CodeGenerator::genArrayAccess(ArrayAccessNode* node) {
     emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, inset));
 
     emit(Opcode::OPR, 0, static_cast<int>(OprCode::SUB));
+
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
+
+    emit(Opcode::OPR, 0, static_cast<int>(OprCode::ADD));
+
+    emit(Opcode::PLO, 0, 0);
+}
+
+void CodeGenerator::genRecordAccess(RecordAccessNode* node) {
+    int addr = resolveAddress(node->name);
+        
+    emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, fieldOffset[recordRecord[lower(node->name)]][lower(node->fieldName)]));
 
     emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
 

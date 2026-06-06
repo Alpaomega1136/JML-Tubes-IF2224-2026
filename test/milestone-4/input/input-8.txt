@@ -1,0 +1,21 @@
+program KesalahanArrayRecord;
+type 
+    Vertex == record
+        x : integer;
+        y : integer;
+        z : integer;
+    end;
+var
+    v : Vertex;
+begin
+    v.x := 1;
+    v.y := 2;
+    v.z := 2;
+    write('(');
+    write(v.x);
+    write(',');
+    write(v.y);
+    write(',');
+    write(v.z);
+    write(')');
+end.

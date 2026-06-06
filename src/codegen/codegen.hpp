@@ -72,6 +72,8 @@ class CodeGenerator {
 private:
     std::vector<Instruction> instructions;
     std::unordered_map<std::string, int> typeSize;
+    std::unordered_map<std::string, std::unordered_map<std::string, int>> fieldOffset;
+    std::unordered_map<std::string, std::string> recordRecord;
     std::unordered_map<std::string, int> varAddress;
     int nextAddress;
     int labelCounter;
@@ -92,6 +94,7 @@ private:
     void genString(StringNode* node);
     void genVar(VarNode* node);
     void genArrayAccess(ArrayAccessNode* node);
+    void genRecordAccess(RecordAccessNode* node);
     void genFuncCall(FuncCallNode* node);
 
     void genStatement(ASTNode* node);
@@ -108,10 +111,11 @@ private:
     void genProcDecl(ProcDeclNode* node);
     void genFuncDecl(FuncDeclNode* node);
 
-    int countVars(ProcCallNode* decls) const;
+    int countVars(ProcCallNode* decls);
     int resolveAddress(const std::string& name);
     int resolveTypeSize(const std::string& name, TypeNode* type);
     int allocateArrayAddress(const std::string& name);
+    int allocateRecordAddress(const std::string& name);
 
     void pushScope();
     void popScope(const std::unordered_map<std::string, int>& saved,
