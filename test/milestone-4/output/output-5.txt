@@ -1,102 +1,186 @@
 === Decorated AST Tree ===
-ProgramNode(name: 'A3WhileMany') [type=program, tab=38, lev=0]
+ProgramNode(name: 'KasusLengkap') [type=program, tab=38, lev=0]
 |-- Declarations
-|   |-- VarDecl(name: 'i') [type=integer, tab=39, lev=0]
+|   |-- VarDecl(name: 'angka') [type=integer, tab=39, lev=0]
 |   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'bagi') [type=integer, tab=40, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'sisa') [type=integer, tab=41, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'harakat') [type=char, tab=42, lev=0]
+|   |   |-- Type(name: 'char')
 |-- Block
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
+|   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
 |   |   |-- value:
-|   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
-|   |-- While [type=boolean, tab=-1, lev=0]
-|   |   |-- condition:
-|   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
+|   |   |   |-- Number(value: 17) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'bagi') [type=integer, tab=40, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: idiv) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- right:
-|   |   |   |   |   |-- Number(value: 3) [type=integer, tab=-1, lev=0]
-|   |   |-- body:
-|   |   |   |-- Block
-|   |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
-|   |   |   |   |   |-- target:
-|   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
-|   |   |   |   |   |-- value:
-|   |   |   |   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
-|   |   |   |   |   |   |   |-- left:
-|   |   |   |   |   |   |   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
-|   |   |   |   |   |   |   |-- right:
-|   |   |   |   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=41, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: imod) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'angka') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 5) [type=integer, tab=-1, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
-|   |   |-- Var(name: 'i') [type=integer, tab=39, lev=0]
+|   |   |-- Var(name: 'bagi') [type=integer, tab=40, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'sisa') [type=integer, tab=41, lev=0]
+|   |-- Case [type=integer, tab=-1, lev=0]
+|   |   |-- selector:
+|   |   |   |-- Var(name: 'sisa') [type=integer, tab=41, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Habis dibagi 5') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 1') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 2) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 2') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 3) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 3') [type=string, tab=-1, lev=0]
+|   |   |-- CaseBlock [type=integer, tab=-1, lev=0]
+|   |   |   |-- Number(value: 4) [type=integer, tab=-1, lev=0]
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Sisa 4') [type=string, tab=-1, lev=0]
+|   |-- Assign [type=char, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'harakat') [type=char, tab=42, lev=0]
+|   |   |-- value:
+|   |   |   |-- Char(value: 'Z') [type=char, tab=-1, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'harakat') [type=char, tab=42, lev=0]
 
 === Symbol Tables ===
 === TAB ===
-identifier 	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
-and        	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-array      	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-begin      	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-case       	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-const      	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-div        	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-downto     	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-do         	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-else       	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-end        	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-for        	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-function   	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-if         	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-mod        	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-not        	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-of         	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-or         	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-procedure  	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-program    	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-record     	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-repeat     	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-integer    	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
-real       	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
-boolean    	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
-char       	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
-string     	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
-then       	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-to         	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-type       	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-until      	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-var        	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-while      	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
-true       	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
-false      	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
-read       	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-readln     	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-write      	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-writeln    	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-A3WhileMany	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
-i          	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+identifier  	 | link	 | obj	 | type	 | ref	 | nrm	 | lev	 | adr
+and         	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+array       	 | 0	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+begin       	 | 1	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+case        	 | 2	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+const       	 | 3	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+div         	 | 4	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+downto      	 | 5	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+do          	 | 6	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+else        	 | 7	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+end         	 | 8	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+for         	 | 9	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+function    	 | 10	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+if          	 | 11	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+mod         	 | 12	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+not         	 | 13	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+of          	 | 14	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+or          	 | 15	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+procedure   	 | 16	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+program     	 | 17	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+record      	 | 18	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+repeat      	 | 19	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+integer     	 | 20	 | 3	 | 1	 | 0	 | 1	 | 0	 | 0
+real        	 | 21	 | 3	 | 2	 | 0	 | 1	 | 0	 | 0
+boolean     	 | 22	 | 3	 | 4	 | 0	 | 1	 | 0	 | 0
+char        	 | 23	 | 3	 | 3	 | 0	 | 1	 | 0	 | 0
+string      	 | 24	 | 3	 | 5	 | 0	 | 1	 | 0	 | 0
+then        	 | 25	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+to          	 | 26	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+type        	 | 27	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+until       	 | 28	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+var         	 | 29	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+while       	 | 30	 | 8	 | 0	 | 0	 | 1	 | 0	 | 0
+true        	 | 31	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+false       	 | 32	 | 2	 | 4	 | 0	 | 1	 | 0	 | 0
+read        	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+readln      	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+write       	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+writeln     	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
+KasusLengkap	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+angka       	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+bagi        	 | 39	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+sisa        	 | 40	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+harakat     	 | 41	 | 1	 | 3	 | 0	 | 1	 | 0	 | 0
 
 === ATAB ===
 indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
 
 === BTAB ===
 last | lpar	 | psze	 | vsze
-39	 | 0	 | 0	 | 1
+42	 | 0	 | 0	 | 4
 
 === Intermediate Code ===
-0 INT 0 4
-1 LIT 0 0
+0 INT 0 7
+1 LIT 0 17
 2 STO 0 3
 3 LOD 0 3
-4 LIT 0 3
-5 OPR 0 9
-6 JPC 0 12
+4 LIT 0 5
+5 OPR 0 5
+6 STO 0 4
 7 LOD 0 3
-8 LIT 0 1
-9 OPR 0 2
-10 STO 0 3
-11 JMP 0 3
-12 LOD 0 3
-13 OPR 0 14
-14 RET 0 0
+8 LIT 0 5
+9 OPR 0 6
+10 STO 0 5
+11 LOD 0 4
+12 OPR 0 14
+13 LOD 0 5
+14 OPR 0 14
+15 LOD 0 5
+16 LIT 0 0
+17 OPR 0 7
+18 JPC 0 22
+19 LIT 0 278292686
+20 OPR 0 14
+21 JMP 0 50
+22 LOD 0 5
+23 LIT 0 1
+24 OPR 0 7
+25 JPC 0 29
+26 LIT 0 1442919289
+27 OPR 0 14
+28 JMP 0 50
+29 LOD 0 5
+30 LIT 0 2
+31 OPR 0 7
+32 JPC 0 36
+33 LIT 0 688785120
+34 OPR 0 14
+35 JMP 0 50
+36 LOD 0 5
+37 LIT 0 3
+38 OPR 0 7
+39 JPC 0 43
+40 LIT 0 171576772
+41 OPR 0 14
+42 JMP 0 50
+43 LOD 0 5
+44 LIT 0 4
+45 OPR 0 7
+46 JPC 0 50
+47 LIT 0 1442922979
+48 OPR 0 14
+49 JMP 0 50
+50 LIT 0 90
+51 STO 0 6
+52 LOD 0 6
+53 OPR 0 14
+54 RET 0 0
 
 === Program Output ===
 3
+2
+Sisa 2
+Z

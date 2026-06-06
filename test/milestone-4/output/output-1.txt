@@ -1,29 +1,88 @@
 === Decorated AST Tree ===
-ProgramNode(name: 'A3IfTrue') [type=program, tab=38, lev=0]
+ProgramNode(name: 'Kalkulator') [type=program, tab=38, lev=0]
 |-- Declarations
 |   |-- VarDecl(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'y') [type=integer, tab=40, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'phi') [type=real, tab=41, lev=0]
+|   |   |-- Type(name: 'real')
+|   |-- VarDecl(name: 'inisial') [type=char, tab=42, lev=0]
+|   |   |-- Type(name: 'char')
+|   |-- VarDecl(name: 'pesan') [type=string, tab=43, lev=0]
+|   |   |-- Type(name: 'string')
+|   |-- VarDecl(name: 'hasil') [type=integer, tab=44, lev=0]
 |   |   |-- Type(name: 'integer')
 |-- Block
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
 |   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
 |   |   |-- value:
-|   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
-|   |-- If [type=boolean, tab=-1, lev=0]
-|   |   |-- condition:
-|   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
+|   |   |   |-- Number(value: 20) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'y') [type=integer, tab=40, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 7) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=real, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'phi') [type=real, tab=41, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 3.14) [type=real, tab=-1, lev=0]
+|   |-- Assign [type=char, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'inisial') [type=char, tab=42, lev=0]
+|   |   |-- value:
+|   |   |   |-- Char(value: 'A') [type=char, tab=-1, lev=0]
+|   |-- Assign [type=string, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'pesan') [type=string, tab=43, lev=0]
+|   |   |-- value:
+|   |   |   |-- String(value: 'Halo Arion') [type=string, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=44, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: plus) [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
-|   |   |   |   |-- right:
-|   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
-|   |   |-- then:
-|   |   |   |-- Assign [type=integer, tab=-1, lev=0]
-|   |   |   |   |-- target:
 |   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
-|   |   |   |   |-- value:
-|   |   |   |   |   |-- Number(value: 10) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=40, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=44, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: minus) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=40, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'hasil') [type=integer, tab=44, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: times) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Var(name: 'y') [type=integer, tab=40, lev=0]
+|   |-- Assign [type=real, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'phi') [type=real, tab=41, lev=0]
+|   |   |-- value:
+|   |   |   |-- BinOp(op: rdiv) [type=real, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Number(value: 22) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 7) [type=integer, tab=-1, lev=0]
 |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
-|   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |-- Var(name: 'hasil') [type=integer, tab=44, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'phi') [type=real, tab=41, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'inisial') [type=char, tab=42, lev=0]
+|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |-- Var(name: 'pesan') [type=string, tab=43, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -66,29 +125,61 @@ read      	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 readln    	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 write     	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 writeln   	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-A3IfTrue  	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+Kalkulator	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
 x         	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+y         	 | 39	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+phi       	 | 40	 | 1	 | 2	 | 0	 | 1	 | 0	 | 0
+inisial   	 | 41	 | 1	 | 3	 | 0	 | 1	 | 0	 | 0
+pesan     	 | 42	 | 1	 | 5	 | 0	 | 1	 | 0	 | 0
+hasil     	 | 43	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
 
 === ATAB ===
 indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
 
 === BTAB ===
 last | lpar	 | psze	 | vsze
-39	 | 0	 | 0	 | 1
+44	 | 0	 | 0	 | 6
 
 === Intermediate Code ===
-0 INT 0 4
-1 LIT 0 0
+0 INT 0 9
+1 LIT 0 20
 2 STO 0 3
-3 LIT 0 0
-4 LIT 0 1
-5 OPR 0 9
-6 JPC 0 9
-7 LIT 0 10
-8 STO 0 3
-9 LOD 0 3
-10 OPR 0 14
-11 RET 0 0
+3 LIT 0 7
+4 STO 0 4
+5 LIT 0 1078523331
+6 STO 0 5
+7 LIT 0 65
+8 STO 0 6
+9 LIT 0 1288884484
+10 STO 0 7
+11 LOD 0 3
+12 LOD 0 4
+13 OPR 0 2
+14 STO 0 8
+15 LOD 0 3
+16 LOD 0 4
+17 OPR 0 3
+18 STO 0 8
+19 LOD 0 3
+20 LOD 0 4
+21 OPR 0 4
+22 STO 0 8
+23 LIT 0 22
+24 LIT 0 7
+25 OPR 0 5
+26 STO 0 5
+27 LOD 0 8
+28 OPR 0 14
+29 LOD 0 5
+30 OPR 0 14
+31 LOD 0 6
+32 OPR 0 14
+33 LOD 0 7
+34 OPR 0 14
+35 RET 0 0
 
 === Program Output ===
-10
+140
+3
+A
+Halo Arion

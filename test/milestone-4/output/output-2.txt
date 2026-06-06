@@ -1,29 +1,136 @@
 === Decorated AST Tree ===
-ProgramNode(name: 'A3IfFalse') [type=program, tab=38, lev=0]
+ProgramNode(name: 'CekNilai') [type=program, tab=38, lev=0]
 |-- Declarations
-|   |-- VarDecl(name: 'x') [type=integer, tab=39, lev=0]
+|   |-- VarDecl(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |-- Type(name: 'integer')
+|   |-- VarDecl(name: 'lulus') [type=integer, tab=40, lev=0]
 |   |   |-- Type(name: 'integer')
 |-- Block
 |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |-- target:
-|   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |-- value:
+|   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
+|   |-- Assign [type=integer, tab=-1, lev=0]
+|   |   |-- target:
+|   |   |   |-- Var(name: 'lulus') [type=integer, tab=40, lev=0]
 |   |   |-- value:
 |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |-- If [type=boolean, tab=-1, lev=0]
 |   |   |-- condition:
-|   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
+|   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
 |   |   |   |   |-- left:
-|   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 90) [type=integer, tab=-1, lev=0]
+|   |   |-- then:
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Sangat Baik') [type=string, tab=-1, lev=0]
+|   |   |-- else:
+|   |   |   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- condition:
+|   |   |   |   |   |-- BinOp(op: geq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- then:
+|   |   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |   |-- String(value: 'Baik') [type=string, tab=-1, lev=0]
+|   |   |   |   |-- else:
+|   |   |   |   |   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- condition:
+|   |   |   |   |   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |   |-- Number(value: 50) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |-- then:
+|   |   |   |   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |   |   |   |-- String(value: 'Kurang') [type=string, tab=-1, lev=0]
+|   |   |   |   |   |   |-- else:
+|   |   |   |   |   |   |   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |   |   |-- condition:
+|   |   |   |   |   |   |   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |   |   |   |   |-- Number(value: 59) [type=integer, tab=-1, lev=0]
+|   |   |   |   |   |   |   |   |-- then:
+|   |   |   |   |   |   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |   |   |   |   |   |-- String(value: 'Cukup') [type=string, tab=-1, lev=0]
+|   |   |   |   |   |   |   |   |-- else:
+|   |   |   |   |   |   |   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |   |   |   |   |   |   |-- String(value: 'Sedang') [type=string, tab=-1, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: neq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
+|   |   |-- then:
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Nilai tidak nol') [type=string, tab=-1, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
 |   |   |   |   |-- right:
 |   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
 |   |   |-- then:
 |   |   |   |-- Assign [type=integer, tab=-1, lev=0]
 |   |   |   |   |-- target:
-|   |   |   |   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |-- Var(name: 'lulus') [type=integer, tab=40, lev=0]
 |   |   |   |   |-- value:
-|   |   |   |   |   |-- Number(value: 10) [type=integer, tab=-1, lev=0]
-|   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
-|   |   |-- Var(name: 'x') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |-- Number(value: 1) [type=integer, tab=-1, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: andsy) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- BinOp(op: geq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- BinOp(op: leq) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |-- Number(value: 100) [type=integer, tab=-1, lev=0]
+|   |   |-- then:
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Lulus') [type=string, tab=-1, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: orsy) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- BinOp(op: lss) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |-- Number(value: 0) [type=integer, tab=-1, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- BinOp(op: gtr) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |   |   |-- left:
+|   |   |   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |   |   |-- right:
+|   |   |   |   |   |   |   |-- Number(value: 100) [type=integer, tab=-1, lev=0]
+|   |   |-- then:
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Nilai tidak valid') [type=string, tab=-1, lev=0]
+|   |-- If [type=boolean, tab=-1, lev=0]
+|   |   |-- condition:
+|   |   |   |-- BinOp(op: eql) [type=boolean, tab=-1, lev=0]
+|   |   |   |   |-- left:
+|   |   |   |   |   |-- Var(name: 'nilai') [type=integer, tab=39, lev=0]
+|   |   |   |   |-- right:
+|   |   |   |   |   |-- Number(value: 75) [type=integer, tab=-1, lev=0]
+|   |   |-- then:
+|   |   |   |-- ProcCall(name: 'writeln') [type=procedure, tab=37, lev=0]
+|   |   |   |   |-- String(value: 'Tepat 75') [type=string, tab=-1, lev=0]
 
 === Symbol Tables ===
 === TAB ===
@@ -66,29 +173,95 @@ read      	 | 33	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 readln    	 | 34	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 write     	 | 35	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
 writeln   	 | 36	 | 5	 | 8	 | 0	 | 1	 | 0	 | 0
-A3IfFalse 	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
-x         	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+CekNilai  	 | 37	 | 0	 | 0	 | 0	 | 1	 | 0	 | 0
+nilai     	 | 38	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
+lulus     	 | 39	 | 1	 | 1	 | 0	 | 1	 | 0	 | 0
 
 === ATAB ===
 indexType	 | elementType	 | elementRef	 | low	 | high	 | elementSize	 | totalSize
 
 === BTAB ===
 last | lpar	 | psze	 | vsze
-39	 | 0	 | 0	 | 1
+40	 | 0	 | 0	 | 2
 
 === Intermediate Code ===
-0 INT 0 4
-1 LIT 0 0
+0 INT 0 5
+1 LIT 0 75
 2 STO 0 3
-3 LIT 0 1
-4 LIT 0 0
-5 OPR 0 9
-6 JPC 0 9
-7 LIT 0 10
-8 STO 0 3
-9 LOD 0 3
+3 LIT 0 0
+4 STO 0 4
+5 LOD 0 3
+6 LIT 0 90
+7 OPR 0 11
+8 JPC 0 12
+9 LIT 0 1391336809
 10 OPR 0 14
-11 RET 0 0
+11 JMP 0 35
+12 LOD 0 3
+13 LIT 0 75
+14 OPR 0 10
+15 JPC 0 19
+16 LIT 0 1550232005
+17 OPR 0 14
+18 JMP 0 35
+19 LOD 0 3
+20 LIT 0 50
+21 OPR 0 9
+22 JPC 0 26
+23 LIT 0 998540502
+24 OPR 0 14
+25 JMP 0 35
+26 LOD 0 3
+27 LIT 0 59
+28 OPR 0 12
+29 JPC 0 33
+30 LIT 0 1201704766
+31 OPR 0 14
+32 JMP 0 35
+33 LIT 0 645669523
+34 OPR 0 14
+35 LOD 0 3
+36 LIT 0 0
+37 OPR 0 8
+38 JPC 0 41
+39 LIT 0 495758438
+40 OPR 0 14
+41 LOD 0 3
+42 LIT 0 0
+43 OPR 0 11
+44 JPC 0 47
+45 LIT 0 1
+46 STO 0 4
+47 LOD 0 3
+48 LIT 0 75
+49 OPR 0 10
+50 LOD 0 3
+51 LIT 0 100
+52 OPR 0 12
+53 OPR 0 4
+54 JPC 0 57
+55 LIT 0 1236044794
+56 OPR 0 14
+57 LOD 0 3
+58 LIT 0 0
+59 OPR 0 9
+60 LOD 0 3
+61 LIT 0 100
+62 OPR 0 11
+63 OPR 0 2
+64 JPC 0 67
+65 LIT 0 1333667335
+66 OPR 0 14
+67 LOD 0 3
+68 LIT 0 75
+69 OPR 0 7
+70 JPC 0 73
+71 LIT 0 30201798
+72 OPR 0 14
+73 RET 0 0
 
 === Program Output ===
-0
+Baik
+Nilai tidak nol
+Lulus
+Tepat 75

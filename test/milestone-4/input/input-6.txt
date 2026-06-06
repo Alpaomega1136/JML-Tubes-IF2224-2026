@@ -1,15 +1,7 @@
-program A3NestedIfWhile;
-var i, total : integer;
+{pengujian 6 - identifier digunakan sebelum dideklarasikan}
+
+program IdentifierBelumDeklarasi;
 begin
-    i := 0;
-    total := 0;
-    while i < 5 do
-    begin
-        if i < 3 then
-            total := total + 10
-        else
-            total := total + 1;
-        i := i + 1;
-    end;
-    writeln(total);
+    nilai := 10;
+    writeln(nilai);
 end.
