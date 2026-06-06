@@ -226,8 +226,7 @@ void Interpreter::validateInstructionTarget(
     const Instruction& instruction,
     const std::vector<Instruction>& instructions
 ) const {
-    if (instruction.operand < 0 ||
-        static_cast<std::size_t>(instruction.operand) >= instructions.size()) {
+    if (static_cast<std::size_t>(instruction.operand) >= instructions.size()) {
         throw RuntimeError(
             "Runtime Error: Label not found for " +
             CodeGenerator::opcodeToString(instruction.opcode) +
@@ -326,7 +325,6 @@ void Interpreter::execute(const std::vector<Instruction>& instructions,
 }
 
 std::string Interpreter::resolveWriteValue(RuntimeValue val) {
-    cout<<runtimeTypeToString(val.type)<<endl;
     switch(val.type) {
         case RuntimeType::INT :
             return to_string(val.integer);

@@ -8,7 +8,7 @@
 std::unordered_map<int, std::string> CodeGenerator::hashedStrings;
 
 uint64_t wrapRuntimeType(RuntimeType type, int value) {
-    u_int64_t wrapped = static_cast<uint64_t>(value & 0xFFFFFFFF) | (static_cast<uint64_t>(type) << 32);
+    uint64_t wrapped = static_cast<uint64_t>(value & 0xFFFFFFFF) | (static_cast<uint64_t>(type) << 32);
     return wrapped;
 }
 
@@ -80,8 +80,12 @@ int CodeGenerator::resolveAddress(const std::string& name) {
     std::string key = lower(name);
     auto it = varAddress.find(key);
     if (it != varAddress.end()) return it->second;
-    if (table->getTab().at(table->lookupTabIndex(name)).type == 6) return allocateArrayAddress(name);
-    if (table->getTab().at(table->lookupTabIndex(name)).type == 7) return allocateRecordAddress(name);
+
+    SymbolEntry* entry = table->lookup(name);
+    int typeCode = entry ? entry->typeCode : table->getTab().at(table->lookupTabIndex(name)).type;
+    if (typeCode == 6) return allocateArrayAddress(name);
+    if (typeCode == 7) return allocateRecordAddress(name);
+
     int addr = nextAddress++;
     varAddress[key] = addr;
     return addr;
@@ -91,7 +95,8 @@ int CodeGenerator::allocateArrayAddress(const std::string& name) {
     std::string key = lower(name);
     
     int addr = nextAddress++;
-    int size = table->getATab().at(table->lookup(name)->ref).totalSize;
+    SymbolEntry* entry = table->lookup(name);
+    int size = entry ? table->getATab().at(entry->ref).totalSize : 1;
     nextAddress += size - 1;
     varAddress[key] = addr;
     return addr;
@@ -101,7 +106,12 @@ int CodeGenerator::allocateRecordAddress(const std::string& name) {
     std::string key = lower(name);
 
     int addr = nextAddress++;
-    int size = typeSize[recordRecord[key]];
+    auto recordIt = recordRecord.find(key);
+    std::string recordType = recordIt != recordRecord.end()
+        ? recordIt->second
+        : lower(table->lookup(name)->typeName);
+    int size = typeSize[recordType];
+    if (size <= 0) size = 1;
     nextAddress += size - 1;
     varAddress[key] = addr;
     return addr;
@@ -111,18 +121,25 @@ int CodeGenerator::resolveTypeSize(const std::string& name, TypeNode* type) {
     std::string key = lower(name);
     auto it = typeSize.find(key);
     if (it != typeSize.end()) return it->second;
+
     int size = 0;
-    if (table->mapTypeNameToCode(name) <= 5 && table->mapTypeNameToCode(name) > 0) {
+    int directTypeCode = table->mapTypeNameToCode(name);
+    SymbolEntry* entry = table->lookup(name);
+
+    if (directTypeCode <= 5 && directTypeCode > 0) {
         size = 1;
-    } else if (table->mapTypeNameToCode(name) == 6) {
-        size = table->getATab().at(table->lookup(name)->ref).totalSize;
+    } else if (entry != nullptr && entry->typeCode == 6) {
+        size = table->getATab().at(entry->ref).totalSize;
     } else if (RecordTypeNode* record = dynamic_cast<RecordTypeNode*>(type)) {
         for (FieldPartNode* field : record->fieldList) {
             size += resolveTypeSize(field->fieldType->typeIdent, field->fieldType);
         }
+    } else if (entry != nullptr && entry->typeCode == 7) {
+        size = typeSize[lower(entry->typeName)];
     }
+
+    if (size <= 0) size = 1;
     typeSize[key] = size;
-    cout<<key<<" : "<<size<<endl;
     return size;
 } 
 
@@ -132,7 +149,14 @@ int CodeGenerator::countVars(ProcCallNode* decls) {
     int count = 0;
     for (ASTNode* child : decls->getChildren()) {
         if (VarDeclNode* decl = dynamic_cast<VarDeclNode*>(child)) {
-            count += resolveTypeSize(decl->type->typeIdent, decl->type);
+            SymbolEntry* entry = table->lookup(decl->name);
+            if (entry != nullptr && entry->typeCode == 6) {
+                count += table->getATab().at(entry->ref).totalSize;
+            } else if (entry != nullptr && entry->typeCode == 7) {
+                count += resolveTypeSize(decl->type->typeIdent, decl->type);
+            } else {
+                count += 1;
+            }
         };
     }
     return count;
@@ -204,10 +228,10 @@ void CodeGenerator::generate(ASTNode* root) {
     if (decls) {
         for (ASTNode* child : decls->getChildren()) {
             if (VarDeclNode* var = dynamic_cast<VarDeclNode*>(child)) {
-                resolveAddress(var->name);
                 if (table->getTab().at(table->lookupTabIndex(var->name)).type == 7) {
                     recordRecord[lower(var->name)] = lower(var->type->typeIdent);
                 }
+                resolveAddress(var->name);
             }
         }
     }
@@ -373,7 +397,7 @@ void CodeGenerator::genAssign(AssignNode* node) {
     } else if (RecordAccessNode* targetVar = dynamic_cast<RecordAccessNode*>(node->target)) {
         int addr = resolveAddress(targetVar->name);
         
-        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, fieldOffset[recordRecord[lower(targetVar->name)]][targetVar->fieldName]));
+        emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, fieldOffset[recordRecord[lower(targetVar->name)]][lower(targetVar->fieldName)]));
 
         emit(Opcode::LIT, 0, wrapRuntimeType(RuntimeType::INT, addr));
 
